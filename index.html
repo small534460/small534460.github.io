@@ -1,17 +1,158 @@
-<p>太 好 了</p>
-<p>我是Small 3，这是我的个人领域。 </p>
-<p>------SMALL 3领域-------</p>
+  html,body{height:100%;}
+    body{
+      margin:0;
+      background: linear-gradient(180deg,#071020 0%, #071026 50%, #051027 100%);
+      color:#e6eef8;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:32px;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.6;
+    }
+    .wrap{
+      width:100%;
+      max-width:880px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:var(--radius);
+      padding:28px;
+      box-shadow: 0 8px 30px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.03);
+      backdrop-filter: blur(6px);
+    }
+    header{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      margin-bottom:12px;
+    }
+    .logo{
+      width:64px;
+      height:64px;
+      border-radius:12px;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:700;
+      font-size:20px;
+      color:white;
+      box-shadow: 0 6px 18px rgba(96,165,250,0.12);
+      flex:0 0 64px;
+    }
+    h1{
+      margin:0;
+      font-size:20px;
+      letter-spacing:0.6px;
+    }
+    .subtitle{
+      margin:6px 0 0 0;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .content{
+      margin-top:18px;
+    }
+    .intro{
+      background:var(--glass);
+      padding:12px 14px;
+      border-radius:10px;
+      color:#dceafc;
+      font-size:15px;
+      margin-bottom:16px;
+    }
+    .links{
+      list-style:none;
+      padding:0;
+      margin:0;
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap:12px;
+    }
+    .links a{
+      text-decoration:none;
+      color:inherit;
+    }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.01));
+      border-radius:10px;
+      padding:12px;
+      border:1px solid rgba(255,255,255,0.02);
+      transition: transform .16s ease, box-shadow .16s ease;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    .card:hover{
+      transform: translateY(-6px);
+      box-shadow: 0 14px 40px rgba(2,6,23,0.6);
+    }
+    .card .title{
+      font-weight:600;
+      color:#f3f9ff;
+      font-size:15px;
+    }
+    .card .desc{
+      font-size:13px;
+      color:var(--muted);
+    }
+    footer{
+      margin-top:18px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .small{
+      color:var(--muted);
+      font-size:13px;
+    }
+    @media (max-width:520px){
+      .logo{width:52px;height:52px;font-size:18px;}
+      .wrap{padding:18px;}
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap" role="main">
+    <header>
+      <div class="logo">S3</div>
+      <div>
+        <h1>Small 3 的个人领域</h1>
+        <div class="subtitle">收藏与分享我觉得有趣的站点与资源</div>
+      </div>
+    </header>
 
-<ul>
-  <li> <a href="https://zi0.cc/">黄油</a> </li>
-  <li> <a href="https://acfan.me/">好看的</a> </li>
-</ul>
-</ul>
-</ul>
-</ul>
-</ul>
-</ul>
-</ul>
-</ul>
-</ul>
-<p>本站由 GitHub 支持</p>
+    <section class="content">
+      <div class="intro">
+        太好了！我是 Small 3，这是我的个人领域。下面是我喜欢的几个站点，欢迎访问。
+      </div>
+
+      <h2 style="margin:0 0 10px 0;font-size:14px;color:var(--muted)">—— SMALL 3 领域 ——</h2>
+
+      <ul class="links" aria-label="推荐链接">
+        <li>
+          <a class="card" href="https://zi0.cc/" target="_blank" rel="noopener noreferrer">
+            <div class="title">黄油</div>
+            <div class="desc">一个有意思的网站（原链接：zi0.cc）。点击打开新窗口查看。</div>
+          </a>
+        </li>
+        <li>
+          <a class="card" href="https://acfan.me/" target="_blank" rel="noopener noreferrer">
+            <div class="title">好看的</div>
+            <div class="desc">好看的资源与内容收藏（原链接：acfan.me）。</div>
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <footer>
+      <div class="small">本站由 <a href="https://github.com" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:none">GitHub</a> 支持</div>
+      <div class="small">© Small 3</div>
+    </footer>
+  </main>
+</body>
+</html>
