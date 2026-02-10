@@ -151,6 +151,34 @@
       .logo{width:52px;height:52px;font-size:18px;}
       .wrap{padding:18px;}
     }
+    @media (max-width: 520px) {
+  .wrap {
+    padding: 10px;
+    min-width: 0;
+    max-width: 100vw;
+    box-sizing: border-box;
+  }
+  form[action="https://www.bing.com/search"] {
+    flex-direction: column;
+    gap: 8px;
+  }
+  form[action="https://www.bing.com/search"] input[type="text"],
+  form[action="https://www.bing.com/search"] button {
+    border-radius: 8px;
+    width: 100%;
+    font-size: 15px;
+    box-sizing: border-box;
+  }
+  .links {
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+  }
+  header {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
   </style>
 </head>
 <body>
