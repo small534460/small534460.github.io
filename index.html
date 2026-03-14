@@ -8,19 +8,28 @@
     :root{
       --accent: #60a5fa;
       --accent-2: #3b82f6;
-      --muted: rgba(230,238,248,0.6);
+      --accent-green: #10B981;
+      --accent-green-hover: #059669;
+      --muted: rgba(173, 186, 203, 0.7);
       --glass: rgba(255,255,255,0.02);
+      --glass-light: rgba(255,255,255,0.05);
+      --glass-border: rgba(255,255,255,0.08);
       --radius: 12px;
+      --radius-sm: 8px;
+      --radius-lg: 16px;
+      --shadow: 0 8px 30px rgba(2,6,23,0.6);
+      --shadow-hover: 0 14px 40px rgba(2,6,23,0.8);
+      --shadow-inset: inset 0 1px 0 rgba(255,255,255,0.02);
     }
 
     html, body { height: 100%; }
 
-    /* 背景使用图片 + 渐变��加，替换下面的 URL 即可更换背景图 */
+    /* 背景使用图片 + 渐变叠加，替换下面的 URL 即可更换背景图 */
     body{
       margin: 0;
       /* 图片来源示例：Unsplash（可替换为你自己的图片 URL） */
       background:
-        linear-gradient(180deg, rgba(7,16,38,0.6) 0%, rgba(7,16,38,0.6) 100%),
+        linear-gradient(180deg, rgba(7,16,38,0.7) 0%, rgba(7,16,38,0.7) 100%),
         url('https://i.mituw.com/imgs/2026/02/16/ca72241243868693.jpg') center/cover no-repeat fixed;
       color: #e6eef8;
       display: flex;
@@ -30,65 +39,99 @@
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       line-height: 1.6;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
     }
 
     .wrap{
       width: 100%;
-      max-width: 880px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border-radius: var(--radius);
-      padding: 28px;
-      box-shadow: 0 8px 30px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
-      border: 1px solid rgba(255,255,255,0.03);
-      backdrop-filter: blur(6px);
+      max-width: 920px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      box-shadow: var(--shadow), var(--shadow-inset);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(12px);
     }
 
     header{
       display: flex;
       align-items: center;
-      gap: 16px;
-      margin-bottom: 12px;
+      gap: 18px;
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--glass-border);
     }
 
     .logo{
-      width: 64px;
-      height: 64px;
-      border-radius: 12px;
+      width: 70px;
+      height: 70px;
+      border-radius: 16px;
       background: linear-gradient(135deg, var(--accent), var(--accent-2));
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 700;
-      font-size: 20px;
+      font-size: 24px;
       color: white;
-      box-shadow: 0 6px 18px rgba(96,165,250,0.12);
-      flex: 0 0 64px;
+      box-shadow: 0 6px 20px rgba(96,165,250,0.2);
+      flex: 0 0 70px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .logo::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(to bottom right, rgba(255,255,255,0.1), transparent);
+      pointer-events: none;
     }
 
     h1{
       margin: 0;
-      font-size: 20px;
+      font-size: 24px;
       letter-spacing: 0.6px;
+      font-weight: 600;
+      background: linear-gradient(to right, #e6eef8, #b0d0ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .subtitle{
-      margin: 6px 0 0 0;
+      margin: 8px 0 0 0;
       color: var(--muted);
-      font-size: 13px;
+      font-size: 14px;
     }
 
     .content{
-      margin-top: 18px;
+      margin-top: 24px;
     }
 
     .intro{
-      background: var(--glass);
-      padding: 12px 14px;
-      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(96,165,250,0.1), rgba(59,130,246,0.05));
+      padding: 16px 18px;
+      border-radius: var(--radius);
       color: #dceafc;
       font-size: 15px;
-      margin-bottom: 16px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(96,165,250,0.1);
+      backdrop-filter: blur(5px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .intro::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(to bottom, var(--accent), var(--accent-2));
     }
 
     .links{
@@ -96,8 +139,8 @@
       padding: 0;
       margin: 0;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
     }
 
     .links a{
@@ -106,79 +149,359 @@
     }
 
     .card{
-      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.01));
-      border-radius: 10px;
-      padding: 12px;
-      border: 1px solid rgba(255,255,255,0.02);
-      transition: transform .16s ease, box-shadow .16s ease;
+      background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      border-radius: var(--radius);
+      padding: 18px;
+      border: 1px solid var(--glass-border);
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(96,165,250,0.3), transparent);
     }
 
     .card:hover{
       transform: translateY(-6px);
-      box-shadow: 0 14px 40px rgba(2,6,23,0.6);
+      box-shadow: var(--shadow-hover);
+      border-color: rgba(96,165,250,0.2);
+      background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(96,165,250,0.02));
     }
 
     .card .title{
       font-weight: 600;
       color: #f3f9ff;
-      font-size: 15px;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .card .desc{
       font-size: 13px;
       color: var(--muted);
+      line-height: 1.5;
     }
 
     footer{
-      margin-top: 18px;
+      margin-top: 28px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 12px;
       color: var(--muted);
-      font-size: 13px;
+      font-size: 14px;
+      padding-top: 20px;
+      border-top: 1px solid var(--glass-border);
     }
 
-    .small{
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    footer a:hover {
+      color: #93c5fd;
+      text-decoration: underline;
+    }
+
+    /* 搜索表单样式 */
+    .search-form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .search-form-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .search-form {
+      flex: 1;
+      display: flex;
+      gap: 8px;
+    }
+
+    .search-input {
+      flex: 1;
+      padding: 10px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(96,165,250,0.3);
+      outline: none;
+      font-size: 15px;
+      background: rgba(7,16,38,0.4);
+      color: #e6eef8;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(5px);
+    }
+
+    .search-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(96,165,250,0.1);
+    }
+
+    .search-input::placeholder {
+      color: rgba(173, 186, 203, 0.6);
+    }
+
+    .search-button {
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
+      border: none;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(5px);
+      min-width: 100px;
+    }
+
+    .search-button:hover {
+      background: linear-gradient(135deg, var(--accent-2), var(--accent));
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+    }
+
+    .search-button:active {
+      transform: translateY(0);
+    }
+
+    .green-button {
+      background: linear-gradient(135deg, var(--accent-green), #0ea271) !important;
+    }
+
+    .green-button:hover {
+      background: linear-gradient(135deg, var(--accent-green-hover), #0d9268) !important;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
+    }
+
+    .section-title {
+      margin: 0 0 16px 0;
+      font-size: 15px;
       color: var(--muted);
-      font-size: 13px;
+      text-align: center;
+      position: relative;
+      padding-bottom: 8px;
     }
 
-    @media (max-width:520px){
-      .logo{width:52px;height:52px;font-size:18px;}
-      .wrap{padding:18px;}
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
     }
-    @media (max-width: 520px) {
-  .wrap {
-    padding: 10px;
-    min-width: 0;
-    max-width: 100vw;
-    box-sizing: border-box;
-  }
-  form[action="https://www.bing.com/search"] {
-    flex-direction: column;
-    gap: 8px;
-  }
-  form[action="https://www.bing.com/search"] input[type="text"],
-  form[action="https://www.bing.com/search"] button {
-    border-radius: 8px;
-    width: 100%;
-    font-size: 15px;
-    box-sizing: border-box;
-  }
-  .links {
-    grid-template-columns: 1fr !important;
-    gap: 10px;
-  }
-  header {
-    flex-direction: row;
-    align-items: flex-start;
-    gap: 8px;
-  }
-}
+
+    /* 搜索结果容器样式 */
+    .search-container {
+      position: relative;
+      margin-bottom: 24px;
+    }
+
+    .search-results {
+      width: 100%;
+      max-height: 0;
+      border-radius: var(--radius);
+      overflow: hidden;
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: absolute;
+      z-index: 100;
+      box-shadow: 0 20px 40px rgba(2,6,23,0.8);
+      background: rgba(7, 16, 38, 0.95);
+      border: 1px solid rgba(96,165,250,0.2);
+      backdrop-filter: blur(15px);
+      margin-top: 10px;
+    }
+
+    .search-results.active {
+      max-height: 600px;
+      opacity: 1;
+      position: relative;
+    }
+
+    .results-iframe {
+      width: 100%;
+      height: 600px;
+      border: none;
+      display: none;
+      background: transparent;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 40px 20px;
+      color: #a5b4cb;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(96,165,250,0.2);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 16px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .error-message {
+      display: none;
+      background: linear-gradient(135deg, rgba(239,68,68,0.1), rgba(220,38,38,0.05));
+      border: 1px solid rgba(239,68,68,0.2);
+      border-radius: var(--radius-sm);
+      padding: 20px;
+      margin: 20px;
+      color: #fca5a5;
+      text-align: center;
+    }
+
+    .no-results-message {
+      text-align: center;
+      padding: 60px 20px;
+      color: #a5b4cb;
+    }
+
+    .results-header {
+      display: none;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 18px;
+      background: rgba(7, 16, 38, 0.8);
+      border-bottom: 1px solid rgba(96,165,250,0.2);
+      backdrop-filter: blur(10px);
+    }
+
+    .results-title {
+      font-weight: 600;
+      color: #e6eef8;
+      font-size: 15px;
+    }
+
+    .close-results {
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.2);
+      border-radius: 6px;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fca5a5;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .close-results:hover {
+      background: rgba(239,68,68,0.2);
+      border-color: rgba(239,68,68,0.3);
+      color: #f87171;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 16px;
+      }
+      
+      .wrap {
+        padding: 24px 20px;
+        border-radius: 16px;
+      }
+      
+      .logo {
+        width: 60px;
+        height: 60px;
+        font-size: 22px;
+      }
+      
+      h1 {
+        font-size: 20px;
+      }
+      
+      .search-form-row {
+        flex-direction: column;
+        gap: 12px;
+      }
+      
+      .links {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      
+      .search-results.active {
+        max-height: 500px;
+      }
+      
+      .results-iframe {
+        height: 500px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .wrap {
+        padding: 20px 16px;
+      }
+      
+      header {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+      }
+      
+      .logo {
+        width: 56px;
+        height: 56px;
+        font-size: 20px;
+      }
+      
+      h1 {
+        font-size: 18px;
+      }
+      
+      .subtitle {
+        font-size: 13px;
+      }
+      
+      .search-form {
+        flex-direction: column;
+      }
+      
+      .search-button {
+        width: 100%;
+      }
+      
+      footer {
+        flex-direction: column;
+        text-align: center;
+        gap: 8px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -196,317 +519,201 @@
         我是 Small 3，这是我的个人领域。下面是我收藏的几个站点，欢迎访问。
       </div>
 
-      <h2 style="margin:0 0 10px 0;font-size:14px;color:var(--muted)">—— SMALL 3 领域 ——</h2>
-<form action="https://www.bing.com/search" method="get" target="_blank" style="margin-bottom:18px;display:flex;gap:6px;">
-  <input type="text" name="q" placeholder="必应搜索…" style="flex:1;padding:7px 12px;border-radius:8px;border:1px solid #3b82f6;outline:none;font-size:15px;">
-  <button type="submit" style="padding:7px 16px;border-radius:8px;border:none;background:#60a5fa;color:white;font-weight:600;cursor:pointer;">必应搜索</button>
-</form>
-      <style>
-    .search-container {
-        margin-bottom: 18px;
-        position: relative;
-    }
-    
-    .search-form {
-        display: flex;
-        gap: 6px;
-        margin-bottom: 15px;
-    }
-    
-    .search-input {
-        flex: 1;
-        padding: 7px 12px;
-        border-radius: 8px;
-        border: 1px solid #3b82f6;
-        outline: none;
-        font-size: 15px;
-    }
-    
-    .search-button {
-        padding: 7px 16px;
-        border-radius: 8px;
-        border: none;
-        background: #10B981;
-        color: white;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background 0.3s ease, transform 0.2s ease;
-    }
-    
-    .search-button:hover {
-        background: #059669;
-        transform: translateY(-1px);
-    }
-    
-    .search-button:active {
-        transform: translateY(0);
-    }
-    
-    .search-results {
-        width: 100%;
-        height: 0;
-        border: none;
-        border-radius: 8px;
-        overflow: hidden;
-        margin-top: 0;
-        opacity: 0;
-        transition: all 0.3s ease;
-        position: absolute;
-        z-index: 1000;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        background: white;
-    }
-    
-    .search-results.active {
-        height: 600px;
-        margin-top: 10px;
-        border: 1px solid #ddd;
-        opacity: 1;
-        position: relative;
-    }
-    
-    .results-iframe {
-        width: 100%;
-        height: 100%;
-        border: none;
-        display: none;
-    }
-    
-    .loading {
-        display: none;
-        text-align: center;
-        padding: 20px;
-        color: #666;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 1;
-    }
-    
-    .error-message {
-        display: none;
-        background-color: #fee;
-        border: 1px solid #fcc;
-        border-radius: 8px;
-        padding: 15px;
-        margin: 20px;
-        color: #c00;
-    }
-    
-    .no-results-message {
-        text-align: center;
-        padding: 40px 20px;
-        color: #666;
-    }
-    
-    .results-header {
-        display: none;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 15px;
-        background: #f8fafc;
-        border-bottom: 1px solid #e5e7eb;
-    }
-    
-    .results-title {
-        font-weight: 600;
-        color: #374151;
-    }
-    
-    .close-results {
-        background: none;
-        border: none;
-        font-size: 24px;
-        color: #6b7280;
-        cursor: pointer;
-        line-height: 1;
-        padding: 0 5px;
-        transition: color 0.2s ease;
-    }
-    
-    .close-results:hover {
-        color: #ef4444;
-    }
-</style>
-
-<div class="search-container">
-    <form id="songSearchForm" class="search-form">
-        <input type="text" id="searchKeyword" class="search-input" placeholder="搜索歌曲、歌手或专辑...">
-        <button type="submit" class="search-button">搜索歌曲</button>
-    </form>
-    
-    <div id="searchResults" class="search-results">
-        <div class="results-header">
+      <h2 class="section-title">—— SMALL 3 领域 ——</h2>
+      
+      <div class="search-form-group">
+        <div class="search-form-row">
+          <form action="https://www.bing.com/search" method="get" target="_blank" class="search-form">
+            <input type="text" name="q" placeholder="必应搜索…" class="search-input">
+            <button type="submit" class="search-button">必应搜索</button>
+          </form>
+          
+          <form id="songSearchForm" class="search-form">
+            <input type="text" id="searchKeyword" class="search-input" placeholder="搜索歌曲、歌手或专辑...">
+            <button type="submit" class="search-button green-button">搜索歌曲</button>
+          </form>
+        </div>
+      </div>
+      
+      <div class="search-container">
+        <div id="searchResults" class="search-results">
+          <div class="results-header">
             <div class="results-title">搜索结果</div>
             <button class="close-results" onclick="closeResults()">×</button>
-        </div>
-        
-        <div id="loading" class="loading">
+          </div>
+          
+          <div id="loading" class="loading">
+            <div class="loading-spinner"></div>
             <div>正在加载搜索结果...</div>
-            <div style="margin-top: 10px; font-size: 14px; color: #9ca3af;">这可能需要几秒钟时间</div>
-        </div>
-        
-        <div id="errorMessage" class="error-message">
+            <div style="margin-top: 10px; font-size: 14px; color: rgba(165, 180, 203, 0.7);">这可能需要几秒钟时间</div>
+          </div>
+          
+          <div id="errorMessage" class="error-message">
             抱歉，无法加载搜索结果。请检查网络连接或稍后重试。
-        </div>
-        
-        <div id="initialMessage" class="no-results-message">
+          </div>
+          
+          <div id="initialMessage" class="no-results-message">
             <h3>歌曲搜索</h3>
             <p>请输入关键词搜索歌曲、歌手或专辑</p>
             <p>示例：周杰伦、青花瓷、Taylor Swift</p>
+          </div>
+          
+          <iframe id="resultsFrame" class="results-iframe"></iframe>
         </div>
-        
-        <iframe id="resultsFrame" class="results-iframe"></iframe>
-    </div>
-</div>
-
-<script>
-    // 搜索表单提交事件
-    document.getElementById('songSearchForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        var keyword = document.getElementById('searchKeyword').value.trim();
-        
-        if (!keyword) {
-            alert('请输入要搜索的歌曲名称或歌手名称');
-            return;
-        }
-        
-        // 获取结果容器和iframe
-        var resultsContainer = document.getElementById('searchResults');
-        var iframe = document.getElementById('resultsFrame');
-        
-        // 显示结果容器并激活状态
-        resultsContainer.classList.add('active');
-        document.querySelector('.results-header').style.display = 'flex';
-        
-        // 显示加载状态
-        document.getElementById('loading').style.display = 'block';
-        document.getElementById('errorMessage').style.display = 'none';
-        document.getElementById('initialMessage').style.display = 'none';
-        iframe.style.display = 'none';
-        
-        // 构建歌曲海搜索URL
-        var searchUrl = 'https://www.gequhai.com/s/' + encodeURIComponent(keyword);
-        
-        // 设置iframe的src
-        iframe.src = searchUrl;
-        
-        // 监听iframe加载完成
-        iframe.onload = function() {
-            document.getElementById('loading').style.display = 'none';
-            iframe.style.display = 'block';
-            
-            // 设置结果标题
-            document.querySelector('.results-title').textContent = `搜索结果: ${keyword}`;
-        };
-        
-        // 监听iframe加载错误
-        iframe.onerror = function() {
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('errorMessage').style.display = 'block';
-            document.querySelector('.results-title').textContent = `搜索失败: ${keyword}`;
-        };
-    });
-    
-    // 关闭结果区域的函数
-    function closeResults() {
-        var resultsContainer = document.getElementById('searchResults');
-        var iframe = document.getElementById('resultsFrame');
-        
-        // 移除激活状态
-        resultsContainer.classList.remove('active');
-        
-        // 隐藏头部
-        document.querySelector('.results-header').style.display = 'none';
-        
-        // 重置状态
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('errorMessage').style.display = 'none';
-        document.getElementById('initialMessage').style.display = 'block';
-        iframe.style.display = 'none';
-        
-        // 可选：清除iframe的src以避免继续加载
-        // iframe.src = '';
-        
-        // 可选：回到页面顶部
-        // window.scrollTo(0, 0);
-    }
-    
-    // 点击页面其他地方关闭搜索结果（可选）
-    document.addEventListener('click', function(e) {
-        var resultsContainer = document.getElementById('searchResults');
-        var searchForm = document.getElementById('songSearchForm');
-        
-        // 如果点击的不是搜索结果区域，也不是搜索表单
-        if (!resultsContainer.contains(e.target) && 
-            !searchForm.contains(e.target) && 
-            resultsContainer.classList.contains('active')) {
-            closeResults();
-        }
-    });
-    
-    // 添加回车键搜索支持
-    document.getElementById('searchKeyword').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            document.getElementById('songSearchForm').dispatchEvent(new Event('submit'));
-        }
-    });
-    
-    // 页面加载完成后，给搜索框自动焦点
-    window.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('searchKeyword').focus();
-    });
-    
-    // ESC键关闭搜索结果
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            var resultsContainer = document.getElementById('searchResults');
-            if (resultsContainer.classList.contains('active')) {
-                closeResults();
-            }
-        }
-    });
-</script>
+      </div>
+      
       <ul class="links" aria-label="推荐链接">
         <li>
           <a class="card" href="https://small534460.github.io/shiyoungongjui/" target="_blank" rel="noopener noreferrer">
             <div class="title">实用工具</div>
+            <div class="desc">各种实用的在线工具和资源</div>
           </a>
         </li>
         <li>
            <a class="card" href="https://small534460.github.io/gonggao/" target="_blank" rel="noopener noreferrer">
             <div class="title">公告</div>
+            <div class="desc">网站公告和更新日志</div>
           </a>
         </li>
         <li>
            <a class="card" href="https://online.yandex.com/search?text=%E4%BF%84%E7%BD%97%E6%96%AF%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8Eyandex&lr=21206" target="_blank" rel="noopener noreferrer">
             <div class="title">Yandex导航</div>
+            <div class="desc">俄罗斯搜索引擎</div>
           </a>
         </li>
         <li>
             <a class="card" href="https://store.steampowered.com/" target="_blank" rel="noopener noreferrer">
             <div class="title">Steam</div>
+            <div class="desc">游戏平台和社区</div>
           </a>
         </li>
         <li>
             <a class="card" href="https://github.com/" target="_blank" rel="noopener noreferrer">
             <div class="title">GitHub</div>
+            <div class="desc">代码托管和协作平台</div>
           </a>
         </li>
         <li>
           <a class="card" href="https://www.speedtests.cn/" target="_blank" rel="noopener noreferrer">
             <div class="title">网络测速</div>
+            <div class="desc">测试您的网络速度</div>
           </a>
         </li>
       </ul>
     </section>
 
     <footer>
-      <div class="small">本站由 <a href="https://github.com" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:none">GitHub</a> 支持</div>
-      <div class="small">© Small 3</div>
+      <div class="small">本站由 <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a> 支持</div>
+      <div class="small">© Small 3 | 探索数字世界</div>
     </footer>
   </main>
+  
+  <script>
+    // 搜索表单提交事件
+    document.getElementById('songSearchForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      var keyword = document.getElementById('searchKeyword').value.trim();
+      
+      if (!keyword) {
+        alert('请输入要搜索的歌曲名称或歌手名称');
+        return;
+      }
+      
+      // 获取结果容器和iframe
+      var resultsContainer = document.getElementById('searchResults');
+      var iframe = document.getElementById('resultsFrame');
+      
+      // 显示结果容器并激活状态
+      resultsContainer.classList.add('active');
+      document.querySelector('.results-header').style.display = 'flex';
+      
+      // 显示加载状态
+      document.getElementById('loading').style.display = 'flex';
+      document.getElementById('errorMessage').style.display = 'none';
+      document.getElementById('initialMessage').style.display = 'none';
+      iframe.style.display = 'none';
+      
+      // 构建歌曲海搜索URL
+      var searchUrl = 'https://www.gequhai.com/s/' + encodeURIComponent(keyword);
+      
+      // 设置iframe的src
+      iframe.src = searchUrl;
+      
+      // 监听iframe加载完成
+      iframe.onload = function() {
+        document.getElementById('loading').style.display = 'none';
+        iframe.style.display = 'block';
+        
+        // 设置结果标题
+        document.querySelector('.results-title').textContent = `搜索结果: ${keyword}`;
+      };
+      
+      // 监听iframe加载错误
+      iframe.onerror = function() {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('errorMessage').style.display = 'block';
+        document.querySelector('.results-title').textContent = `搜索失败: ${keyword}`;
+      };
+    });
+    
+    // 关闭结果区域的函数
+    function closeResults() {
+      var resultsContainer = document.getElementById('searchResults');
+      var iframe = document.getElementById('resultsFrame');
+      
+      // 移除激活状态
+      resultsContainer.classList.remove('active');
+      
+      // 隐藏头部
+      document.querySelector('.results-header').style.display = 'none';
+      
+      // 重置状态
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('errorMessage').style.display = 'none';
+      document.getElementById('initialMessage').style.display = 'block';
+      iframe.style.display = 'none';
+      
+      // 清除搜索框内容（可选）
+      // document.getElementById('searchKeyword').value = '';
+    }
+    
+    // 点击页面其他地方关闭搜索结果
+    document.addEventListener('click', function(e) {
+      var resultsContainer = document.getElementById('searchResults');
+      var searchForm = document.getElementById('songSearchForm');
+      var searchInput = document.getElementById('searchKeyword');
+      
+      // 如果点击的不是搜索结果区域，也不是搜索表单和输入框
+      if (!resultsContainer.contains(e.target) && 
+          !searchForm.contains(e.target) && 
+          resultsContainer.classList.contains('active')) {
+        closeResults();
+      }
+    });
+    
+    // 添加回车键搜索支持
+    document.getElementById('searchKeyword').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        document.getElementById('songSearchForm').dispatchEvent(new Event('submit'));
+      }
+    });
+    
+    // ESC键关闭搜索结果
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        var resultsContainer = document.getElementById('searchResults');
+        if (resultsContainer.classList.contains('active')) {
+          closeResults();
+        }
+      }
+    });
+    
+    // 页面加载完成后，给搜索框自动焦点
+    window.addEventListener('DOMContentLoaded', function() {
+      // 可选：自动聚焦到歌曲搜索框
+      // document.getElementById('searchKeyword').focus();
+    });
+  </script>
 </body>
 </html>
