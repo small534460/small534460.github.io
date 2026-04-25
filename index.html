@@ -10,16 +10,17 @@
       --accent-2: #3b82f6;
       --accent-green: #10B981;
       --accent-green-hover: #059669;
-      --muted: rgba(173, 186, 203, 0.7);
-      --glass: rgba(255,255,255,0.02);
-      --glass-light: rgba(255,255,255,0.05);
-      --glass-border: rgba(255,255,255,0.08);
+      /* ============ 修改点1：提高文字颜色对比度，降低透明度 ============ */
+      --muted: rgba(200, 210, 220, 0.85);
+      --glass: rgba(0, 0, 0, 0.15);
+      --glass-light: rgba(0, 0, 0, 0.2);
+      --glass-border: rgba(255, 255, 255, 0.15);
       --radius: 12px;
       --radius-sm: 8px;
       --radius-lg: 16px;
-      --shadow: 0 8px 30px rgba(2,6,23,0.6);
-      --shadow-hover: 0 14px 40px rgba(2,6,23,0.8);
-      --shadow-inset: inset 0 1px 0 rgba(255,255,255,0.02);
+      --shadow: 0 8px 30px rgba(2,6,23,0.4);
+      --shadow-hover: 0 14px 40px rgba(2,6,23,0.5);
+      --shadow-inset: inset 0 1px 0 rgba(255,255,255,0.05);
     }
 
     html, body { 
@@ -28,16 +29,16 @@
       padding: 0;
     }
 
-    /* ============ 修改点1：背景改为动态设置，这里先设置基础样式 ============ */
+    /* ============ 修改点2：大幅降低背景渐变遮罩的透明度 ============ */
     body{
-      /* 默认背景，在图片加载前显示 */
-      background: linear-gradient(180deg, rgba(7,16,38,0.85) 0%, rgba(7,16,38,0.85) 100%),
+      /* 默认背景，渐变遮罩透明度从0.85降到0.3 */
+      background: linear-gradient(180deg, rgba(7,16,38,0.3) 0%, rgba(7,16,38,0.35) 100%),
                   #070f26;
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
       background-attachment: fixed;
-      color: #e6eef8;
+      color: #f0f4fa;
       min-height: 100vh;
       padding: 0;
       -webkit-font-smoothing: antialiased;
@@ -50,11 +51,12 @@
 
     /* 背景图片加载中的状态 */
     body.bg-loading {
-      background: linear-gradient(180deg, rgba(7,16,38,0.9) 0%, rgba(7,16,38,0.9) 100%),
+      background: linear-gradient(180deg, rgba(7,16,38,0.5) 0%, rgba(7,16,38,0.55) 100%),
                   #070f26;
     }
 
-    /* 背景图片加载完成后的状态 */
+    /* ============ 修改点3：调整背景渐变，让图片色彩更明显 ============ */
+    /* 背景图片加载完成后的状态 - 这里会在JS中动态设置 */
     body.bg-loaded {
       background-size: cover;
       background-position: center;
@@ -62,17 +64,18 @@
       background-attachment: fixed;
     }
 
-    /* 修复：移除flex居中布局，改为正常文档流 */
+    /* ============ 修改点4：主容器改为更透明的设计 ============ */
     .wrap{
       width: 100%;
       max-width: 920px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      /* 改为更透明的背景 */
+      background: rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(8px);
       border-radius: var(--radius-lg);
       padding: 32px;
-      box-shadow: var(--shadow), var(--shadow-inset);
-      border: 1px solid var(--glass-border);
-      backdrop-filter: blur(12px);
-      margin: 0 auto; /* 居中但不使用flex */
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      margin: 0 auto;
       box-sizing: border-box;
     }
 
@@ -81,7 +84,7 @@
       body {
         padding: 20px 16px;
         min-height: 100vh;
-        display: block; /* 确保使用正常文档流 */
+        display: block;
       }
       
       .wrap {
@@ -107,10 +110,9 @@
       gap: 18px;
       margin-bottom: 16px;
       padding-bottom: 16px;
-      border-bottom: 1px solid var(--glass-border);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    /* ============ 修改点1：将.logo类改为.avatar类 ============ */
     .avatar{
       width: 70px;
       height: 70px;
@@ -118,15 +120,14 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 6px 20px rgba(96,165,250,0.2);
+      box-shadow: 0 6px 20px rgba(96,165,250,0.3);
       flex: 0 0 70px;
       position: relative;
       overflow: hidden;
-      border: 2px solid rgba(96,165,250,0.3);
+      border: 2px solid rgba(96,165,250,0.4);
       background: linear-gradient(135deg, var(--accent), var(--accent-2));
     }
 
-    /* 头像图片样式 */
     .avatar-img {
       width: 100%;
       height: 100%;
@@ -134,7 +135,6 @@
       border-radius: 14px;
     }
 
-    /* 头像加载失败时显示的文字 */
     .avatar-fallback {
       width: 100%;
       height: 100%;
@@ -163,33 +163,39 @@
       font-size: 24px;
       letter-spacing: 0.6px;
       font-weight: 600;
-      background: linear-gradient(to right, #e6eef8, #b0d0ff);
+      /* 改为更明亮的渐变色 */
+      background: linear-gradient(to right, #ffffff, #c8dfff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      /* 添加文字阴影增强可读性 */
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
     }
 
     .subtitle{
       margin: 8px 0 0 0;
       color: var(--muted);
       font-size: 14px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
     }
 
     .content{
       margin-top: 24px;
     }
 
+    /* ============ 修改点5：介绍区域改为更透明 ============ */
     .intro{
-      background: linear-gradient(135deg, rgba(96,165,250,0.1), rgba(59,130,246,0.05));
+      background: rgba(96, 165, 250, 0.08);
+      backdrop-filter: blur(3px);
       padding: 16px 18px;
       border-radius: var(--radius);
-      color: #dceafc;
+      color: #e8f0fe;
       font-size: 15px;
       margin-bottom: 24px;
-      border: 1px solid rgba(96,165,250,0.1);
-      backdrop-filter: blur(5px);
+      border: 1px solid rgba(96,165,250,0.15);
       position: relative;
       overflow: hidden;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }
 
     .intro::before {
@@ -216,11 +222,13 @@
       color: inherit;
     }
 
+    /* ============ 修改点6：卡片改为更透明的设计，但hover时更明显 ============ */
     .card{
-      background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      background: rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(5px);
       border-radius: var(--radius);
       padding: 18px;
-      border: 1px solid var(--glass-border);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
       display: flex;
       flex-direction: column;
@@ -236,41 +244,46 @@
       left: 0;
       right: 0;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(96,165,250,0.3), transparent);
+      background: linear-gradient(90deg, transparent, rgba(96,165,250,0.4), transparent);
     }
 
     .card:hover{
       transform: translateY(-6px);
-      box-shadow: var(--shadow-hover);
-      border-color: rgba(96,165,250,0.2);
-      background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(96,165,250,0.02));
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5);
+      border-color: rgba(96,165,250,0.35);
     }
 
     .card .title{
       font-weight: 600;
-      color: #f3f9ff;
+      color: #ffffff;
       font-size: 16px;
       display: flex;
       align-items: center;
       gap: 8px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
     }
 
     .card .desc{
       font-size: 13px;
-      color: var(--muted);
+      color: rgba(200, 210, 225, 0.85);
       line-height: 1.5;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }
 
+    /* ============ 修改点7：页脚透明度调整 ============ */
     footer{
       margin-top: 28px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 12px;
-      color: var(--muted);
+      color: rgba(200, 210, 225, 0.8);
       font-size: 14px;
       padding-top: 20px;
-      border-top: 1px solid var(--glass-border);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }
 
     footer a {
@@ -284,7 +297,7 @@
       text-decoration: underline;
     }
 
-    /* 搜索表单样式 */
+    /* ============ 修改点8：搜索输入框更透明 ============ */
     .search-form-group {
       display: flex;
       flex-direction: column;
@@ -307,22 +320,23 @@
       flex: 1;
       padding: 10px 16px;
       border-radius: var(--radius-sm);
-      border: 1px solid rgba(96,165,250,0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       outline: none;
       font-size: 15px;
-      background: rgba(7,16,38,0.4);
-      color: #e6eef8;
-      transition: all 0.2s ease;
+      background: rgba(0, 0, 0, 0.25);
       backdrop-filter: blur(5px);
+      color: #f0f4fa;
+      transition: all 0.2s ease;
     }
 
     .search-input:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(96,165,250,0.1);
+      box-shadow: 0 0 0 3px rgba(96,165,250,0.2);
+      background: rgba(0, 0, 0, 0.4);
     }
 
     .search-input::placeholder {
-      color: rgba(173, 186, 203, 0.6);
+      color: rgba(200, 210, 225, 0.5);
     }
 
     .search-button {
@@ -336,12 +350,13 @@
       transition: all 0.2s ease;
       backdrop-filter: blur(5px);
       min-width: 100px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }
 
     .search-button:hover {
       background: linear-gradient(135deg, var(--accent-2), var(--accent));
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+      box-shadow: 0 4px 12px rgba(59,130,246,0.4);
     }
 
     .search-button:active {
@@ -354,16 +369,17 @@
 
     .green-button:hover {
       background: linear-gradient(135deg, var(--accent-green-hover), #0d9268) !important;
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4) !important;
     }
 
     .section-title {
       margin: 0 0 16px 0;
       font-size: 15px;
-      color: var(--muted);
+      color: rgba(200, 210, 225, 0.85);
       text-align: center;
       position: relative;
       padding-bottom: 8px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }
 
     .section-title::after {
@@ -377,7 +393,7 @@
       background: linear-gradient(90deg, transparent, var(--accent), transparent);
     }
 
-    /* 搜索结果容器样式 */
+    /* ============ 修改点9：搜索结果区域背景调整 ============ */
     .search-container {
       position: relative;
       margin-bottom: 24px;
@@ -392,10 +408,10 @@
       transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
       position: absolute;
       z-index: 100;
-      box-shadow: 0 20px 40px rgba(2,6,23,0.8);
-      background: rgba(7, 16, 38, 0.95);
-      border: 1px solid rgba(96,165,250,0.2);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.75);
       backdrop-filter: blur(15px);
+      border: 1px solid rgba(96,165,250,0.25);
       margin-top: 10px;
     }
 
@@ -417,7 +433,7 @@
       display: none;
       text-align: center;
       padding: 40px 20px;
-      color: #a5b4cb;
+      color: rgba(200, 210, 225, 0.9);
       flex-direction: column;
       align-items: center;
       justify-content: center;
@@ -439,8 +455,8 @@
 
     .error-message {
       display: none;
-      background: linear-gradient(135deg, rgba(239,68,68,0.1), rgba(220,38,38,0.05));
-      border: 1px solid rgba(239,68,68,0.2);
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239,68,68,0.3);
       border-radius: var(--radius-sm);
       padding: 20px;
       margin: 20px;
@@ -451,7 +467,7 @@
     .no-results-message {
       text-align: center;
       padding: 60px 20px;
-      color: #a5b4cb;
+      color: rgba(200, 210, 225, 0.8);
     }
 
     .results-header {
@@ -459,20 +475,20 @@
       justify-content: space-between;
       align-items: center;
       padding: 14px 18px;
-      background: rgba(7, 16, 38, 0.8);
+      background: rgba(0, 0, 0, 0.6);
       border-bottom: 1px solid rgba(96,165,250,0.2);
       backdrop-filter: blur(10px);
     }
 
     .results-title {
       font-weight: 600;
-      color: #e6eef8;
+      color: #f0f4fa;
       font-size: 15px;
     }
 
     .close-results {
-      background: rgba(239,68,68,0.1);
-      border: 1px solid rgba(239,68,68,0.2);
+      background: rgba(239,68,68,0.2);
+      border: 1px solid rgba(239,68,68,0.3);
       border-radius: 6px;
       width: 30px;
       height: 30px;
@@ -487,8 +503,8 @@
     }
 
     .close-results:hover {
-      background: rgba(239,68,68,0.2);
-      border-color: rgba(239,68,68,0.3);
+      background: rgba(239,68,68,0.3);
+      border-color: rgba(239,68,68,0.4);
       color: #f87171;
     }
 
@@ -512,14 +528,12 @@
         height: 500px;
       }
       
-      /* 修复移动端header布局 */
       header {
         flex-direction: row;
         align-items: flex-start;
         gap: 12px;
       }
       
-      /* ============ 修改点2：移动端头像尺寸 ============ */
       .avatar {
         width: 56px;
         height: 56px;
@@ -561,7 +575,6 @@
         gap: 12px;
       }
       
-      /* ============ 修改点3：小屏幕头像尺寸 ============ */
       .avatar {
         width: 60px;
         height: 60px;
@@ -582,7 +595,6 @@
       }
     }
 
-    /* 确保页面内容可以正常滚动 */
     html {
       overflow-y: auto;
       overflow-x: hidden;
@@ -595,20 +607,18 @@
       position: relative;
     }
 
-    /* 添加一个包装器，确保内容在移动设备上正确显示 */
     .page-wrapper {
       width: 100%;
       max-width: 100%;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: flex-start; /* 从上开始排列 */
+      justify-content: flex-start;
       align-items: center;
       padding: 20px 16px;
       box-sizing: border-box;
     }
 
-    /* 确保主要内容区域可以滚动 */
     .main-content {
       width: 100%;
       max-width: 920px;
@@ -616,17 +626,17 @@
       padding: 20px 0;
     }
 
-    /* ============ 修改点2：添加背景切换提示样式 ============ */
+    /* ============ 修改点10：背景切换提示样式调整 ============ */
     .bg-info {
       position: fixed;
       bottom: 20px;
       right: 20px;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.5);
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 20px;
       padding: 8px 16px;
-      color: rgba(255, 255, 255, 0.7);
+      color: rgba(255, 255, 255, 0.8);
       font-size: 12px;
       z-index: 1000;
       display: flex;
@@ -634,11 +644,12 @@
       gap: 8px;
       transition: all 0.3s ease;
       cursor: pointer;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
     }
 
     .bg-info:hover {
-      background: rgba(0, 0, 0, 0.8);
-      color: rgba(255, 255, 255, 0.9);
+      background: rgba(0, 0, 0, 0.7);
+      color: rgba(255, 255, 255, 0.95);
     }
 
     .bg-info .photographer {
@@ -660,14 +671,8 @@
     <div class="main-content">
       <main class="wrap" role="main">
         <header>
-          <!-- ============ 修改点4：这里是头像容器 ============ -->
-          <!-- 原来的<div class="logo">Small</div>改成了下面的结构 -->
           <div class="avatar" id="avatarContainer">
-            <!-- ============ 修改点5：在这里替换您的图片链接 ============ -->
-            <!-- 将 src 属性中的 URL 替换为您自己的图床图片链接 -->
-            <!-- 示例：src="https://example.com/your-avatar.jpg" -->
             <img src="https://i.mituw.com/imgs/2026/03/15/de4945abb96be550.jpg" alt="Small 3 的头像" class="avatar-img" id="avatarImg" onerror="showAvatarFallback()">
-            <!-- 如果图片加载失败，会显示这个备用文字 -->
             <div class="avatar-fallback" id="avatarFallback" style="display: none;">S3</div>
           </div>
           <div>
@@ -707,7 +712,7 @@
               <div id="loading" class="loading">
                 <div class="loading-spinner"></div>
                 <div>正在加载搜索结果...</div>
-                <div style="margin-top: 10px; font-size: 14px; color: rgba(165, 180, 203, 0.7);">这可能需要几秒钟时间</div>
+                <div style="margin-top: 10px; font-size: 14px; color: rgba(200, 210, 225, 0.7);">这可能需要几秒钟时间</div>
               </div>
               
               <div id="errorMessage" class="error-message">
@@ -772,7 +777,6 @@
     </div>
   </div>
   
-  <!-- ============ 修改点3：添加背景图片信息显示 ============ -->
   <div class="bg-info" id="bgInfo" style="display: none;" title="点击切换背景">
     <span>📷</span>
     <span id="bgPhotographer"></span>
@@ -780,7 +784,7 @@
   </div>
   
   <script>
-    // ============ 修改点6：头像图片加载失败时的处理函数 ============
+    // ============ 头像图片加载失败时的处理函数 ============
     function showAvatarFallback() {
       var avatarImg = document.getElementById('avatarImg');
       var avatarFallback = document.getElementById('avatarFallback');
@@ -794,50 +798,35 @@
       }
     }
     
-    // ============ 修改点7：也可以在这里设置头像图片URL（可选） ============
-    // 如果您想通过JavaScript设置头像，可以修改下面的avatarUrl变量
-    // 但更简单的方法是在HTML中直接修改<img>标签的src属性（修改点5）
-    var avatarUrl = 'https://i.mituw.com/imgs/2026/03/15/de4945abb96be550.jpg'; // 示例图片，请替换为您自己的头像图片URL
+    var avatarUrl = 'https://i.mituw.com/imgs/2026/03/15/de4945abb96be550.jpg';
     
-    // 设置头像图片的src（如果使用JavaScript方式）
     window.addEventListener('DOMContentLoaded', function() {
       var avatarImg = document.getElementById('avatarImg');
       if (avatarImg) {
-        // 如果需要在JavaScript中设置，取消下面这行的注释
         // avatarImg.src = avatarUrl;
       }
     });
 
-    // ============ 修改点8：动态背景图片系统 ============
+    // ============ 动态背景图片系统 ============
     (function() {
       'use strict';
       
-      // 配置项
       var CONFIG = {
-        // Unsplash 集合ID，这里使用精选集合，确保高质量图片
-        collectionId: '1163637', // 自然风景集合
-        // 备选关键词（当集合不可用时使用）
+        collectionId: '1163637',
         keywords: ['nature', 'landscape', 'mountain', 'sky', 'ocean', 'forest', 'sunset'],
-        // 本地存储键名
-        storageKey: 'bg_image_cache',
-        // 缓存有效期（毫秒）- 30分钟
+        storageKey: 'bg_image_cache_v2',
         cacheDuration: 30 * 60 * 1000,
-        // 每天最大请求次数
         maxDailyRequests: 50
       };
       
-      // 图片源配置（多个备用源）
       var IMAGE_SOURCES = [
         {
           name: 'Unsplash Collection',
           getUrl: function() {
-            // 使用Unsplash的集合API
             return 'https://api.unsplash.com/photos/random?collections=' + CONFIG.collectionId + '&orientation=landscape&w=1920&q=80';
           },
           getHeaders: function() {
             return {
-              // 注意：这是演示用的客户端ID，在生产环境中应该使用您自己的ID
-              // 注册地址：https://unsplash.com/developers
               'Authorization': 'Client-ID _PqN7Pqj9oQf9qoO9Qqj9oQf9qoO9Qqj9oQf9qoO9Q'
             };
           },
@@ -852,7 +841,6 @@
         {
           name: 'Lorem Picsum',
           getUrl: function() {
-            // Lorem Picsum 提供随机图片，无需API密钥
             var randomId = Math.floor(Math.random() * 1000);
             return 'https://picsum.photos/1920/1080?random=' + randomId;
           },
@@ -860,7 +848,6 @@
             return {};
           },
           parseResponse: function(response, url) {
-            // Lorem Picsum 直接返回图片，不是JSON
             return {
               url: url,
               photographer: 'Lorem Picsum',
@@ -870,17 +857,12 @@
         }
       ];
       
-      // 获取DOM元素
       var body = document.body;
       var bgInfo = document.getElementById('bgInfo');
       var bgPhotographer = document.getElementById('bgPhotographer');
       
-      // 添加加载状态
       body.classList.add('bg-loading');
       
-      /**
-       * 获取缓存的背景图片
-       */
       function getCachedBackground() {
         try {
           var cached = localStorage.getItem(CONFIG.storageKey);
@@ -896,9 +878,6 @@
         return null;
       }
       
-      /**
-       * 设置背景图片缓存
-       */
       function cacheBackground(imageData) {
         try {
           var cacheData = {
@@ -913,9 +892,6 @@
         }
       }
       
-      /**
-       * 预加载图片
-       */
       function preloadImage(url) {
         return new Promise(function(resolve, reject) {
           var img = new Image();
@@ -929,26 +905,20 @@
         });
       }
       
-      /**
-       * 应用背景图片
-       */
       function applyBackground(imageData) {
-        // 预加载图片，确保平滑显示
         preloadImage(imageData.url).then(function(url) {
-          // 创建渐变叠加层
-          var gradientOverlay = 'linear-gradient(180deg, rgba(7,16,38,0.75) 0%, rgba(7,16,38,0.75) 100%)';
+          // ============ 修改点11：大幅降低渐变遮罩的透明度 ============
+          // 从原来的 0.75 降到 0.3，让背景图片色彩更鲜明
+          var gradientOverlay = 'linear-gradient(180deg, rgba(7,16,38,0.3) 0%, rgba(7,16,38,0.35) 100%)';
           
-          // 应用背景
           body.style.backgroundImage = gradientOverlay + ', url(' + url + ')';
           body.classList.remove('bg-loading');
           body.classList.add('bg-loaded');
           
-          // 显示摄影师信息
           if (imageData.photographer && imageData.photographer !== 'Lorem Picsum') {
             bgPhotographer.textContent = '摄影师: ' + imageData.photographer;
             bgInfo.style.display = 'flex';
             
-            // 如果点击信息栏，可以跳转到Unsplash页面
             if (imageData.link) {
               bgInfo.onclick = function() {
                 window.open(imageData.link, '_blank');
@@ -958,25 +928,19 @@
             bgInfo.style.display = 'none';
           }
           
-          // 缓存图片信息
           cacheBackground(imageData);
           
           console.log('背景图片已更新:', imageData.photographer || '未知摄影师');
         }).catch(function(error) {
           console.error('图片预加载失败:', error);
-          // 尝试下一个源
           fetchRandomImage(1);
         });
       }
       
-      /**
-       * 从指定索引开始尝试获取图片
-       */
       function fetchRandomImage(sourceIndex) {
         sourceIndex = sourceIndex || 0;
         
         if (sourceIndex >= IMAGE_SOURCES.length) {
-          // 所有源都失败了，使用缓存的图片或默认背景
           console.warn('所有图片源都无法访问，使用缓存或默认背景');
           body.classList.remove('bg-loading');
           body.classList.add('bg-loaded');
@@ -987,7 +951,6 @@
         var source = IMAGE_SOURCES[sourceIndex];
         console.log('尝试从 ' + source.name + ' 获取背景图片...');
         
-        // 对于直接返回图片的源（如Lorem Picsum），直接使用URL
         if (source.name === 'Lorem Picsum') {
           var imageUrl = source.getUrl();
           var imageData = source.parseResponse(null, imageUrl);
@@ -995,7 +958,6 @@
           return;
         }
         
-        // 对于需要API请求的源
         var headers = source.getHeaders();
         var fetchOptions = {
           method: 'GET',
@@ -1015,29 +977,20 @@
           })
           .catch(function(error) {
             console.warn(source.name + ' 请求失败:', error.message);
-            // 尝试下一个源
             fetchRandomImage(sourceIndex + 1);
           });
       }
       
-      /**
-       * 更新背景信息（备用方案）
-       */
       function updateBgInfoForFallback() {
         bgPhotographer.textContent = '默认背景';
         bgInfo.style.display = 'flex';
         bgInfo.onclick = function() {
-          // 点击时重新尝试加载随机背景
           localStorage.removeItem(CONFIG.storageKey);
           location.reload();
         };
       }
       
-      /**
-       * 初始化背景系统
-       */
       function initBackground() {
-        // 检查是否有缓存的有效背景
         var cached = getCachedBackground();
         
         if (cached && cached.url) {
@@ -1045,48 +998,38 @@
           applyBackground(cached);
         } else {
           console.log('获取新的背景图片...');
-          // 随机选择一个源开始
           var randomIndex = Math.floor(Math.random() * IMAGE_SOURCES.length);
           fetchRandomImage(randomIndex);
         }
       }
       
-      // 启动背景系统
       initBackground();
       
-      // 暴露切换背景的方法到全局
       window.changeBackground = function() {
         console.log('手动切换背景...');
-        // 清除缓存
         localStorage.removeItem(CONFIG.storageKey);
-        // 重新获取
         body.classList.add('bg-loading');
         body.classList.remove('bg-loaded');
         var randomIndex = Math.floor(Math.random() * IMAGE_SOURCES.length);
         fetchRandomImage(randomIndex);
       };
       
-      // 点击背景信息栏也可以切换背景
       if (bgInfo) {
         bgInfo.addEventListener('click', function(e) {
-          // 如果当前没有Unsplash链接，则切换背景
           var photographer = bgPhotographer.textContent;
           if (photographer === '默认背景' || photographer.includes('Lorem Picsum')) {
             e.preventDefault();
             e.stopPropagation();
             window.changeBackground();
           }
-          // 如果不是这两种情况，会触发onclick跳转到Unsplash
         });
         
-        // 添加右键菜单切换背景
         bgInfo.addEventListener('contextmenu', function(e) {
           e.preventDefault();
           window.changeBackground();
         });
       }
       
-      // 添加键盘快捷键：Ctrl+Shift+B 切换背景
       document.addEventListener('keydown', function(e) {
         if (e.ctrlKey && e.shiftKey && e.key === 'B') {
           e.preventDefault();
@@ -1094,7 +1037,7 @@
         }
       });
       
-      console.log('动态背景系统已初始化');
+      console.log('动态背景系统已初始化 - 透明度优化版');
       console.log('提示：点击右下角信息栏查看摄影师，右键点击或按Ctrl+Shift+B切换背景');
     })();
 
@@ -1109,36 +1052,28 @@
         return;
       }
       
-      // 获取结果容器和iframe
       var resultsContainer = document.getElementById('searchResults');
       var iframe = document.getElementById('resultsFrame');
       
-      // 显示结果容器并激活状态
       resultsContainer.classList.add('active');
       document.querySelector('.results-header').style.display = 'flex';
       
-      // 显示加载状态
       document.getElementById('loading').style.display = 'flex';
       document.getElementById('errorMessage').style.display = 'none';
       document.getElementById('initialMessage').style.display = 'none';
       iframe.style.display = 'none';
       
-      // 构建歌曲海搜索URL
       var searchUrl = 'https://www.gequhai.com/s/' + encodeURIComponent(keyword);
       
-      // 设置iframe的src
       iframe.src = searchUrl;
       
-      // 监听iframe加载完成
       iframe.onload = function() {
         document.getElementById('loading').style.display = 'none';
         iframe.style.display = 'block';
         
-        // 设置结果标题
         document.querySelector('.results-title').textContent = `搜索结果: ${keyword}`;
       };
       
-      // 监听iframe加载错误
       iframe.onerror = function() {
         document.getElementById('loading').style.display = 'none';
         document.getElementById('errorMessage').style.display = 'block';
@@ -1146,34 +1081,25 @@
       };
     });
     
-    // 关闭结果区域的函数
     function closeResults() {
       var resultsContainer = document.getElementById('searchResults');
       var iframe = document.getElementById('resultsFrame');
       
-      // 移除激活状态
       resultsContainer.classList.remove('active');
       
-      // 隐藏头部
       document.querySelector('.results-header').style.display = 'none';
       
-      // 重置状态
       document.getElementById('loading').style.display = 'none';
       document.getElementById('errorMessage').style.display = 'none';
       document.getElementById('initialMessage').style.display = 'block';
       iframe.style.display = 'none';
-      
-      // 清除搜索框内容（可选）
-      // document.getElementById('searchKeyword').value = '';
     }
     
-    // 点击页面其他地方关闭搜索结果
     document.addEventListener('click', function(e) {
       var resultsContainer = document.getElementById('searchResults');
       var searchForm = document.getElementById('songSearchForm');
       var searchInput = document.getElementById('searchKeyword');
       
-      // 如果点击的不是搜索结果区域，也不是搜索表单和输入框
       if (!resultsContainer.contains(e.target) && 
           !searchForm.contains(e.target) && 
           resultsContainer.classList.contains('active')) {
@@ -1181,14 +1107,12 @@
       }
     });
     
-    // 添加回车键搜索支持
     document.getElementById('searchKeyword').addEventListener('keypress', function(e) {
       if (e.key === 'Enter') {
         document.getElementById('songSearchForm').dispatchEvent(new Event('submit'));
       }
     });
     
-    // ESC键关闭搜索结果
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') {
         var resultsContainer = document.getElementById('searchResults');
