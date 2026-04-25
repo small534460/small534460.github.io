@@ -844,5 +844,18 @@
       }
     });
   </script>
+  // 在<body>标签的结束前添加
+<script>
+  // 可自定义关键词，如“nature”，“city”，“wallpaper”
+  var unsplashUrl = 'https://source.unsplash.com/1920x1080/?wallpaper,landscape,scenery,nature';
+
+  // 也可通过每日壁纸接口等，更丰富（修改关键词即可）
+  document.body.style.backgroundImage = 
+    'linear-gradient(180deg, rgba(7,16,38,0.7) 0%, rgba(7,16,38,0.7) 100%), url(' + unsplashUrl + ')';
+  document.body.style.backgroundAttachment = 'fixed'; // 保持和原有设置一致
+  document.body.style.backgroundSize = 'cover';
+  document.body.style.backgroundRepeat = 'no-repeat';
+  document.body.style.backgroundPosition = 'center';
+</script>
 </body>
 </html>
