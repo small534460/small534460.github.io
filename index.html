@@ -29,19 +29,19 @@
     }
 
     /* 背景使用图片 + 渐变叠加，替换下面的 URL 即可更换背景图 */
-body {
-  /* 动态背景由 JavaScript 设置，不要写 background/background-image */
-  color: #e6eef8;
-  min-height: 100vh;
-  padding: 0;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  line-height: 1.6;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
-  overflow-x: hidden; 
-  overflow-y: auto;
-  position: relative;
-}
+    body{
+      /* 图片来源示例：Unsplash（可替换为你自己的图片 URL） */
+      background:
+        linear-gradient(180deg, rgba(7,16,38,0.7) 0%, rgba(7,16,38,0.7) 100%),
+        url('https://i.mituw.com/imgs/2026/02/16/ca72241243868693.jpg') center/cover no-repeat fixed;
+      color: #e6eef8;
+      min-height: 100vh;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.6;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
 
     /* 修复：移除flex居中布局，改为正常文档流 */
     .wrap{
@@ -57,6 +57,13 @@ body {
       box-sizing: border-box;
     }
 
+    /* 为移动端添加顶部和底部内边距 */
+    @media (max-width: 768px) {
+      body {
+        padding: 20px 16px;
+        min-height: 100vh;
+        display: block; /* 确保使用正常文档流 */
+      }
       
       .wrap {
         margin: 0 auto;
@@ -66,7 +73,9 @@ body {
     }
 
     @media (max-width: 480px) {
-
+      body {
+        padding: 16px 12px;
+      }
       
       .wrap {
         padding: 20px 16px;
@@ -835,37 +844,5 @@ body {
       }
     });
   </script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  var unsplashUrl = 'https://source.unsplash.com/1920x1080/?wallpaper,landscape,scenery,nature,sky,sea,forest,snow';
-  document.body.style.backgroundImage =
-    'linear-gradient(180deg, rgba(7,16,38,0.7) 0%, rgba(7,16,38,0.7) 100%), url(' + unsplashUrl + ')';
-  document.body.style.backgroundAttachment = 'fixed';
-  document.body.style.backgroundSize = 'cover';
-  document.body.style.backgroundRepeat = 'no-repeat';
-  document.body.style.backgroundPosition = 'center';
-});
-</script>
-  <script>
-(function () {
-  // Unsplash 随机壁纸接口（你可以更换关键词）
-  var unsplashUrl = 'https://source.unsplash.com/1920x1080/?wallpaper,landscape,scenery,nature,sky,sea,forest,snow,mountain';
-
-  function setBackground() {
-    document.body.style.backgroundImage =
-      'linear-gradient(180deg, rgba(7,16,38,0.7) 0%, rgba(7,16,38,0.7) 100%), url("' + unsplashUrl + '")';
-    document.body.style.backgroundAttachment = 'fixed';
-    document.body.style.backgroundSize = 'cover';
-    document.body.style.backgroundRepeat = 'no-repeat';
-    document.body.style.backgroundPosition = 'center';
-  }
-
-  if (document.readyState === "complete" || document.readyState === "interactive") {
-    setBackground();
-  } else {
-    window.addEventListener('DOMContentLoaded', setBackground);
-  }
-})();
-</script>
 </body>
 </html>
