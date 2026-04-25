@@ -10,7 +10,8 @@
       --accent-2: #3b82f6;
       --accent-green: #10B981;
       --accent-green-hover: #059669;
-      /* ============ 修改点1：提高文字颜色对比度，降低透明度 ============ */
+      --accent-purple: #8b5cf6;
+      --accent-orange: #f59e0b;
       --muted: rgba(200, 210, 220, 0.85);
       --glass: rgba(0, 0, 0, 0.15);
       --glass-light: rgba(0, 0, 0, 0.2);
@@ -20,7 +21,6 @@
       --radius-lg: 16px;
       --shadow: 0 8px 30px rgba(2,6,23,0.4);
       --shadow-hover: 0 14px 40px rgba(2,6,23,0.5);
-      --shadow-inset: inset 0 1px 0 rgba(255,255,255,0.05);
     }
 
     html, body { 
@@ -29,9 +29,7 @@
       padding: 0;
     }
 
-    /* ============ 修改点2：大幅降低背景渐变遮罩的透明度 ============ */
     body{
-      /* 默认背景，渐变遮罩透明度从0.85降到0.3 */
       background: linear-gradient(180deg, rgba(7,16,38,0.3) 0%, rgba(7,16,38,0.35) 100%),
                   #070f26;
       background-size: cover;
@@ -45,18 +43,14 @@
       -moz-osx-font-smoothing: grayscale;
       line-height: 1.6;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
-      /* 添加平滑过渡效果 */
       transition: background-image 0.8s ease-in-out;
     }
 
-    /* 背景图片加载中的状态 */
     body.bg-loading {
       background: linear-gradient(180deg, rgba(7,16,38,0.5) 0%, rgba(7,16,38,0.55) 100%),
                   #070f26;
     }
 
-    /* ============ 修改点3：调整背景渐变，让图片色彩更明显 ============ */
-    /* 背景图片加载完成后的状态 - 这里会在JS中动态设置 */
     body.bg-loaded {
       background-size: cover;
       background-position: center;
@@ -64,11 +58,9 @@
       background-attachment: fixed;
     }
 
-    /* ============ 修改点4：主容器改为更透明的设计 ============ */
     .wrap{
       width: 100%;
       max-width: 920px;
-      /* 改为更透明的背景 */
       background: rgba(0, 0, 0, 0.25);
       backdrop-filter: blur(8px);
       border-radius: var(--radius-lg);
@@ -79,7 +71,6 @@
       box-sizing: border-box;
     }
 
-    /* 为移动端添加顶部和底部内边距 */
     @media (max-width: 768px) {
       body {
         padding: 20px 16px;
@@ -163,12 +154,10 @@
       font-size: 24px;
       letter-spacing: 0.6px;
       font-weight: 600;
-      /* 改为更明亮的渐变色 */
       background: linear-gradient(to right, #ffffff, #c8dfff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      /* 添加文字阴影增强可读性 */
       filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
     }
 
@@ -183,7 +172,91 @@
       margin-top: 24px;
     }
 
-    /* ============ 修改点5：介绍区域改为更透明 ============ */
+    /* ============ 新增：快捷功能区样式 ============ */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .quick-action-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      color: #f0f4fa;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      backdrop-filter: blur(5px);
+      text-decoration: none;
+    }
+
+    .quick-action-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .quick-action-btn .icon {
+      font-size: 20px;
+    }
+
+    /* 天气和时间显示 */
+    .info-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .info-card {
+      background: rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .info-card:hover {
+      background: rgba(0, 0, 0, 0.3);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .info-icon {
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+
+    .info-text {
+      flex: 1;
+    }
+
+    .info-label {
+      font-size: 11px;
+      color: rgba(200, 210, 225, 0.7);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .info-value {
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+
     .intro{
       background: rgba(96, 165, 250, 0.08);
       backdrop-filter: blur(3px);
@@ -222,7 +295,6 @@
       color: inherit;
     }
 
-    /* ============ 修改点6：卡片改为更透明的设计，但hover时更明显 ============ */
     .card{
       background: rgba(0, 0, 0, 0.2);
       backdrop-filter: blur(5px);
@@ -272,7 +344,6 @@
       text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }
 
-    /* ============ 修改点7：页脚透明度调整 ============ */
     footer{
       margin-top: 28px;
       display: flex;
@@ -297,7 +368,6 @@
       text-decoration: underline;
     }
 
-    /* ============ 修改点8：搜索输入框更透明 ============ */
     .search-form-group {
       display: flex;
       flex-direction: column;
@@ -393,7 +463,6 @@
       background: linear-gradient(90deg, transparent, var(--accent), transparent);
     }
 
-    /* ============ 修改点9：搜索结果区域背景调整 ============ */
     .search-container {
       position: relative;
       margin-bottom: 24px;
@@ -508,7 +577,6 @@
       color: #f87171;
     }
 
-    /* 响应式设计 - 修复移动端问题 */
     @media (max-width: 768px) {
       .search-form-row {
         flex-direction: column;
@@ -518,6 +586,16 @@
       .links {
         grid-template-columns: 1fr;
         gap: 12px;
+      }
+      
+      .quick-actions {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+      
+      .info-bar {
+        grid-template-columns: 1fr;
+        gap: 8px;
       }
       
       .search-results.active {
@@ -593,6 +671,10 @@
         padding: 14px 16px;
         font-size: 14px;
       }
+      
+      .quick-actions {
+        grid-template-columns: 1fr;
+      }
     }
 
     html {
@@ -626,7 +708,7 @@
       padding: 20px 0;
     }
 
-    /* ============ 修改点10：背景切换提示样式调整 ============ */
+    /* ============ 修复：背景信息栏样式 ============ */
     .bg-info {
       position: fixed;
       bottom: 20px;
@@ -650,10 +732,6 @@
     .bg-info:hover {
       background: rgba(0, 0, 0, 0.7);
       color: rgba(255, 255, 255, 0.95);
-    }
-
-    .bg-info .photographer {
-      color: var(--accent);
     }
 
     @media (max-width: 768px) {
@@ -682,6 +760,53 @@
         </header>
 
         <section class="content">
+          <!-- ============ 新增：时间和天气信息栏 ============ -->
+          <div class="info-bar">
+            <div class="info-card">
+              <div class="info-icon">🕐</div>
+              <div class="info-text">
+                <div class="info-label">当前时间</div>
+                <div class="info-value" id="currentTime">加载中...</div>
+              </div>
+            </div>
+            <div class="info-card">
+              <div class="info-icon">📅</div>
+              <div class="info-text">
+                <div class="info-label">今天日期</div>
+                <div class="info-value" id="currentDate">加载中...</div>
+              </div>
+            </div>
+            <div class="info-card">
+              <div class="info-icon">💡</div>
+              <div class="info-text">
+                <div class="info-label">每日一言</div>
+                <div class="info-value" id="dailyQuote" style="font-size: 14px;">思考中...</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============ 新增：快捷操作区 ============ -->
+          <div class="quick-actions">
+            <button class="quick-action-btn" onclick="window.changeBackground()" title="换个背景图片">
+              <span class="icon">🎨</span> 换背景
+            </button>
+            <button class="quick-action-btn" onclick="copyToClipboard(window.location.href)" title="复制当前页面链接">
+              <span class="icon">🔗</span> 复制链接
+            </button>
+            <a class="quick-action-btn" href="https://mail.google.com" target="_blank" rel="noopener">
+              <span class="icon">📧</span> Gmail
+            </a>
+            <button class="quick-action-btn" onclick="toggleDarkMode()" title="调整遮罩亮度">
+              <span class="icon">🌓</span> 亮度调节
+            </button>
+            <button class="quick-action-btn" onclick="randomWebsite()" title="随机打开一个收藏的网站">
+              <span class="icon">🎲</span> 随机访问
+            </button>
+            <button class="quick-action-btn" onclick="showBookmarkPrompt()" title="快速添加书签">
+              <span class="icon">⭐</span> 加书签
+            </button>
+          </div>
+
           <div class="intro">
             我是 Small 3，这是我的个人领域。下面是我收藏的几个站点，欢迎访问。
           </div>
@@ -732,37 +857,37 @@
           <ul class="links" aria-label="推荐链接">
             <li>
               <a class="card" href="https://small534460.github.io/shiyoungongjui/" target="_blank" rel="noopener noreferrer">
-                <div class="title">实用工具</div>
+                <div class="title">🛠️ 实用工具</div>
                 <div class="desc">各种实用的在线工具和资源</div>
               </a>
             </li>
             <li>
                <a class="card" href="https://small534460.github.io/gonggao/" target="_blank" rel="noopener noreferrer">
-                <div class="title">公告</div>
+                <div class="title">📢 公告</div>
                 <div class="desc">网站公告和实验性内容</div>
               </a>
             </li>
             <li>
                <a class="card" href="https://online.yandex.com/search?text=%E4%BF%84%E7%BD%97%E6%96%AF%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8Eyandex&lr=21206" target="_blank" rel="noopener noreferrer">
-                <div class="title">Yandex导航</div>
+                <div class="title">🔍 Yandex导航</div>
                 <div class="desc">俄罗斯搜索引擎</div>
               </a>
             </li>
             <li>
                 <a class="card" href="https://store.steampowered.com/" target="_blank" rel="noopener noreferrer">
-                <div class="title">Steam</div>
+                <div class="title">🎮 Steam</div>
                 <div class="desc">游戏平台和社区</div>
               </a>
             </li>
             <li>
                 <a class="card" href="https://github.com/" target="_blank" rel="noopener noreferrer">
-                <div class="title">GitHub</div>
+                <div class="title">💻 GitHub</div>
                 <div class="desc">代码托管和协作平台</div>
               </a>
             </li>
             <li>
               <a class="card" href="https://small534460.github.io/wenjiantuoguan/" target="_blank" rel="noopener noreferrer">
-                <div class="title">GitHub 文件管理器</div>
+                <div class="title">📁 GitHub 文件管理器</div>
                 <div class="desc">你可以把文件暂时存放在这里</div>
               </a>
             </li>
@@ -777,13 +902,186 @@
     </div>
   </div>
   
-  <div class="bg-info" id="bgInfo" style="display: none;" title="点击切换背景">
+  <!-- ============ 修复：背景信息栏，默认显示 ============ -->
+  <div class="bg-info" id="bgInfo" title="点击查看摄影师 | 右键换图 | Ctrl+Shift+B换图">
     <span>📷</span>
-    <span id="bgPhotographer"></span>
-    <span style="font-size: 10px; opacity: 0.7;">| 点击换图</span>
+    <span id="bgPhotographer">摄影师: 加载中...</span>
   </div>
   
   <script>
+    // ============ 新增功能：时间和日期更新 ============
+    function updateDateTime() {
+      var now = new Date();
+      
+      // 更新时间
+      var timeStr = now.toLocaleTimeString('zh-CN', { 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        second: '2-digit',
+        hour12: false 
+      });
+      document.getElementById('currentTime').textContent = timeStr;
+      
+      // 更新日期
+      var weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+      var dateStr = now.getFullYear() + '年' + 
+                    (now.getMonth() + 1) + '月' + 
+                    now.getDate() + '日 星期' + 
+                    weekdays[now.getDay()];
+      document.getElementById('currentDate').textContent = dateStr;
+    }
+    
+    // ============ 新增功能：每日一言 ============
+    var quotes = [
+      "生活不止眼前的苟且，还有诗和远方。",
+      "每一天都是一个新的开始。",
+      "保持热爱，奔赴山海。",
+      "星光不问赶路人，时光不负有心人。",
+      "与其临渊羡鱼，不如退而结网。",
+      "路漫漫其修远兮，吾将上下而求索。",
+      "世界上最快乐的事，莫过于为理想而奋斗。",
+      "不要等待机会，而要创造机会。",
+      "成功不是终点，失败也不是终结，唯有勇气才是永恒。",
+      "生活就像一盒巧克力，你永远不知道下一颗是什么味道。",
+      "种一棵树最好的时间是十年前，其次是现在。",
+      "人生如逆旅，我亦是行人。",
+      "我也是会词穷的啊！~",
+      "且将新火试新茶，诗酒趁年华。",
+      "长风破浪会有时，直挂云帆济沧海。",
+      "好无聊啊。",
+      "世界那么大，我想去看看。"
+    ];
+    
+    function updateDailyQuote() {
+      var today = new Date();
+      var dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+      var quoteIndex = dayOfYear % quotes.length;
+      document.getElementById('dailyQuote').textContent = quotes[quoteIndex];
+    }
+    
+    // ============ 新增功能：复制到剪贴板 ============
+    function copyToClipboard(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function() {
+          showToast('链接已复制！');
+        }).catch(function() {
+          fallbackCopy(text);
+        });
+      } else {
+        fallbackCopy(text);
+      }
+    }
+    
+    function fallbackCopy(text) {
+      var textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand('copy');
+        showToast('链接已复制！');
+      } catch (err) {
+        showToast('复制失败，请手动复制');
+      }
+      document.body.removeChild(textarea);
+    }
+    
+    // ============ 新增功能：Toast提示 ============
+    function showToast(message) {
+      var toast = document.createElement('div');
+      toast.textContent = message;
+      toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+        color: white;
+        padding: 10px 24px;
+        border-radius: 20px;
+        font-size: 14px;
+        z-index: 2000;
+        animation: fadeInOut 2s ease;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      `;
+      
+      var style = document.createElement('style');
+      style.textContent = `
+        @keyframes fadeInOut {
+          0% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+          15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+          85% { opacity: 1; transform: translateX(-50%) translateY(0); }
+          100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+        }
+      `;
+      document.head.appendChild(style);
+      document.body.appendChild(toast);
+      
+      setTimeout(function() {
+        document.body.removeChild(toast);
+        document.head.removeChild(style);
+      }, 2000);
+    }
+    
+    // ============ 新增功能：亮度调节 ============
+    var darkModeLevel = 0;
+    function toggleDarkMode() {
+      darkModeLevel = (darkModeLevel + 1) % 3;
+      var body = document.body;
+      
+      switch(darkModeLevel) {
+        case 0:
+          body.style.backgroundImage = body.style.backgroundImage.replace(/rgba\(7,16,38,[0-9.]+\)/g, 'rgba(7,16,38,0.3)');
+          showToast('亮度：明亮 ✨');
+          break;
+        case 1:
+          body.style.backgroundImage = body.style.backgroundImage.replace(/rgba\(7,16,38,[0-9.]+\)/g, 'rgba(7,16,38,0.5)');
+          showToast('亮度：适中 🌤️');
+          break;
+        case 2:
+          body.style.backgroundImage = body.style.backgroundImage.replace(/rgba\(7,16,38,[0-9.]+\)/g, 'rgba(7,16,38,0.7)');
+          showToast('亮度：暗色 🌙');
+          break;
+      }
+    }
+    
+    // ============ 新增功能：随机访问收藏网站 ============
+    var myWebsites = [
+      'https://small534460.github.io/shiyoungongjui/',
+      'https://small534460.github.io/gonggao/',
+      'https://small534460.github.io/wenjiantuoguan/',
+      'https://store.steampowered.com/',
+      'https://github.com/',
+      'https://www.bilibili.com',
+      'https://www.youtube.com'
+    ];
+    
+    function randomWebsite() {
+      var randomIndex = Math.floor(Math.random() * myWebsites.length);
+      var url = myWebsites[randomIndex];
+      showToast('正在前往：' + url);
+      setTimeout(function() {
+        window.open(url, '_blank');
+      }, 800);
+    }
+    
+    // ============ 新增功能：添加书签提示 ============
+    function showBookmarkPrompt() {
+      if (window.navigator.userAgent.indexOf('Mac') !== -1) {
+        showToast('按 Cmd+D 添加书签 ⭐');
+      } else {
+        showToast('按 Ctrl+D 添加书签 ⭐');
+      }
+    }
+    
+    // ============ 启动时更新时间和日期 ============
+    updateDateTime();
+    updateDailyQuote();
+    setInterval(updateDateTime, 1000);
+    
     // ============ 头像图片加载失败时的处理函数 ============
     function showAvatarFallback() {
       var avatarImg = document.getElementById('avatarImg');
@@ -807,7 +1105,7 @@
       }
     });
 
-    // ============ 动态背景图片系统 ============
+    // ============ 动态背景图片系统（修复版）============
     (function() {
       'use strict';
       
@@ -861,6 +1159,14 @@
       var bgInfo = document.getElementById('bgInfo');
       var bgPhotographer = document.getElementById('bgPhotographer');
       
+      // ============ 修复：默认显示背景信息栏 ============
+      if (bgInfo) {
+        bgInfo.style.display = 'flex';
+        if (bgPhotographer) {
+          bgPhotographer.textContent = '摄影师: 加载中...';
+        }
+      }
+      
       body.classList.add('bg-loading');
       
       function getCachedBackground() {
@@ -907,25 +1213,36 @@
       
       function applyBackground(imageData) {
         preloadImage(imageData.url).then(function(url) {
-          // ============ 修改点11：大幅降低渐变遮罩的透明度 ============
-          // 从原来的 0.75 降到 0.3，让背景图片色彩更鲜明
           var gradientOverlay = 'linear-gradient(180deg, rgba(7,16,38,0.3) 0%, rgba(7,16,38,0.35) 100%)';
           
           body.style.backgroundImage = gradientOverlay + ', url(' + url + ')';
           body.classList.remove('bg-loading');
           body.classList.add('bg-loaded');
           
-          if (imageData.photographer && imageData.photographer !== 'Lorem Picsum') {
-            bgPhotographer.textContent = '摄影师: ' + imageData.photographer;
+          // ============ 修复：始终更新并显示摄影师信息 ============
+          if (bgPhotographer) {
+            if (imageData.photographer && imageData.photographer !== 'Lorem Picsum') {
+              bgPhotographer.textContent = '摄影师: ' + imageData.photographer;
+            } else {
+              bgPhotographer.textContent = '图片来自 Lorem Picsum';
+            }
+          }
+          
+          if (bgInfo) {
             bgInfo.style.display = 'flex';
             
-            if (imageData.link) {
+            // 设置点击事件
+            if (imageData.link && imageData.photographer !== 'Lorem Picsum') {
               bgInfo.onclick = function() {
                 window.open(imageData.link, '_blank');
               };
+              bgInfo.title = '点击查看摄影师主页';
+            } else {
+              bgInfo.onclick = function() {
+                window.changeBackground();
+              };
+              bgInfo.title = '点击切换背景图片';
             }
-          } else {
-            bgInfo.style.display = 'none';
           }
           
           cacheBackground(imageData);
@@ -944,7 +1261,15 @@
           console.warn('所有图片源都无法访问，使用缓存或默认背景');
           body.classList.remove('bg-loading');
           body.classList.add('bg-loaded');
-          updateBgInfoForFallback();
+          if (bgPhotographer) {
+            bgPhotographer.textContent = '默认背景（点击切换）';
+          }
+          if (bgInfo) {
+            bgInfo.style.display = 'flex';
+            bgInfo.onclick = function() {
+              window.changeBackground();
+            };
+          }
           return;
         }
         
@@ -981,15 +1306,6 @@
           });
       }
       
-      function updateBgInfoForFallback() {
-        bgPhotographer.textContent = '默认背景';
-        bgInfo.style.display = 'flex';
-        bgInfo.onclick = function() {
-          localStorage.removeItem(CONFIG.storageKey);
-          location.reload();
-        };
-      }
-      
       function initBackground() {
         var cached = getCachedBackground();
         
@@ -1005,31 +1321,28 @@
       
       initBackground();
       
+      // 暴露切换背景的方法到全局
       window.changeBackground = function() {
         console.log('手动切换背景...');
         localStorage.removeItem(CONFIG.storageKey);
         body.classList.add('bg-loading');
         body.classList.remove('bg-loaded');
+        if (bgPhotographer) {
+          bgPhotographer.textContent = '摄影师: 加载中...';
+        }
         var randomIndex = Math.floor(Math.random() * IMAGE_SOURCES.length);
         fetchRandomImage(randomIndex);
       };
       
+      // ============ 修复：右键菜单切换背景 ============
       if (bgInfo) {
-        bgInfo.addEventListener('click', function(e) {
-          var photographer = bgPhotographer.textContent;
-          if (photographer === '默认背景' || photographer.includes('Lorem Picsum')) {
-            e.preventDefault();
-            e.stopPropagation();
-            window.changeBackground();
-          }
-        });
-        
         bgInfo.addEventListener('contextmenu', function(e) {
           e.preventDefault();
           window.changeBackground();
         });
       }
       
+      // 键盘快捷键
       document.addEventListener('keydown', function(e) {
         if (e.ctrlKey && e.shiftKey && e.key === 'B') {
           e.preventDefault();
@@ -1037,7 +1350,7 @@
         }
       });
       
-      console.log('动态背景系统已初始化 - 透明度优化版');
+      console.log('动态背景系统已初始化 - 修复版');
       console.log('提示：点击右下角信息栏查看摄影师，右键点击或按Ctrl+Shift+B切换背景');
     })();
 
