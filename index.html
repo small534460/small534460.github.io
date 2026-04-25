@@ -28,12 +28,15 @@
       padding: 0;
     }
 
-    /* 背景使用图片 + 渐变叠加，替换下面的 URL 即可更换背景图 */
+    /* ============ 修改点1：背景改为动态设置，这里先设置基础样式 ============ */
     body{
-      /* 图片来源示例：Unsplash（可替换为你自己的图片 URL） */
-      background:
-        linear-gradient(180deg, rgba(7,16,38,0.7) 0%, rgba(7,16,38,0.7) 100%),
-        url('https://i.mituw.com/imgs/2026/02/16/ca72241243868693.jpg') center/cover no-repeat fixed;
+      /* 默认背景，在图片加载前显示 */
+      background: linear-gradient(180deg, rgba(7,16,38,0.85) 0%, rgba(7,16,38,0.85) 100%),
+                  #070f26;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
       color: #e6eef8;
       min-height: 100vh;
       padding: 0;
@@ -41,6 +44,22 @@
       -moz-osx-font-smoothing: grayscale;
       line-height: 1.6;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+      /* 添加平滑过渡效果 */
+      transition: background-image 0.8s ease-in-out;
+    }
+
+    /* 背景图片加载中的状态 */
+    body.bg-loading {
+      background: linear-gradient(180deg, rgba(7,16,38,0.9) 0%, rgba(7,16,38,0.9) 100%),
+                  #070f26;
+    }
+
+    /* 背景图片加载完成后的状态 */
+    body.bg-loaded {
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
     }
 
     /* 修复：移除flex居中布局，改为正常文档流 */
@@ -596,6 +615,44 @@
       margin: 0 auto;
       padding: 20px 0;
     }
+
+    /* ============ 修改点2：添加背景切换提示样式 ============ */
+    .bg-info {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 8px 16px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 12px;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .bg-info:hover {
+      background: rgba(0, 0, 0, 0.8);
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .bg-info .photographer {
+      color: var(--accent);
+    }
+
+    @media (max-width: 768px) {
+      .bg-info {
+        bottom: 10px;
+        right: 10px;
+        font-size: 11px;
+        padding: 6px 12px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -715,6 +772,13 @@
     </div>
   </div>
   
+  <!-- ============ 修改点3：添加背景图片信息显示 ============ -->
+  <div class="bg-info" id="bgInfo" style="display: none;" title="点击切换背景">
+    <span>📷</span>
+    <span id="bgPhotographer"></span>
+    <span style="font-size: 10px; opacity: 0.7;">| 点击换图</span>
+  </div>
+  
   <script>
     // ============ 修改点6：头像图片加载失败时的处理函数 ============
     function showAvatarFallback() {
@@ -743,6 +807,296 @@
         // avatarImg.src = avatarUrl;
       }
     });
+
+    // ============ 修改点8：动态背景图片系统 ============
+    (function() {
+      'use strict';
+      
+      // 配置项
+      var CONFIG = {
+        // Unsplash 集合ID，这里使用精选集合，确保高质量图片
+        collectionId: '1163637', // 自然风景集合
+        // 备选关键词（当集合不可用时使用）
+        keywords: ['nature', 'landscape', 'mountain', 'sky', 'ocean', 'forest', 'sunset'],
+        // 本地存储键名
+        storageKey: 'bg_image_cache',
+        // 缓存有效期（毫秒）- 30分钟
+        cacheDuration: 30 * 60 * 1000,
+        // 每天最大请求次数
+        maxDailyRequests: 50
+      };
+      
+      // 图片源配置（多个备用源）
+      var IMAGE_SOURCES = [
+        {
+          name: 'Unsplash Collection',
+          getUrl: function() {
+            // 使用Unsplash的集合API
+            return 'https://api.unsplash.com/photos/random?collections=' + CONFIG.collectionId + '&orientation=landscape&w=1920&q=80';
+          },
+          getHeaders: function() {
+            return {
+              // 注意：这是演示用的客户端ID，在生产环境中应该使用您自己的ID
+              // 注册地址：https://unsplash.com/developers
+              'Authorization': 'Client-ID _PqN7Pqj9oQf9qoO9Qqj9oQf9qoO9Qqj9oQf9qoO9Q'
+            };
+          },
+          parseResponse: function(data) {
+            return {
+              url: data.urls.regular,
+              photographer: data.user.name,
+              link: data.links.html
+            };
+          }
+        },
+        {
+          name: 'Lorem Picsum',
+          getUrl: function() {
+            // Lorem Picsum 提供随机图片，无需API密钥
+            var randomId = Math.floor(Math.random() * 1000);
+            return 'https://picsum.photos/1920/1080?random=' + randomId;
+          },
+          getHeaders: function() {
+            return {};
+          },
+          parseResponse: function(response, url) {
+            // Lorem Picsum 直接返回图片，不是JSON
+            return {
+              url: url,
+              photographer: 'Lorem Picsum',
+              link: 'https://picsum.photos'
+            };
+          }
+        }
+      ];
+      
+      // 获取DOM元素
+      var body = document.body;
+      var bgInfo = document.getElementById('bgInfo');
+      var bgPhotographer = document.getElementById('bgPhotographer');
+      
+      // 添加加载状态
+      body.classList.add('bg-loading');
+      
+      /**
+       * 获取缓存的背景图片
+       */
+      function getCachedBackground() {
+        try {
+          var cached = localStorage.getItem(CONFIG.storageKey);
+          if (cached) {
+            var data = JSON.parse(cached);
+            if (data.timestamp && (Date.now() - data.timestamp) < CONFIG.cacheDuration) {
+              return data;
+            }
+          }
+        } catch (e) {
+          console.warn('读取缓存失败:', e);
+        }
+        return null;
+      }
+      
+      /**
+       * 设置背景图片缓存
+       */
+      function cacheBackground(imageData) {
+        try {
+          var cacheData = {
+            url: imageData.url,
+            photographer: imageData.photographer,
+            link: imageData.link,
+            timestamp: Date.now()
+          };
+          localStorage.setItem(CONFIG.storageKey, JSON.stringify(cacheData));
+        } catch (e) {
+          console.warn('缓存存储失败:', e);
+        }
+      }
+      
+      /**
+       * 预加载图片
+       */
+      function preloadImage(url) {
+        return new Promise(function(resolve, reject) {
+          var img = new Image();
+          img.onload = function() {
+            resolve(url);
+          };
+          img.onerror = function() {
+            reject(new Error('图片加载失败: ' + url));
+          };
+          img.src = url;
+        });
+      }
+      
+      /**
+       * 应用背景图片
+       */
+      function applyBackground(imageData) {
+        // 预加载图片，确保平滑显示
+        preloadImage(imageData.url).then(function(url) {
+          // 创建渐变叠加层
+          var gradientOverlay = 'linear-gradient(180deg, rgba(7,16,38,0.75) 0%, rgba(7,16,38,0.75) 100%)';
+          
+          // 应用背景
+          body.style.backgroundImage = gradientOverlay + ', url(' + url + ')';
+          body.classList.remove('bg-loading');
+          body.classList.add('bg-loaded');
+          
+          // 显示摄影师信息
+          if (imageData.photographer && imageData.photographer !== 'Lorem Picsum') {
+            bgPhotographer.textContent = '摄影师: ' + imageData.photographer;
+            bgInfo.style.display = 'flex';
+            
+            // 如果点击信息栏，可以跳转到Unsplash页面
+            if (imageData.link) {
+              bgInfo.onclick = function() {
+                window.open(imageData.link, '_blank');
+              };
+            }
+          } else {
+            bgInfo.style.display = 'none';
+          }
+          
+          // 缓存图片信息
+          cacheBackground(imageData);
+          
+          console.log('背景图片已更新:', imageData.photographer || '未知摄影师');
+        }).catch(function(error) {
+          console.error('图片预加载失败:', error);
+          // 尝试下一个源
+          fetchRandomImage(1);
+        });
+      }
+      
+      /**
+       * 从指定索引开始尝试获取图片
+       */
+      function fetchRandomImage(sourceIndex) {
+        sourceIndex = sourceIndex || 0;
+        
+        if (sourceIndex >= IMAGE_SOURCES.length) {
+          // 所有源都失败了，使用缓存的图片或默认背景
+          console.warn('所有图片源都无法访问，使用缓存或默认背景');
+          body.classList.remove('bg-loading');
+          body.classList.add('bg-loaded');
+          updateBgInfoForFallback();
+          return;
+        }
+        
+        var source = IMAGE_SOURCES[sourceIndex];
+        console.log('尝试从 ' + source.name + ' 获取背景图片...');
+        
+        // 对于直接返回图片的源（如Lorem Picsum），直接使用URL
+        if (source.name === 'Lorem Picsum') {
+          var imageUrl = source.getUrl();
+          var imageData = source.parseResponse(null, imageUrl);
+          applyBackground(imageData);
+          return;
+        }
+        
+        // 对于需要API请求的源
+        var headers = source.getHeaders();
+        var fetchOptions = {
+          method: 'GET',
+          headers: headers
+        };
+        
+        fetch(source.getUrl(), fetchOptions)
+          .then(function(response) {
+            if (!response.ok) {
+              throw new Error('HTTP ' + response.status);
+            }
+            return response.json();
+          })
+          .then(function(data) {
+            var imageData = source.parseResponse(data);
+            applyBackground(imageData);
+          })
+          .catch(function(error) {
+            console.warn(source.name + ' 请求失败:', error.message);
+            // 尝试下一个源
+            fetchRandomImage(sourceIndex + 1);
+          });
+      }
+      
+      /**
+       * 更新背景信息（备用方案）
+       */
+      function updateBgInfoForFallback() {
+        bgPhotographer.textContent = '默认背景';
+        bgInfo.style.display = 'flex';
+        bgInfo.onclick = function() {
+          // 点击时重新尝试加载随机背景
+          localStorage.removeItem(CONFIG.storageKey);
+          location.reload();
+        };
+      }
+      
+      /**
+       * 初始化背景系统
+       */
+      function initBackground() {
+        // 检查是否有缓存的有效背景
+        var cached = getCachedBackground();
+        
+        if (cached && cached.url) {
+          console.log('使用缓存的背景图片...');
+          applyBackground(cached);
+        } else {
+          console.log('获取新的背景图片...');
+          // 随机选择一个源开始
+          var randomIndex = Math.floor(Math.random() * IMAGE_SOURCES.length);
+          fetchRandomImage(randomIndex);
+        }
+      }
+      
+      // 启动背景系统
+      initBackground();
+      
+      // 暴露切换背景的方法到全局
+      window.changeBackground = function() {
+        console.log('手动切换背景...');
+        // 清除缓存
+        localStorage.removeItem(CONFIG.storageKey);
+        // 重新获取
+        body.classList.add('bg-loading');
+        body.classList.remove('bg-loaded');
+        var randomIndex = Math.floor(Math.random() * IMAGE_SOURCES.length);
+        fetchRandomImage(randomIndex);
+      };
+      
+      // 点击背景信息栏也可以切换背景
+      if (bgInfo) {
+        bgInfo.addEventListener('click', function(e) {
+          // 如果当前没有Unsplash链接，则切换背景
+          var photographer = bgPhotographer.textContent;
+          if (photographer === '默认背景' || photographer.includes('Lorem Picsum')) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.changeBackground();
+          }
+          // 如果不是这两种情况，会触发onclick跳转到Unsplash
+        });
+        
+        // 添加右键菜单切换背景
+        bgInfo.addEventListener('contextmenu', function(e) {
+          e.preventDefault();
+          window.changeBackground();
+        });
+      }
+      
+      // 添加键盘快捷键：Ctrl+Shift+B 切换背景
+      document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.shiftKey && e.key === 'B') {
+          e.preventDefault();
+          window.changeBackground();
+        }
+      });
+      
+      console.log('动态背景系统已初始化');
+      console.log('提示：点击右下角信息栏查看摄影师，右键点击或按Ctrl+Shift+B切换背景');
+    })();
 
     // 搜索表单提交事件
     document.getElementById('songSearchForm').addEventListener('submit', function(e) {
