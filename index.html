@@ -208,6 +208,29 @@
       font-size: 20px;
     }
 
+    /* ============ 新增：图库选择按钮特殊样式 ============ */
+    .gallery-selector-btn {
+      background: rgba(139, 92, 246, 0.15) !important;
+      border-color: rgba(139, 92, 246, 0.3) !important;
+      position: relative;
+    }
+
+    .gallery-selector-btn:hover {
+      background: rgba(139, 92, 246, 0.25) !important;
+      border-color: rgba(139, 92, 246, 0.5) !important;
+    }
+
+    .gallery-selector-btn .gallery-indicator {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      width: 8px;
+      height: 8px;
+      background: var(--accent-purple);
+      border-radius: 50%;
+      border: 2px solid rgba(0,0,0,0.5);
+    }
+
     /* 天气和时间显示 */
     .info-bar {
       display: grid;
@@ -790,6 +813,11 @@
             <button class="quick-action-btn" onclick="window.changeBackground()" title="换个背景图片">
               <span class="icon">🎨</span> 换背景
             </button>
+            <!-- ============ 新增：图库选择按钮 ============ -->
+            <button class="quick-action-btn gallery-selector-btn" id="gallerySelectorBtn" onclick="toggleGallery()" title="切换图片库类型">
+              <span class="icon">🖼️</span> 图库选择
+              <span class="gallery-indicator"></span>
+            </button>
             <button class="quick-action-btn" onclick="copyToClipboard(window.location.href)" title="复制当前页面链接">
               <span class="icon">🔗</span> 复制链接
             </button>
@@ -921,7 +949,7 @@
     //    4. 同意条款后，填写应用名称（如：Small 3 Homepage）
     //    5. 创建完成后，您会看到 Access Key 和 Secret Key
     //    6. 复制 Access Key（一串类似字母数字的组合）
-    //    7. 将下面引号中的 "YOUR_ACCESS_KEY_HERE" 替换为您的 Access Key
+    //    7. 将下面引号中的内容替换为您的 Access Key
     // 
     // 📝 示例：
     //    假如您的 Access Key 是 "abc123def456ghi789jkl"
@@ -930,9 +958,7 @@
     // 
     // ⚠️  注意：必须保留引号，且不要改变其他任何内容！
     // 
-    var UNSPLASH_ACCESS_KEY = YYvtMNDAqTidAbtxrQkb-wOskhmn3CSHx0PXxAK60po;  // ← 在这里填入您的 Access Key
-    //                          ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
-    //                    把这段文字替换成您的 Access Key
+    var UNSPLASH_ACCESS_KEY = 'YYvtMNDAqTidAbtxrQkb-wOskhmn3CSHx0PXxAK60po';  // ← 您的 Access Key（已修复引号）
     //
     // ╔══════════════════════════════════════════════════════════════╗
     // ║               🎯 Unsplash API 配置区域结束                   ║
@@ -1170,60 +1196,109 @@
       }
     });
 
-    // ============ 动态背景图片系统（使用真实API密钥版）============
+    // ============ 动态背景图片系统（图库选择版）============
     (function() {
       'use strict';
       
+      // ============ 新增：图库类型定义 ============
+      var GALLERY_TYPES = {
+        // 风景图片 - Unsplash 集合ID: 1163637 (自然风景)
+        nature: {
+          name: '自然风景',
+          icon: '🏔️',
+          description: '山川、海洋、森林等自然风光',
+          unsplashCollection: '1163637',
+          unsplashQuery: 'nature landscape'
+        },
+        // 艺术图片 - Unsplash 集合ID: 1163637 改为 317099 (艺术与设计)
+        art: {
+          name: '艺术创意',
+          icon: '🎨',
+          description: '抽象艺术、设计、创意摄影',
+          unsplashCollection: '317099',
+          unsplashQuery: 'art abstract creative'
+        }
+      };
+      
+      // 当前选择的图库类型（从localStorage读取，默认风景）
+      var currentGalleryType = localStorage.getItem('bg_gallery_type') || 'nature';
+      
       var CONFIG = {
-        collectionId: '1163637',
-        keywords: ['nature', 'landscape', 'mountain', 'sky', 'ocean', 'forest', 'sunset'],
-        storageKey: 'bg_image_cache_v3',
+        storageKey: 'bg_image_cache_v4',
         cacheDuration: 30 * 60 * 1000,
         maxDailyRequests: 50
       };
       
-      var IMAGE_SOURCES = [
-        {
-          name: 'Unsplash Collection',
-          getUrl: function() {
-            return 'https://api.unsplash.com/photos/random?collections=' + CONFIG.collectionId + '&orientation=landscape&w=1920&q=80';
+      // ============ 新增：根据图库类型构建图片源 ============
+      function buildImageSources(galleryType) {
+        var gallery = GALLERY_TYPES[galleryType] || GALLERY_TYPES.nature;
+        
+        return [
+          {
+            name: 'Unsplash - ' + gallery.name,
+            getUrl: function() {
+              // 使用搜索API获取更精准的结果
+              return 'https://api.unsplash.com/photos/random?collections=' + 
+                     gallery.unsplashCollection + 
+                     '&orientation=landscape&w=1920&q=80&count=1';
+            },
+            getHeaders: function() {
+              return {
+                'Authorization': 'Client-ID ' + UNSPLASH_ACCESS_KEY,
+                'Accept-Version': 'v1'
+              };
+            },
+            parseResponse: function(data) {
+              // Unsplash random API 返回数组
+              var photo = Array.isArray(data) ? data[0] : data;
+              return {
+                url: photo.urls.regular,
+                photographer: photo.user.name,
+                link: photo.links.html,
+                galleryType: galleryType
+              };
+            }
           },
-          getHeaders: function() {
-            return {
-              // 🔑 这里使用您在上面配置的 Access Key
-              'Authorization': 'Client-ID ' + UNSPLASH_ACCESS_KEY
-            };
-          },
-          parseResponse: function(data) {
-            return {
-              url: data.urls.regular,
-              photographer: data.user.name,
-              link: data.links.html
-            };
+          {
+            name: 'Lorem Picsum (备用)',
+            getUrl: function() {
+              var randomId = Math.floor(Math.random() * 1000);
+              return 'https://picsum.photos/1920/1080?random=' + randomId;
+            },
+            getHeaders: function() {
+              return {};
+            },
+            parseResponse: function(response, url) {
+              return {
+                url: url,
+                photographer: 'Lorem Picsum',
+                link: 'https://picsum.photos',
+                galleryType: 'picsum'
+              };
+            }
           }
-        },
-        {
-          name: 'Lorem Picsum',
-          getUrl: function() {
-            var randomId = Math.floor(Math.random() * 1000);
-            return 'https://picsum.photos/1920/1080?random=' + randomId;
-          },
-          getHeaders: function() {
-            return {};
-          },
-          parseResponse: function(response, url) {
-            return {
-              url: url,
-              photographer: 'Lorem Picsum',
-              link: 'https://picsum.photos'
-            };
-          }
-        }
-      ];
+        ];
+      }
+      
+      var IMAGE_SOURCES = buildImageSources(currentGalleryType);
       
       var body = document.body;
       var bgInfo = document.getElementById('bgInfo');
       var bgPhotographer = document.getElementById('bgPhotographer');
+      var galleryBtn = document.getElementById('gallerySelectorBtn');
+      
+      // ============ 新增：更新图库选择按钮显示 ============
+      function updateGalleryButton() {
+        if (galleryBtn) {
+          var gallery = GALLERY_TYPES[currentGalleryType] || GALLERY_TYPES.nature;
+          galleryBtn.innerHTML = '<span class="icon">' + gallery.icon + '</span> ' + gallery.name + 
+                                '<span class="gallery-indicator"></span>';
+          galleryBtn.title = '当前图库：' + gallery.name + ' - ' + gallery.description + ' | 点击切换';
+        }
+      }
+      
+      // 初始化按钮显示
+      updateGalleryButton();
       
       // 默认显示背景信息栏
       if (bgInfo) {
@@ -1240,7 +1315,10 @@
           var cached = localStorage.getItem(CONFIG.storageKey);
           if (cached) {
             var data = JSON.parse(cached);
-            if (data.timestamp && (Date.now() - data.timestamp) < CONFIG.cacheDuration) {
+            // 检查缓存是否匹配当前图库类型
+            if (data.timestamp && 
+                (Date.now() - data.timestamp) < CONFIG.cacheDuration &&
+                data.galleryType === currentGalleryType) {
               return data;
             }
           }
@@ -1256,6 +1334,7 @@
             url: imageData.url,
             photographer: imageData.photographer,
             link: imageData.link,
+            galleryType: imageData.galleryType || currentGalleryType,
             timestamp: Date.now()
           };
           localStorage.setItem(CONFIG.storageKey, JSON.stringify(cacheData));
@@ -1285,19 +1364,22 @@
           body.classList.remove('bg-loading');
           body.classList.add('bg-loaded');
           
-          // 始终更新并显示摄影师信息
+          // 更新摄影师信息
           if (bgPhotographer) {
-            if (imageData.photographer && imageData.photographer !== 'Lorem Picsum') {
-              bgPhotographer.textContent = '摄影师: ' + imageData.photographer;
+            if (imageData.photographer && !imageData.photographer.includes('Lorem Picsum')) {
+              var galleryLabel = '';
+              if (imageData.galleryType && GALLERY_TYPES[imageData.galleryType]) {
+                galleryLabel = '[' + GALLERY_TYPES[imageData.galleryType].name + '] ';
+              }
+              bgPhotographer.textContent = galleryLabel + '摄影师: ' + imageData.photographer;
             } else if (imageData.photographer === 'Lorem Picsum') {
-              bgPhotographer.textContent = '图片来自 Lorem Picsum';
+              bgPhotographer.textContent = '图片来自 Lorem Picsum (备用)';
             }
           }
           
           if (bgInfo) {
             bgInfo.style.display = 'flex';
             
-            // 设置点击事件
             if (imageData.link) {
               bgInfo.onclick = function() {
                 if (imageData.photographer !== 'Lorem Picsum') {
@@ -1307,14 +1389,16 @@
                 }
               };
               bgInfo.title = imageData.photographer !== 'Lorem Picsum' ? 
-                '点击查看摄影师主页 | 右键强制换图' : 
+                '点击查看摄影师主页 | 右键强制换图 | 当前图库：' + 
+                (GALLERY_TYPES[imageData.galleryType] || {name: '未知'}).name : 
                 '点击切换背景图片 | 右键强制换图';
             }
           }
           
           cacheBackground(imageData);
           
-          console.log('背景图片已更新:', imageData.photographer || '未知摄影师');
+          console.log('背景图片已更新 [' + (GALLERY_TYPES[imageData.galleryType] || {name: '未知'}).name + ']:', 
+                      imageData.photographer || '未知摄影师');
         }).catch(function(error) {
           console.error('图片预加载失败:', error);
           fetchRandomImage(1);
@@ -1324,11 +1408,10 @@
       function fetchRandomImage(sourceIndex) {
         sourceIndex = sourceIndex || 0;
         
-        // 🔍 检查是否配置了 Unsplash Access Key
-        if (sourceIndex === 0 && UNSPLASH_ACCESS_KEY === 'YOUR_ACCESS_KEY_HERE') {
+        // 检查是否配置了 Unsplash Access Key
+        if (sourceIndex === 0 && (!UNSPLASH_ACCESS_KEY || UNSPLASH_ACCESS_KEY === 'YOUR_ACCESS_KEY_HERE')) {
           console.warn('⚠️  检测到您还没有配置 Unsplash Access Key，正在跳过 Unsplash...');
-          console.warn('📝 请在代码中搜索 "UNSPLASH_ACCESS_KEY" 并按说明配置');
-          fetchRandomImage(1); // 直接跳到 Lorem Picsum
+          fetchRandomImage(1);
           return;
         }
         
@@ -1351,7 +1434,7 @@
         var source = IMAGE_SOURCES[sourceIndex];
         console.log('尝试从 ' + source.name + ' 获取背景图片...');
         
-        if (source.name === 'Lorem Picsum') {
+        if (source.name.includes('Lorem Picsum')) {
           var imageUrl = source.getUrl();
           var imageData = source.parseResponse(null, imageUrl);
           applyBackground(imageData);
@@ -1377,7 +1460,6 @@
           })
           .catch(function(error) {
             console.warn(source.name + ' 请求失败:', error.message);
-            // Unsplash失败后自动切换到Lorem Picsum
             fetchRandomImage(sourceIndex + 1);
           });
       }
@@ -1386,11 +1468,10 @@
         var cached = getCachedBackground();
         
         if (cached && cached.url) {
-          console.log('使用缓存的背景图片...');
+          console.log('使用缓存的背景图片 [' + currentGalleryType + ']...');
           applyBackground(cached);
         } else {
-          console.log('获取新的背景图片...');
-          // 总是从Unsplash开始尝试
+          console.log('获取新的背景图片 [' + currentGalleryType + ']...');
           fetchRandomImage(0);
         }
       }
@@ -1399,14 +1480,44 @@
       
       // 暴露切换背景的方法到全局
       window.changeBackground = function() {
-        console.log('手动切换背景...');
+        console.log('手动切换背景 [' + currentGalleryType + ']...');
         localStorage.removeItem(CONFIG.storageKey);
+        // 重新构建图片源（使用当前图库类型）
+        IMAGE_SOURCES = buildImageSources(currentGalleryType);
         body.classList.add('bg-loading');
         body.classList.remove('bg-loaded');
         if (bgPhotographer) {
           bgPhotographer.textContent = '摄影师: 加载中...';
         }
-        // 总是从Unsplash开始尝试
+        fetchRandomImage(0);
+      };
+      
+      // ============ 新增：切换图库类型函数 ============
+      window.toggleGallery = function() {
+        // 切换图库类型
+        var galleryTypes = Object.keys(GALLERY_TYPES);
+        var currentIndex = galleryTypes.indexOf(currentGalleryType);
+        currentGalleryType = galleryTypes[(currentIndex + 1) % galleryTypes.length];
+        
+        // 保存用户偏好
+        localStorage.setItem('bg_gallery_type', currentGalleryType);
+        
+        var gallery = GALLERY_TYPES[currentGalleryType];
+        
+        // 更新按钮显示
+        updateGalleryButton();
+        
+        // 显示提示
+        showToast('已切换至：' + gallery.icon + ' ' + gallery.name + ' - ' + gallery.description);
+        
+        // 清除缓存并重新加载
+        localStorage.removeItem(CONFIG.storageKey);
+        IMAGE_SOURCES = buildImageSources(currentGalleryType);
+        body.classList.add('bg-loading');
+        body.classList.remove('bg-loaded');
+        if (bgPhotographer) {
+          bgPhotographer.textContent = '摄影师: 加载中...';
+        }
         fetchRandomImage(0);
       };
       
@@ -1424,18 +1535,24 @@
           e.preventDefault();
           window.changeBackground();
         }
+        // 新增：Ctrl+Shift+G 切换图库
+        if (e.ctrlKey && e.shiftKey && e.key === 'G') {
+          e.preventDefault();
+          window.toggleGallery();
+        }
       });
       
       // 提示API配置状态
-      if (UNSPLASH_ACCESS_KEY === 'YOUR_ACCESS_KEY_HERE') {
+      if (!UNSPLASH_ACCESS_KEY || UNSPLASH_ACCESS_KEY === 'YOUR_ACCESS_KEY_HERE') {
         console.log('💡 提示：配置 Unsplash API 后将优先使用 Unsplash 的高质量图片');
-        console.log('📝 在代码中搜索 "UNSPLASH_ACCESS_KEY" 查看配置方法');
       } else {
         console.log('✅ 已检测到 Unsplash Access Key，正在使用 Unsplash 服务');
       }
       
-      console.log('动态背景系统已初始化');
-      console.log('提示：点击右下角信息栏查看摄影师，右键点击或按Ctrl+Shift+B切换背景');
+      console.log('动态背景系统已初始化 - 图库选择版');
+      console.log('📸 当前图库：' + GALLERY_TYPES[currentGalleryType].name);
+      console.log('🖼️  切换图库：点击"图库选择"按钮 或 Ctrl+Shift+G');
+      console.log('🎨 切换图片：点击右下角信息栏右键 或 Ctrl+Shift+B');
     })();
 
     // 搜索表单提交事件
