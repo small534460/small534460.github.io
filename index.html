@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>Small 3 的个人领域</title>
   <style>
     :root{
@@ -21,6 +21,8 @@
       --radius-lg: 16px;
       --shadow: 0 8px 30px rgba(2,6,23,0.4);
       --shadow-hover: 0 14px 40px rgba(2,6,23,0.5);
+      /* ============ 新增：毛玻璃强度CSS变量 ============ */
+      --blur-strength: 8px;
     }
 
     html, body { 
@@ -62,36 +64,53 @@
       width: 100%;
       max-width: 920px;
       background: rgba(0, 0, 0, 0.25);
-      backdrop-filter: blur(8px);
+      /* ============ 修改：使用CSS变量控制毛玻璃 ============ */
+      backdrop-filter: blur(var(--blur-strength));
+      -webkit-backdrop-filter: blur(var(--blur-strength));
       border-radius: var(--radius-lg);
       padding: 32px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
       border: 1px solid rgba(255, 255, 255, 0.12);
       margin: 0 auto;
       box-sizing: border-box;
+      transition: backdrop-filter 0.3s ease, -webkit-backdrop-filter 0.3s ease;
     }
 
+    /* ============ 修改：手机端优化 ============ */
     @media (max-width: 768px) {
       body {
-        padding: 20px 16px;
+        padding: 12px 8px;
         min-height: 100vh;
         display: block;
       }
       
       .wrap {
         margin: 0 auto;
-        padding: 24px 20px;
-        border-radius: 16px;
+        padding: 16px 12px;
+        border-radius: 14px;
+        /* 手机端默认毛玻璃更轻 */
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+      }
+      
+      /* ============ 新增：手机端滑块始终可见 ============ */
+      .blur-control-mobile {
+        display: flex !important;
       }
     }
 
     @media (max-width: 480px) {
       body {
-        padding: 16px 12px;
+        padding: 8px 4px;
       }
       
       .wrap {
-        padding: 20px 16px;
+        padding: 14px 10px;
+        border-radius: 12px;
+      }
+      
+      .page-wrapper {
+        padding: 8px 4px;
       }
     }
 
@@ -172,6 +191,104 @@
       margin-top: 24px;
     }
 
+    /* ============ 新增：毛玻璃控制滑块样式 ============ */
+    .blur-control {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding: 10px 14px;
+      background: rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-sm);
+      transition: all 0.3s ease;
+    }
+
+    .blur-control:hover {
+      background: rgba(0, 0, 0, 0.3);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .blur-control-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: rgba(200, 210, 225, 0.85);
+      white-space: nowrap;
+      min-width: 70px;
+    }
+
+    .blur-control-label .icon {
+      font-size: 16px;
+    }
+
+    .blur-slider {
+      flex: 1;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.1), rgba(255,255,255,0.3));
+      border-radius: 3px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .blur-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      cursor: pointer;
+      border: 2px solid rgba(255,255,255,0.3);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      transition: all 0.2s ease;
+    }
+
+    .blur-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+
+    .blur-slider::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      cursor: pointer;
+      border: 2px solid rgba(255,255,255,0.3);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .blur-value {
+      font-size: 13px;
+      color: rgba(200, 210, 225, 0.85);
+      min-width: 40px;
+      text-align: right;
+      font-weight: 600;
+    }
+
+    .blur-reset-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      color: rgba(200, 210, 225, 0.85);
+      padding: 4px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .blur-reset-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+    }
+
     /* 快捷功能区样式 */
     .quick-actions {
       display: grid;
@@ -194,6 +311,7 @@
       justify-content: center;
       gap: 8px;
       backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
       text-decoration: none;
     }
 
@@ -208,7 +326,7 @@
       font-size: 20px;
     }
 
-    /* ============ 新增：图库选择按钮特殊样式 ============ */
+    /* 图库选择按钮特殊样式 */
     .gallery-selector-btn {
       background: rgba(139, 92, 246, 0.15) !important;
       border-color: rgba(139, 92, 246, 0.3) !important;
@@ -242,6 +360,7 @@
     .info-card {
       background: rgba(0, 0, 0, 0.2);
       backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: var(--radius-sm);
       padding: 16px;
@@ -283,6 +402,7 @@
     .intro{
       background: rgba(96, 165, 250, 0.08);
       backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
       padding: 16px 18px;
       border-radius: var(--radius);
       color: #e8f0fe;
@@ -321,6 +441,7 @@
     .card{
       background: rgba(0, 0, 0, 0.2);
       backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
       border-radius: var(--radius);
       padding: 18px;
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -346,6 +467,7 @@
       transform: translateY(-6px);
       background: rgba(0, 0, 0, 0.4);
       backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5);
       border-color: rgba(96,165,250,0.35);
     }
@@ -418,6 +540,7 @@
       font-size: 15px;
       background: rgba(0, 0, 0, 0.25);
       backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
       color: #f0f4fa;
       transition: all 0.2s ease;
     }
@@ -442,6 +565,7 @@
       cursor: pointer;
       transition: all 0.2s ease;
       backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
       min-width: 100px;
       text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }
@@ -503,6 +627,7 @@
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
       background: rgba(0, 0, 0, 0.75);
       backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
       border: 1px solid rgba(96,165,250,0.25);
       margin-top: 10px;
     }
@@ -570,6 +695,7 @@
       background: rgba(0, 0, 0, 0.6);
       border-bottom: 1px solid rgba(96,165,250,0.2);
       backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
 
     .results-title {
@@ -600,20 +726,31 @@
       color: #f87171;
     }
 
+    /* ============ 修改：手机端全面优化 ============ */
     @media (max-width: 768px) {
       .search-form-row {
         flex-direction: column;
-        gap: 12px;
+        gap: 8px;
       }
       
       .links {
         grid-template-columns: 1fr;
-        gap: 12px;
+        gap: 10px;
       }
       
       .quick-actions {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+      }
+      
+      .quick-action-btn {
+        padding: 8px 6px;
+        font-size: 12px;
+        gap: 4px;
+      }
+      
+      .quick-action-btn .icon {
+        font-size: 16px;
       }
       
       .info-bar {
@@ -621,24 +758,136 @@
         gap: 8px;
       }
       
+      .info-card {
+        padding: 12px;
+      }
+      
+      .info-icon {
+        font-size: 24px;
+      }
+      
+      .info-value {
+        font-size: 14px;
+      }
+      
       .search-results.active {
-        max-height: 500px;
+        max-height: 400px;
       }
       
       .results-iframe {
-        height: 500px;
+        height: 400px;
       }
       
       header {
         flex-direction: row;
         align-items: flex-start;
-        gap: 12px;
+        gap: 10px;
       }
       
       .avatar {
-        width: 56px;
-        height: 56px;
-        flex: 0 0 56px;
+        width: 48px;
+        height: 48px;
+        flex: 0 0 48px;
+        border-radius: 12px;
+      }
+      
+      .avatar-img {
+        border-radius: 10px;
+      }
+      
+      .avatar-fallback {
+        font-size: 18px;
+      }
+      
+      h1 {
+        font-size: 17px;
+      }
+      
+      .subtitle {
+        font-size: 12px;
+      }
+      
+      .search-form {
+        flex-direction: column;
+        gap: 6px;
+      }
+      
+      .search-input {
+        padding: 8px 12px;
+        font-size: 14px;
+      }
+      
+      .search-button {
+        width: 100%;
+        padding: 8px 16px;
+        font-size: 14px;
+      }
+      
+      footer {
+        flex-direction: column;
+        text-align: center;
+        gap: 6px;
+        font-size: 12px;
+      }
+      
+      .card {
+        padding: 14px;
+      }
+      
+      .card .title {
+        font-size: 14px;
+      }
+      
+      .card .desc {
+        font-size: 12px;
+      }
+      
+      .intro {
+        padding: 12px 14px;
+        font-size: 13px;
+      }
+      
+      .content {
+        margin-top: 16px;
+      }
+      
+      .blur-control {
+        padding: 8px 10px;
+        gap: 6px;
+      }
+      
+      .blur-control-label {
+        font-size: 11px;
+        min-width: 60px;
+      }
+      
+      .blur-control-label .icon {
+        font-size: 14px;
+      }
+      
+      .blur-value {
+        font-size: 11px;
+        min-width: 32px;
+      }
+      
+      .blur-reset-btn {
+        padding: 3px 8px;
+        font-size: 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 10px;
+      }
+      
+      .avatar {
+        width: 52px;
+        height: 52px;
+        flex: 0 0 52px;
       }
       
       .avatar-fallback {
@@ -649,54 +898,22 @@
         font-size: 18px;
       }
       
-      .subtitle {
+      .intro {
+        padding: 10px 12px;
         font-size: 13px;
       }
       
-      .search-form {
-        flex-direction: column;
-      }
-      
-      .search-button {
-        width: 100%;
-      }
-      
-      footer {
-        flex-direction: column;
-        text-align: center;
-        gap: 8px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      header {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        gap: 12px;
-      }
-      
-      .avatar {
-        width: 60px;
-        height: 60px;
-        flex: 0 0 60px;
-      }
-      
-      .avatar-fallback {
-        font-size: 22px;
-      }
-      
-      h1 {
-        font-size: 20px;
-      }
-      
-      .intro {
-        padding: 14px 16px;
-        font-size: 14px;
-      }
-      
       .quick-actions {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+      }
+      
+      .section-title {
+        font-size: 13px;
+      }
+      
+      .search-input {
+        font-size: 13px;
       }
     }
 
@@ -724,6 +941,19 @@
       box-sizing: border-box;
     }
 
+    /* ============ 修改：手机端页面包装器 ============ */
+    @media (max-width: 768px) {
+      .page-wrapper {
+        padding: 8px 6px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page-wrapper {
+        padding: 4px 2px;
+      }
+    }
+
     .main-content {
       width: 100%;
       max-width: 920px;
@@ -738,6 +968,7 @@
       right: 20px;
       background: rgba(0, 0, 0, 0.5);
       backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 20px;
       padding: 8px 16px;
@@ -759,10 +990,11 @@
 
     @media (max-width: 768px) {
       .bg-info {
-        bottom: 10px;
-        right: 10px;
-        font-size: 11px;
-        padding: 6px 12px;
+        bottom: 8px;
+        right: 8px;
+        font-size: 10px;
+        padding: 6px 10px;
+        border-radius: 16px;
       }
     }
   </style>
@@ -783,6 +1015,16 @@
         </header>
 
         <section class="content">
+          <!-- ============ 新增：毛玻璃强度滑块 ============ -->
+          <div class="blur-control" id="blurControl">
+            <div class="blur-control-label">
+              <span class="icon">🔮</span> 模糊度
+            </div>
+            <input type="range" class="blur-slider" id="blurSlider" min="0" max="20" value="8" step="1" title="调整毛玻璃模糊强度">
+            <span class="blur-value" id="blurValue">8px</span>
+            <button class="blur-reset-btn" id="blurResetBtn" title="恢复默认模糊度">重置</button>
+          </div>
+
           <!-- 时间和天气信息栏 -->
           <div class="info-bar">
             <div class="info-card">
@@ -813,7 +1055,6 @@
             <button class="quick-action-btn" onclick="window.changeBackground()" title="换个背景图片">
               <span class="icon">🖼</span> 换背景
             </button>
-            <!-- ============ 新增：图库选择按钮 ============ -->
             <button class="quick-action-btn gallery-selector-btn" id="gallerySelectorBtn" onclick="toggleGallery()" title="切换图片库类型">
               <span class="icon">🖼️</span> 图库选择
               <span class="gallery-indicator"></span>
@@ -941,34 +1182,133 @@
     // ║            🔑 Unsplash API 配置区域 - 看这里！              ║
     // ║        请将下面的字符串替换为您自己的 Access Key            ║
     // ╚══════════════════════════════════════════════════════════════╝
-    // 
-    // 📌 如何获取 Unsplash API Access Key：
-    //    1. 访问 https://unsplash.com/developers
-    //    2. 注册/登录您的 Unsplash 账号
-    //    3. 点击 "New Application" 创建新应用
-    //    4. 同意条款后，填写应用名称（如：Small 3 Homepage）
-    //    5. 创建完成后，您会看到 Access Key 和 Secret Key
-    //    6. 复制 Access Key（一串类似字母数字的组合）
-    //    7. 将下面引号中的内容替换为您的 Access Key
-    // 
-    // 📝 示例：
-    //    假如您的 Access Key 是 "abc123def456ghi789jkl"
-    //    那么请将这行改为：
-    //    var UNSPLASH_ACCESS_KEY = 'abc123def456ghi789jkl';
-    // 
-    // ⚠️  注意：必须保留引号，且不要改变其他任何内容！
-    // 
-    var UNSPLASH_ACCESS_KEY = 'YYvtMNDAqTidAbtxrQkb-wOskhmn3CSHx0PXxAK60po';  // ← 您的 Access Key（已修复引号）
+    var UNSPLASH_ACCESS_KEY = 'YYvtMNDAqTidAbtxrQkb-wOskhmn3CSHx0PXxAK60po';  // ← 您的 Access Key
     //
     // ╔══════════════════════════════════════════════════════════════╗
     // ║               🎯 Unsplash API 配置区域结束                   ║
     // ╚══════════════════════════════════════════════════════════════╝
     
+    // ============ 新增：毛玻璃强度控制 ============
+    (function() {
+      var blurSlider = document.getElementById('blurSlider');
+      var blurValue = document.getElementById('blurValue');
+      var blurResetBtn = document.getElementById('blurResetBtn');
+      var wrap = document.querySelector('.wrap');
+      
+      // 默认值
+      var DEFAULT_BLUR = 8;
+      var MOBILE_DEFAULT_BLUR = 4;
+      
+      // 检测是否为移动设备
+      function isMobile() {
+        return window.innerWidth <= 768;
+      }
+      
+      // 从localStorage读取保存的值
+      function getSavedBlur() {
+        var saved = localStorage.getItem('blur_strength');
+        if (saved !== null && saved !== undefined) {
+          return parseInt(saved);
+        }
+        return isMobile() ? MOBILE_DEFAULT_BLUR : DEFAULT_BLUR;
+      }
+      
+      // 应用毛玻璃强度
+      function applyBlur(value) {
+        var blurPx = value + 'px';
+        
+        // 更新CSS变量
+        document.documentElement.style.setProperty('--blur-strength', blurPx);
+        
+        // 直接设置wrap的模糊
+        if (wrap) {
+          wrap.style.backdropFilter = 'blur(' + blurPx + ')';
+          wrap.style.webkitBackdropFilter = 'blur(' + blurPx + ')';
+        }
+        
+        // 更新滑块和显示值
+        if (blurSlider && blurValue) {
+          blurSlider.value = value;
+          blurValue.textContent = blurPx;
+        }
+        
+        // 保存到localStorage
+        localStorage.setItem('blur_strength', value);
+        
+        // 根据模糊程度调整背景透明度，让背景图片更清晰
+        var infoCards = document.querySelectorAll('.info-card, .card, .intro, .quick-action-btn');
+        var bgOpacity = value <= 5 ? '0.1' : value <= 12 ? '0.2' : '0.3';
+        
+        infoCards.forEach(function(card) {
+          if (card.className.includes('card') && !card.className.includes('info-card')) {
+            card.style.background = 'rgba(0, 0, 0, ' + bgOpacity + ')';
+          }
+        });
+      }
+      
+      // 初始化
+      var initialBlur = getSavedBlur();
+      applyBlur(initialBlur);
+      
+      // 监听滑块变化
+      if (blurSlider) {
+        blurSlider.addEventListener('input', function() {
+          var value = parseInt(this.value);
+          applyBlur(value);
+          
+          // 实时提示
+          if (value === 0) {
+            showToast('毛玻璃已关闭 - 背景完全清晰 🔍');
+          } else if (value <= 4) {
+            showToast('轻微模糊 - 能看到背景细节 ✨');
+          } else if (value <= 12) {
+            showToast('适中模糊 - 内容和背景平衡 🎯');
+          } else {
+            showToast('强模糊 - 突出内容阅读 📖');
+          }
+        });
+      }
+      
+      // 重置按钮
+      if (blurResetBtn) {
+        blurResetBtn.addEventListener('click', function() {
+          var defaultVal = isMobile() ? MOBILE_DEFAULT_BLUR : DEFAULT_BLUR;
+          applyBlur(defaultVal);
+          showToast('毛玻璃已恢复默认：' + defaultVal + 'px 🔄');
+        });
+      }
+      
+      // 窗口大小改变时，如果不曾手动设置过，自动调整
+      window.addEventListener('resize', function() {
+        var hasUserSet = localStorage.getItem('blur_strength_user_set');
+        if (!hasUserSet) {
+          var defaultVal = isMobile() ? MOBILE_DEFAULT_BLUR : DEFAULT_BLUR;
+          applyBlur(defaultVal);
+        }
+      });
+      
+      // 标记用户是否手动设置过
+      if (blurSlider) {
+        blurSlider.addEventListener('change', function() {
+          localStorage.setItem('blur_strength_user_set', 'true');
+        });
+      }
+      
+      if (blurResetBtn) {
+        blurResetBtn.addEventListener('click', function() {
+          localStorage.removeItem('blur_strength_user_set');
+        });
+      }
+      
+      console.log('🔮 毛玻璃控制系统已初始化');
+      console.log('  当前模糊度：' + initialBlur + 'px');
+      console.log('  拖动滑块调整 | 点击重置恢复默认');
+    })();
+    
     // ============ 时间和日期更新 ============
     function updateDateTime() {
       var now = new Date();
       
-      // 更新时间
       var timeStr = now.toLocaleTimeString('zh-CN', { 
         hour: '2-digit', 
         minute: '2-digit', 
@@ -977,7 +1317,6 @@
       });
       document.getElementById('currentTime').textContent = timeStr;
       
-      // 更新日期
       var weekdays = ['日', '一', '二', '三', '四', '五', '六'];
       var dateStr = now.getFullYear() + '年' + 
                     (now.getMonth() + 1) + '月' + 
@@ -1043,7 +1382,6 @@
     
     // ============ Toast提示 ============
     function showToast(message) {
-      // 移除之前的toast
       var existingToast = document.querySelector('.custom-toast');
       if (existingToast) {
         document.body.removeChild(existingToast);
@@ -1059,6 +1397,7 @@
         transform: translateX(-50%);
         background: rgba(0, 0, 0, 0.85);
         backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
         color: white;
         padding: 10px 24px;
         border-radius: 20px;
@@ -1067,6 +1406,7 @@
         animation: fadeInOut 2s ease forwards;
         border: 1px solid rgba(255, 255, 255, 0.2);
         white-space: nowrap;
+        pointer-events: none;
       `;
       
       if (!document.getElementById('toast-animation-style')) {
@@ -1092,7 +1432,7 @@
       }, 2000);
     }
     
-    // ============ 亮度调节（修复版）============
+    // ============ 亮度调节 ============
     var brightnessLevel = 0;
     var brightnessValues = [
       { value: 0.3, label: '明亮 ✨' },
@@ -1104,7 +1444,6 @@
       brightnessLevel = (brightnessLevel + 1) % brightnessValues.length;
       var level = brightnessValues[brightnessLevel];
       
-      // 获取当前背景图片URL
       var currentBg = document.body.style.backgroundImage;
       var bgUrlMatch = currentBg.match(/url\(([^)]+)\)/);
       
@@ -1118,34 +1457,21 @@
       }
     }
     
-    // ============ 随机访问有趣网站（更新版）============
+    // ============ 随机访问有趣网站 ============
     var funWebsites = [
-      // 🌟 视频平台
       { url: 'https://www.bilibili.com', name: '哔哩哔哩 - 干杯！' },
       { url: 'https://www.youtube.com', name: 'YouTube - 视频分享' },
-      
-      // 🎵 音乐平台  
       { url: 'https://music.163.com', name: '网易云音乐' },
       { url: 'https://y.qq.com', name: 'QQ音乐' },
-      
-      // 🤖 AI 工具
       { url: 'https://chat.deepseek.com', name: 'DeepSeek - AI助手' },
       { url: 'https://kimi.moonshot.cn', name: 'Kimi - AI助手' },
-      
-      // 📱 社交媒体
       { url: 'https://www.douyin.com', name: '抖音 - 记录美好生活' },
       { url: 'https://weibo.com', name: '微博 - 随时随地发现新鲜事' },
       { url: 'https://www.zhihu.com', name: '知乎 - 有问题，就会有答案' },
-      
-      // 🛠️ 实用工具
       { url: 'https://translate.google.com', name: 'Google 翻译' },
       { url: 'https://www.wikipedia.org', name: '维基百科' },
-      
-      // 🎮 游戏相关
       { url: 'https://store.steampowered.com', name: 'Steam 商店' },
       { url: 'https://www.epicgames.com', name: 'Epic Games' },
-      
-      // 📚 学习资源
       { url: 'https://www.runoob.com', name: '菜鸟教程 - 编程学习' },
       { url: 'https://github.com', name: 'GitHub - 代码托管' }
     ];
@@ -1200,9 +1526,7 @@
     (function() {
       'use strict';
       
-      // ============ 新增：图库类型定义 ============
       var GALLERY_TYPES = {
-        // 风景图片 - Unsplash 集合ID: 1163637 (自然风景)
         nature: {
           name: '自然风景',
           icon: '🏔️',
@@ -1210,7 +1534,6 @@
           unsplashCollection: '1163637',
           unsplashQuery: 'nature landscape'
         },
-        // 艺术图片 - Unsplash 集合ID: 1163637 改为 317099 (艺术与设计)
         art: {
           name: '艺术创意',
           icon: '🎨',
@@ -1220,7 +1543,6 @@
         }
       };
       
-      // 当前选择的图库类型（从localStorage读取，默认风景）
       var currentGalleryType = localStorage.getItem('bg_gallery_type') || 'nature';
       
       var CONFIG = {
@@ -1229,7 +1551,6 @@
         maxDailyRequests: 50
       };
       
-      // ============ 新增：根据图库类型构建图片源 ============
       function buildImageSources(galleryType) {
         var gallery = GALLERY_TYPES[galleryType] || GALLERY_TYPES.nature;
         
@@ -1237,7 +1558,6 @@
           {
             name: 'Unsplash - ' + gallery.name,
             getUrl: function() {
-              // 使用搜索API获取更精准的结果
               return 'https://api.unsplash.com/photos/random?collections=' + 
                      gallery.unsplashCollection + 
                      '&orientation=landscape&w=1920&q=80&count=1';
@@ -1249,7 +1569,6 @@
               };
             },
             parseResponse: function(data) {
-              // Unsplash random API 返回数组
               var photo = Array.isArray(data) ? data[0] : data;
               return {
                 url: photo.urls.regular,
@@ -1287,7 +1606,6 @@
       var bgPhotographer = document.getElementById('bgPhotographer');
       var galleryBtn = document.getElementById('gallerySelectorBtn');
       
-      // ============ 新增：更新图库选择按钮显示 ============
       function updateGalleryButton() {
         if (galleryBtn) {
           var gallery = GALLERY_TYPES[currentGalleryType] || GALLERY_TYPES.nature;
@@ -1297,10 +1615,8 @@
         }
       }
       
-      // 初始化按钮显示
       updateGalleryButton();
       
-      // 默认显示背景信息栏
       if (bgInfo) {
         bgInfo.style.display = 'flex';
         if (bgPhotographer) {
@@ -1315,7 +1631,6 @@
           var cached = localStorage.getItem(CONFIG.storageKey);
           if (cached) {
             var data = JSON.parse(cached);
-            // 检查缓存是否匹配当前图库类型
             if (data.timestamp && 
                 (Date.now() - data.timestamp) < CONFIG.cacheDuration &&
                 data.galleryType === currentGalleryType) {
@@ -1364,7 +1679,6 @@
           body.classList.remove('bg-loading');
           body.classList.add('bg-loaded');
           
-          // 更新摄影师信息
           if (bgPhotographer) {
             if (imageData.photographer && !imageData.photographer.includes('Lorem Picsum')) {
               var galleryLabel = '';
@@ -1408,7 +1722,6 @@
       function fetchRandomImage(sourceIndex) {
         sourceIndex = sourceIndex || 0;
         
-        // 检查是否配置了 Unsplash Access Key
         if (sourceIndex === 0 && (!UNSPLASH_ACCESS_KEY || UNSPLASH_ACCESS_KEY === 'YOUR_ACCESS_KEY_HERE')) {
           console.warn('⚠️  检测到您还没有配置 Unsplash Access Key，正在跳过 Unsplash...');
           fetchRandomImage(1);
@@ -1478,11 +1791,9 @@
       
       initBackground();
       
-      // 暴露切换背景的方法到全局
       window.changeBackground = function() {
         console.log('手动切换背景 [' + currentGalleryType + ']...');
         localStorage.removeItem(CONFIG.storageKey);
-        // 重新构建图片源（使用当前图库类型）
         IMAGE_SOURCES = buildImageSources(currentGalleryType);
         body.classList.add('bg-loading');
         body.classList.remove('bg-loaded');
@@ -1492,25 +1803,19 @@
         fetchRandomImage(0);
       };
       
-      // ============ 新增：切换图库类型函数 ============
       window.toggleGallery = function() {
-        // 切换图库类型
         var galleryTypes = Object.keys(GALLERY_TYPES);
         var currentIndex = galleryTypes.indexOf(currentGalleryType);
         currentGalleryType = galleryTypes[(currentIndex + 1) % galleryTypes.length];
         
-        // 保存用户偏好
         localStorage.setItem('bg_gallery_type', currentGalleryType);
         
         var gallery = GALLERY_TYPES[currentGalleryType];
         
-        // 更新按钮显示
         updateGalleryButton();
         
-        // 显示提示
         showToast('已切换至：' + gallery.icon + ' ' + gallery.name + ' - ' + gallery.description);
         
-        // 清除缓存并重新加载
         localStorage.removeItem(CONFIG.storageKey);
         IMAGE_SOURCES = buildImageSources(currentGalleryType);
         body.classList.add('bg-loading');
@@ -1521,7 +1826,6 @@
         fetchRandomImage(0);
       };
       
-      // 右键菜单切换背景
       if (bgInfo) {
         bgInfo.addEventListener('contextmenu', function(e) {
           e.preventDefault();
@@ -1529,20 +1833,17 @@
         });
       }
       
-      // 键盘快捷键
       document.addEventListener('keydown', function(e) {
         if (e.ctrlKey && e.shiftKey && e.key === 'B') {
           e.preventDefault();
           window.changeBackground();
         }
-        // 新增：Ctrl+Shift+G 切换图库
         if (e.ctrlKey && e.shiftKey && e.key === 'G') {
           e.preventDefault();
           window.toggleGallery();
         }
       });
       
-      // 提示API配置状态
       if (!UNSPLASH_ACCESS_KEY || UNSPLASH_ACCESS_KEY === 'YOUR_ACCESS_KEY_HERE') {
         console.log('💡 提示：配置 Unsplash API 后将优先使用 Unsplash 的高质量图片');
       } else {
