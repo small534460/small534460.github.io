@@ -2,292 +2,1940 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Small 3 的聊天室</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Small 3 的个人领域</title>
   <style>
-    :root{--bg:#1a1a2e;--msg:#16213e;--text:#e0e0e0;--accent:#60a5fa;--accent2:#3b82f6;--my-msg:#1a3a2a;--other-msg:#16213e;--input-bg:#0f1724;--sidebar-bg:rgba(0,0,0,0.7);--border:rgba(255,255,255,0.1);--radius:12px;}
-    body.light{--bg:#f0f0f0;--msg:#ffffff;--text:#333;--my-msg:#e3f2fd;--other-msg:#ffffff;--input-bg:#e8e8e8;--sidebar-bg:rgba(255,255,255,0.9);--border:rgba(0,0,0,0.1);}
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;height:100vh;display:flex;overflow:hidden;transition:all .3s}
-    .sidebar-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99;display:none}
-    .sidebar-overlay.show{display:block}
-    .sidebar{position:fixed;top:0;left:-300px;width:280px;height:100%;background:var(--sidebar-bg);backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);z-index:100;transition:left .3s;display:flex;flex-direction:column;padding:20px 16px;border-right:1px solid var(--border)}
-    .sidebar.open{left:0}
-    .sidebar-close{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--text);font-size:20px;cursor:pointer}
-    .sidebar-header{text-align:center;margin-bottom:20px}
-    .sidebar-header img{width:60px;height:60px;border-radius:50%;border:3px solid var(--accent);object-fit:cover}
-    .sidebar-header h3{margin-top:8px;font-size:16px;color:var(--accent)}
-    .sidebar-btn{display:block;width:100%;padding:12px;margin:6px 0;background:rgba(96,165,250,0.1);border:1px solid var(--border);border-radius:8px;color:var(--text);cursor:pointer;font-size:14px;text-align:left;transition:all .2s}
-    .sidebar-btn:hover{background:rgba(96,165,250,0.2);border-color:var(--accent)}
-    .sidebar-btn.danger{background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.3)}
-    .sidebar-btn.danger:hover{background:rgba(239,68,68,0.2)}
-    .main{flex:1;display:flex;flex-direction:column;height:100%;position:relative}
-    .topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--bg);border-bottom:1px solid var(--border);z-index:10}
-    .topbar h2{font-size:18px;font-weight:600;color:var(--accent)}
-    .topbar .gear-btn{background:none;border:none;color:var(--text);font-size:22px;cursor:pointer;padding:4px 8px;opacity:0.7}
-    .topbar .gear-btn:hover{opacity:1}
-    .chat-area{flex:1;overflow-y:auto;padding:16px}
-    .msg-row{margin-bottom:12px;display:flex;flex-direction:column;align-items:flex-start}
-    .msg-row.mine{align-items:flex-start}
-    .msg-meta{font-size:11px;margin-bottom:2px;opacity:0.7;display:flex;align-items:center;gap:6px}
-    .msg-meta .user-tag{background:var(--accent);color:#fff;padding:1px 8px;border-radius:8px;font-size:10px;font-weight:600}
-    .msg-bubble{background:var(--other-msg);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;word-break:break-word;line-height:1.5;font-size:14px;max-width:80%}
-    .msg-row.mine .msg-bubble{background:var(--my-msg)}
-    .msg-attachment{margin-top:6px}
-    .msg-attachment img{max-width:180px;max-height:180px;border-radius:8px;cursor:pointer;display:block}
-    .msg-attachment a{color:var(--accent);font-size:12px;text-decoration:none;display:block;margin-top:2px}
-    .input-area{display:flex;gap:8px;padding:12px 16px;background:var(--bg);border-top:1px solid var(--border);align-items:flex-end}
-    .input-area textarea{flex:1;padding:10px 14px;border-radius:20px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);font-size:14px;resize:none;outline:none;max-height:100px;min-height:18px;font-family:inherit;line-height:1.4}
-    .input-area textarea:focus{border-color:var(--accent)}
-    .input-area button{padding:8px 16px;border-radius:20px;border:none;background:var(--accent);color:#fff;font-weight:600;cursor:pointer;font-size:14px;white-space:nowrap;transition:all .2s}
-    .input-area button:hover{background:var(--accent2);transform:translateY(-1px)}
-    .input-area .attach-btn{background:rgba(96,165,250,0.2);padding:8px 12px}
-    .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:200;display:flex;align-items:center;justify-content:center}
-    .modal-box{background:var(--sidebar-bg);backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);border-radius:16px;padding:28px;border:1px solid var(--border);max-width:400px;width:90%;animation:pop .3s ease}
-    @keyframes pop{from{opacity:0;transform:scale(0.9)}to{opacity:1;transform:scale(1)}}
-    .modal-box h3{font-size:18px;color:var(--accent);margin-bottom:16px;text-align:center}
-    .modal-box input{width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);font-size:14px;outline:none;margin-bottom:10px}
-    .modal-box input:focus{border-color:var(--accent)}
-    .modal-box .btn-group{display:flex;gap:8px;margin-top:16px;justify-content:center}
-    .modal-box .btn-group button{flex:1;padding:10px;border-radius:8px;border:none;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
-    .btn-primary{background:var(--accent);color:#fff}
-    .btn-secondary{background:rgba(96,165,250,0.2);color:var(--text);border:1px solid var(--border)}
-    .btn-warning{background:#f59e0b;color:#fff}
-    .log-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:300;display:flex;align-items:center;justify-content:center}
-    .log-box{background:var(--sidebar-bg);backdrop-filter:blur(15px);border-radius:16px;padding:20px;border:1px solid var(--border);max-width:500px;width:90%;max-height:60vh;overflow-y:auto;font-family:monospace;font-size:12px;color:var(--text);line-height:1.6}
-    .log-box h3{color:var(--accent);margin-bottom:10px}
-    .welcome-btns{display:flex;gap:16px;justify-content:center;margin-top:20px}
-    .welcome-btns button{padding:14px 32px;border-radius:12px;font-size:18px;font-weight:600;cursor:pointer;border:none;transition:all .2s;color:#fff;min-width:120px}
-    .welcome-btns .btn-login{background:var(--accent)}
-    .welcome-btns .btn-register{background:rgba(96,165,250,0.3);border:2px solid var(--accent)}
-    .welcome-btns button:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(96,165,250,0.3)}
-    .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.9);color:#fff;padding:10px 24px;border-radius:20px;font-size:14px;z-index:400;animation:fadeOut 2s ease forwards;pointer-events:none}
-    @keyframes fadeOut{0%{opacity:1}70%{opacity:1}100%{opacity:0}}
-    @media(max-width:600px){.msg-bubble{max-width:95%}.input-area{gap:4px;padding:8px}.input-area button{padding:6px 12px;font-size:12px}.welcome-btns button{padding:12px 24px;font-size:16px}}
+    :root{
+      --accent: #60a5fa;
+      --accent-2: #3b82f6;
+      --accent-green: #10B981;
+      --accent-green-hover: #059669;
+      --accent-purple: #8b5cf6;
+      --accent-orange: #f59e0b;
+      --muted: rgba(200, 210, 220, 0.85);
+      --glass: rgba(0, 0, 0, 0.15);
+      --glass-light: rgba(0, 0, 0, 0.2);
+      --glass-border: rgba(255, 255, 255, 0.15);
+      --radius: 12px;
+      --radius-sm: 8px;
+      --radius-lg: 16px;
+      --shadow: 0 8px 30px rgba(2,6,23,0.4);
+      --shadow-hover: 0 14px 40px rgba(2,6,23,0.5);
+      /* ============ 新增：毛玻璃强度CSS变量 ============ */
+      --blur-strength: 8px;
+    }
+
+    html, body { 
+      height: 100%; 
+      margin: 0;
+      padding: 0;
+    }
+
+    body{
+      background: linear-gradient(180deg, rgba(7,16,38,0.3) 0%, rgba(7,16,38,0.35) 100%),
+                  #070f26;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #f0f4fa;
+      min-height: 100vh;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.6;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+      transition: background-image 0.8s ease-in-out;
+    }
+
+    body.bg-loading {
+      background: linear-gradient(180deg, rgba(7,16,38,0.5) 0%, rgba(7,16,38,0.55) 100%),
+                  #070f26;
+    }
+
+    body.bg-loaded {
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+
+    .wrap{
+      width: 100%;
+      max-width: 920px;
+      background: rgba(0, 0, 0, 0.25);
+      /* ============ 修改：使用CSS变量控制毛玻璃 ============ */
+      backdrop-filter: blur(var(--blur-strength));
+      -webkit-backdrop-filter: blur(var(--blur-strength));
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      margin: 0 auto;
+      box-sizing: border-box;
+      transition: backdrop-filter 0.3s ease, -webkit-backdrop-filter 0.3s ease;
+    }
+
+    /* ============ 修改：手机端优化 ============ */
+    @media (max-width: 768px) {
+      body {
+        padding: 12px 8px;
+        min-height: 100vh;
+        display: block;
+      }
+      
+      .wrap {
+        margin: 0 auto;
+        padding: 16px 12px;
+        border-radius: 14px;
+        /* 手机端默认毛玻璃更轻 */
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+      }
+      
+      /* ============ 新增：手机端滑块始终可见 ============ */
+      .blur-control-mobile {
+        display: flex !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 8px 4px;
+      }
+      
+      .wrap {
+        padding: 14px 10px;
+        border-radius: 12px;
+      }
+      
+      .page-wrapper {
+        padding: 8px 4px;
+      }
+    }
+
+    header{
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .avatar{
+      width: 70px;
+      height: 70px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 20px rgba(96,165,250,0.3);
+      flex: 0 0 70px;
+      position: relative;
+      overflow: hidden;
+      border: 2px solid rgba(96,165,250,0.4);
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    }
+
+    .avatar-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 14px;
+    }
+
+    .avatar-fallback {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 24px;
+      color: white;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    }
+
+    .avatar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(to bottom right, rgba(255,255,255,0.1), transparent);
+      pointer-events: none;
+    }
+
+    h1{
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: 0.6px;
+      font-weight: 600;
+      background: linear-gradient(to right, #ffffff, #c8dfff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    }
+
+    .subtitle{
+      margin: 8px 0 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+    .content{
+      margin-top: 24px;
+    }
+
+    /* ============ 新增：毛玻璃控制滑块样式 ============ */
+    .blur-control {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding: 10px 14px;
+      background: rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-sm);
+      transition: all 0.3s ease;
+    }
+
+    .blur-control:hover {
+      background: rgba(0, 0, 0, 0.3);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .blur-control-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: rgba(200, 210, 225, 0.85);
+      white-space: nowrap;
+      min-width: 70px;
+    }
+
+    .blur-control-label .icon {
+      font-size: 16px;
+    }
+
+    .blur-slider {
+      flex: 1;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.1), rgba(255,255,255,0.3));
+      border-radius: 3px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .blur-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      cursor: pointer;
+      border: 2px solid rgba(255,255,255,0.3);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      transition: all 0.2s ease;
+    }
+
+    .blur-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+
+    .blur-slider::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      cursor: pointer;
+      border: 2px solid rgba(255,255,255,0.3);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .blur-value {
+      font-size: 13px;
+      color: rgba(200, 210, 225, 0.85);
+      min-width: 40px;
+      text-align: right;
+      font-weight: 600;
+    }
+
+    .blur-reset-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      color: rgba(200, 210, 225, 0.85);
+      padding: 4px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .blur-reset-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+    }
+
+    /* 快捷功能区样式 */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .quick-action-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      color: #f0f4fa;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      text-decoration: none;
+    }
+
+    .quick-action-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .quick-action-btn .icon {
+      font-size: 20px;
+    }
+
+    /* 图库选择按钮特殊样式 */
+    .gallery-selector-btn {
+      background: rgba(139, 92, 246, 0.15) !important;
+      border-color: rgba(139, 92, 246, 0.3) !important;
+      position: relative;
+    }
+
+    .gallery-selector-btn:hover {
+      background: rgba(139, 92, 246, 0.25) !important;
+      border-color: rgba(139, 92, 246, 0.5) !important;
+    }
+
+    .gallery-selector-btn .gallery-indicator {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      width: 8px;
+      height: 8px;
+      background: var(--accent-purple);
+      border-radius: 50%;
+      border: 2px solid rgba(0,0,0,0.5);
+    }
+
+    /* 天气和时间显示 */
+    .info-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .info-card {
+      background: rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .info-card:hover {
+      background: rgba(0, 0, 0, 0.3);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .info-icon {
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+
+    .info-text {
+      flex: 1;
+    }
+
+    .info-label {
+      font-size: 11px;
+      color: rgba(200, 210, 225, 0.7);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .info-value {
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+    .intro{
+      background: rgba(96, 165, 250, 0.08);
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+      padding: 16px 18px;
+      border-radius: var(--radius);
+      color: #e8f0fe;
+      font-size: 15px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(96,165,250,0.15);
+      position: relative;
+      overflow: hidden;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+
+    .intro::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(to bottom, var(--accent), var(--accent-2));
+    }
+
+    .links{
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .links a{
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .card{
+      background: rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      border-radius: var(--radius);
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(96,165,250,0.4), transparent);
+    }
+
+    .card:hover{
+      transform: translateY(-6px);
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5);
+      border-color: rgba(96,165,250,0.35);
+    }
+
+    .card .title{
+      font-weight: 600;
+      color: #ffffff;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+    .card .desc{
+      font-size: 13px;
+      color: rgba(200, 210, 225, 0.85);
+      line-height: 1.5;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+
+    footer{
+      margin-top: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      color: rgba(200, 210, 225, 0.8);
+      font-size: 14px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    footer a:hover {
+      color: #93c5fd;
+      text-decoration: underline;
+    }
+
+    .search-form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .search-form-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .search-form {
+      flex: 1;
+      display: flex;
+      gap: 8px;
+    }
+
+    .search-input {
+      flex: 1;
+      padding: 10px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      outline: none;
+      font-size: 15px;
+      background: rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      color: #f0f4fa;
+      transition: all 0.2s ease;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(96,165,250,0.2);
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    .search-input::placeholder {
+      color: rgba(200, 210, 225, 0.5);
+    }
+
+    .search-button {
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
+      border: none;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      min-width: 100px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+
+    .search-button:hover {
+      background: linear-gradient(135deg, var(--accent-2), var(--accent));
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(59,130,246,0.4);
+    }
+
+    .search-button:active {
+      transform: translateY(0);
+    }
+
+    .green-button {
+      background: linear-gradient(135deg, var(--accent-green), #0ea271) !important;
+    }
+
+    .green-button:hover {
+      background: linear-gradient(135deg, var(--accent-green-hover), #0d9268) !important;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4) !important;
+    }
+
+    .section-title {
+      margin: 0 0 16px 0;
+      font-size: 15px;
+      color: rgba(200, 210, 225, 0.85);
+      text-align: center;
+      position: relative;
+      padding-bottom: 8px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    }
+
+    .search-container {
+      position: relative;
+      margin-bottom: 24px;
+    }
+
+    .search-results {
+      width: 100%;
+      max-height: 0;
+      border-radius: var(--radius);
+      overflow: hidden;
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: absolute;
+      z-index: 100;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(96,165,250,0.25);
+      margin-top: 10px;
+    }
+
+    .search-results.active {
+      max-height: 600px;
+      opacity: 1;
+      position: relative;
+    }
+
+    .results-iframe {
+      width: 100%;
+      height: 600px;
+      border: none;
+      display: none;
+      background: transparent;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 40px 20px;
+      color: rgba(200, 210, 225, 0.9);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(96,165,250,0.2);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 16px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .error-message {
+      display: none;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: var(--radius-sm);
+      padding: 20px;
+      margin: 20px;
+      color: #fca5a5;
+      text-align: center;
+    }
+
+    .no-results-message {
+      text-align: center;
+      padding: 60px 20px;
+      color: rgba(200, 210, 225, 0.8);
+    }
+
+    .results-header {
+      display: none;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 18px;
+      background: rgba(0, 0, 0, 0.6);
+      border-bottom: 1px solid rgba(96,165,250,0.2);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .results-title {
+      font-weight: 600;
+      color: #f0f4fa;
+      font-size: 15px;
+    }
+
+    .close-results {
+      background: rgba(239,68,68,0.2);
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: 6px;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fca5a5;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .close-results:hover {
+      background: rgba(239,68,68,0.3);
+      border-color: rgba(239,68,68,0.4);
+      color: #f87171;
+    }
+
+    /* ============ 修改：手机端全面优化 ============ */
+    @media (max-width: 768px) {
+      .search-form-row {
+        flex-direction: column;
+        gap: 8px;
+      }
+      
+      .links {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      
+      .quick-actions {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+      }
+      
+      .quick-action-btn {
+        padding: 8px 6px;
+        font-size: 12px;
+        gap: 4px;
+      }
+      
+      .quick-action-btn .icon {
+        font-size: 16px;
+      }
+      
+      .info-bar {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      
+      .info-card {
+        padding: 12px;
+      }
+      
+      .info-icon {
+        font-size: 24px;
+      }
+      
+      .info-value {
+        font-size: 14px;
+      }
+      
+      .search-results.active {
+        max-height: 400px;
+      }
+      
+      .results-iframe {
+        height: 400px;
+      }
+      
+      header {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      
+      .avatar {
+        width: 48px;
+        height: 48px;
+        flex: 0 0 48px;
+        border-radius: 12px;
+      }
+      
+      .avatar-img {
+        border-radius: 10px;
+      }
+      
+      .avatar-fallback {
+        font-size: 18px;
+      }
+      
+      h1 {
+        font-size: 17px;
+      }
+      
+      .subtitle {
+        font-size: 12px;
+      }
+      
+      .search-form {
+        flex-direction: column;
+        gap: 6px;
+      }
+      
+      .search-input {
+        padding: 8px 12px;
+        font-size: 14px;
+      }
+      
+      .search-button {
+        width: 100%;
+        padding: 8px 16px;
+        font-size: 14px;
+      }
+      
+      footer {
+        flex-direction: column;
+        text-align: center;
+        gap: 6px;
+        font-size: 12px;
+      }
+      
+      .card {
+        padding: 14px;
+      }
+      
+      .card .title {
+        font-size: 14px;
+      }
+      
+      .card .desc {
+        font-size: 12px;
+      }
+      
+      .intro {
+        padding: 12px 14px;
+        font-size: 13px;
+      }
+      
+      .content {
+        margin-top: 16px;
+      }
+      
+      .blur-control {
+        padding: 8px 10px;
+        gap: 6px;
+      }
+      
+      .blur-control-label {
+        font-size: 11px;
+        min-width: 60px;
+      }
+      
+      .blur-control-label .icon {
+        font-size: 14px;
+      }
+      
+      .blur-value {
+        font-size: 11px;
+        min-width: 32px;
+      }
+      
+      .blur-reset-btn {
+        padding: 3px 8px;
+        font-size: 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 10px;
+      }
+      
+      .avatar {
+        width: 52px;
+        height: 52px;
+        flex: 0 0 52px;
+      }
+      
+      .avatar-fallback {
+        font-size: 20px;
+      }
+      
+      h1 {
+        font-size: 18px;
+      }
+      
+      .intro {
+        padding: 10px 12px;
+        font-size: 13px;
+      }
+      
+      .quick-actions {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+      }
+      
+      .section-title {
+        font-size: 13px;
+      }
+      
+      .search-input {
+        font-size: 13px;
+      }
+    }
+
+    html {
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    
+    body {
+      overflow-y: auto;
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    .page-wrapper {
+      width: 100%;
+      max-width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 20px 16px;
+      box-sizing: border-box;
+    }
+
+    /* ============ 修改：手机端页面包装器 ============ */
+    @media (max-width: 768px) {
+      .page-wrapper {
+        padding: 8px 6px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page-wrapper {
+        padding: 4px 2px;
+      }
+    }
+
+    .main-content {
+      width: 100%;
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 20px 0;
+    }
+
+    /* 背景信息栏样式 */
+    .bg-info {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      padding: 8px 16px;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 12px;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+
+    .bg-info:hover {
+      background: rgba(0, 0, 0, 0.7);
+      color: rgba(255, 255, 255, 0.95);
+    }
+
+    @media (max-width: 768px) {
+      .bg-info {
+        bottom: 8px;
+        right: 8px;
+        font-size: 10px;
+        padding: 6px 10px;
+        border-radius: 16px;
+      }
+    }
   </style>
 </head>
 <body>
-<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
-<div class="sidebar" id="sidebar">
-  <button class="sidebar-close" onclick="closeSidebar()">✕</button>
-  <div class="sidebar-header"><img src="https://i.mituw.com/imgs/2026/03/15/de4945abb96be550.jpg" alt="头像"><h3>Small 3 的聊天室</h3></div>
-  <button class="sidebar-btn" onclick="showAdminModal()">🔐 管理员模式</button>
-  <button class="sidebar-btn" onclick="toggleTheme()" id="themeBtn">🌙 夜间模式</button>
-  <button class="sidebar-btn" onclick="showLog()">📋 运行日志</button>
-  <button class="sidebar-btn danger" onclick="logout()">🚪 退出登录</button>
-</div>
+  <div class="page-wrapper">
+    <div class="main-content">
+      <main class="wrap" role="main">
+        <header>
+          <div class="avatar" id="avatarContainer">
+            <img src="https://i.mituw.com/imgs/2026/03/15/de4945abb96be550.jpg" alt="Small 3 的头像" class="avatar-img" id="avatarImg" onerror="showAvatarFallback()">
+            <div class="avatar-fallback" id="avatarFallback" style="display: none;">S3</div>
+          </div>
+          <div>
+            <h1>Small 3 的个人领域</h1>
+            <div class="subtitle">收藏与分享我觉得有趣的站点与资源</div>
+          </div>
+        </header>
 
-<div class="main" id="mainApp" style="display:none">
-  <div class="topbar"><div><h2>Small 3 的聊天室</h2></div><button class="gear-btn" onclick="openSidebar()">⚙️</button></div>
-  <div class="chat-area" id="chatArea"><div style="text-align:center;opacity:0.5;padding:40px">暂无消息，来发第一条吧</div></div>
-  <div class="input-area">
-    <input type="file" id="attachInput" style="display:none" accept="*/*">
-    <button class="attach-btn" onclick="document.getElementById('attachInput').click()" title="附件（<25MB）">📎</button>
-    <textarea id="msgInput" rows="1" placeholder="输入消息...（禁止 __ / \）" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage()}"></textarea>
-    <button onclick="sendMessage()">发送</button>
+        <section class="content">
+          <!-- ============ 新增：毛玻璃强度滑块 ============ -->
+          <div class="blur-control" id="blurControl">
+            <div class="blur-control-label">
+              <span class="icon">🔮</span> 模糊度
+            </div>
+            <input type="range" class="blur-slider" id="blurSlider" min="0" max="20" value="8" step="1" title="调整毛玻璃模糊强度">
+            <span class="blur-value" id="blurValue">8px</span>
+            <button class="blur-reset-btn" id="blurResetBtn" title="恢复默认模糊度">重置</button>
+          </div>
+
+          <!-- 时间和天气信息栏 -->
+          <div class="info-bar">
+            <div class="info-card">
+              <div class="info-icon">🕐</div>
+              <div class="info-text">
+                <div class="info-label">当前时间</div>
+                <div class="info-value" id="currentTime">加载中...</div>
+              </div>
+            </div>
+            <div class="info-card">
+              <div class="info-icon">📅</div>
+              <div class="info-text">
+                <div class="info-label">今天日期</div>
+                <div class="info-value" id="currentDate">加载中...</div>
+              </div>
+            </div>
+            <div class="info-card">
+              <div class="info-icon">💡</div>
+              <div class="info-text">
+                <div class="info-label">每日一言</div>
+                <div class="info-value" id="dailyQuote" style="font-size: 14px;">思考中...</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 快捷操作区 -->
+          <div class="quick-actions">
+            <button class="quick-action-btn" onclick="window.changeBackground()" title="换个背景图片">
+              <span class="icon">🖼</span> 换背景
+            </button>
+            <button class="quick-action-btn gallery-selector-btn" id="gallerySelectorBtn" onclick="toggleGallery()" title="切换图片库类型">
+              <span class="icon">🖼️</span> 图库选择
+              <span class="gallery-indicator"></span>
+            </button>
+            <button class="quick-action-btn" onclick="copyToClipboard(window.location.href)" title="复制当前页面链接">
+              <span class="icon">🔗</span> 复制链接
+            </button>
+            <a class="quick-action-btn" href="https://126.com/" target="_blank" rel="noopener">
+              <span class="icon">📧</span> Email
+            </a>
+            <button class="quick-action-btn" onclick="toggleBrightness()" title="调整遮罩亮度">
+              <span class="icon">🌓</span> 亮度调节
+            </button>
+            <button class="quick-action-btn" onclick="randomWebsite()" title="随机打开一个有趣的网站">
+              <span class="icon">🎲</span> 随机访问
+            </button>
+            <button class="quick-action-btn" onclick="showBookmarkPrompt()" title="快速添加书签">
+              <span class="icon">⭐</span> 加书签
+            </button>
+          </div>
+
+          <div class="intro">
+            我是 Small 3，这是我的个人领域。下面是我收藏的几个站点，欢迎访问。
+          </div>
+
+          <h2 class="section-title">—— SMALL 3 领域 ——</h2>
+          
+          <div class="search-form-group">
+            <div class="search-form-row">
+              <form action="https://www.bing.com/search" method="get" target="_blank" class="search-form">
+                <input type="text" name="q" placeholder="必应搜索…" class="search-input">
+                <button type="submit" class="search-button">必应搜索</button>
+              </form>
+              
+              <form id="songSearchForm" class="search-form">
+                <input type="text" id="searchKeyword" class="search-input" placeholder="搜索歌曲、歌手或专辑...">
+                <button type="submit" class="search-button green-button">搜索歌曲</button>
+              </form>
+            </div>
+          </div>
+          
+          <div class="search-container">
+            <div id="searchResults" class="search-results">
+              <div class="results-header">
+                <div class="results-title">搜索结果</div>
+                <button class="close-results" onclick="closeResults()">×</button>
+              </div>
+              
+              <div id="loading" class="loading">
+                <div class="loading-spinner"></div>
+                <div>正在加载搜索结果...</div>
+                <div style="margin-top: 10px; font-size: 14px; color: rgba(200, 210, 225, 0.7);">这可能需要几秒钟时间</div>
+              </div>
+              
+              <div id="errorMessage" class="error-message">
+                抱歉，无法加载搜索结果。请检查网络连接或稍后重试。
+              </div>
+              
+              <div id="initialMessage" class="no-results-message">
+                <h3>歌曲搜索</h3>
+                <p>你还什么都没有输入呢＞︿＜</p>
+                <p>示例：周杰伦、青花瓷、Taylor Swift</p>
+              </div>
+              
+              <iframe id="resultsFrame" class="results-iframe"></iframe>
+            </div>
+          </div>
+          
+          <ul class="links" aria-label="推荐链接">
+            <li>
+              <a class="card" href="https://small534460.github.io/shiyoungongjui/" target="_blank" rel="noopener noreferrer">
+                <div class="title">🛠️ 实用工具</div>
+                <div class="desc">各种实用的在线工具和资源</div>
+              </a>
+            </li>
+            <li>
+               <a class="card" href="https://small534460.github.io/gonggao/" target="_blank" rel="noopener noreferrer">
+                <div class="title">📢 公告</div>
+                <div class="desc">网站公告和实验性内容</div>
+              </a>
+            </li>
+            <li>
+               <a class="card" href="https://online.yandex.com/search?text=%E4%BF%84%E7%BD%97%E6%96%AF%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8Eyandex&lr=21206" target="_blank" rel="noopener noreferrer">
+                <div class="title">🔍 Yandex导航</div>
+                <div class="desc">俄罗斯搜索引擎</div>
+              </a>
+            </li>
+            <li>
+                <a class="card" href="https://store.steampowered.com/" target="_blank" rel="noopener noreferrer">
+                <div class="title">🎮 Steam</div>
+                <div class="desc">游戏平台和社区</div>
+              </a>
+            </li>
+            <li>
+                <a class="card" href="https://github.com/" target="_blank" rel="noopener noreferrer">
+                <div class="title">💻 GitHub</div>
+                <div class="desc">代码托管和协作平台</div>
+              </a>
+            </li>
+            <li>
+              <a class="card" href="https://small534460.github.io/wenjiantuoguan/" target="_blank" rel="noopener noreferrer">
+                <div class="title">📁 GitHub 文件管理器</div>
+                <div class="desc">你可以把文件暂时存放在这里</div>
+              </a>
+            </li>
+          </ul>
+        </section>
+
+        <footer>
+          <div class="small">本站由 <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a> 支持</div>
+          <div class="small">© Small 3 | 探索数字世界</div>
+        </footer>
+      </main>
+    </div>
   </div>
-</div>
-
-<div id="welcomeModal" class="modal-overlay">
-  <div class="modal-box"><h3>欢迎来到 Small 3 的聊天室</h3><div style="text-align:center;color:var(--text);opacity:0.7;margin-bottom:10px">选择一个操作</div>
-    <div class="welcome-btns"><button class="btn-login" onclick="showLoginModal()">登录</button><button class="btn-register" onclick="showRegisterModal()">注册</button></div>
+  
+  <!-- 背景信息栏，默认显示 -->
+  <div class="bg-info" id="bgInfo" title="点击查看摄影师 | 右键换图 | Ctrl+Shift+B换图">
+    <span>📷</span>
+    <span id="bgPhotographer">摄影师: 加载中...</span>
   </div>
-</div>
-
-<div id="loginModal" class="modal-overlay" style="display:none">
-  <div class="modal-box"><h3>🔑 登录</h3>
-    <input type="text" id="loginUser" placeholder="用户名" autocomplete="off">
-    <input type="password" id="loginPass" placeholder="密码" autocomplete="off">
-    <div class="btn-group"><button class="btn-secondary" onclick="document.getElementById('loginModal').style.display='none';document.getElementById('welcomeModal').style.display='flex'">返回</button><button class="btn-primary" onclick="doLogin()">登录</button></div>
-  </div>
-</div>
-
-<div id="registerModal" class="modal-overlay" style="display:none">
-  <div class="modal-box"><h3>📝 注册</h3>
-    <input type="text" id="regUser" placeholder="用户名（禁止 __ / \）" autocomplete="off">
-    <input type="password" id="regPass" placeholder="密码" autocomplete="off">
-    <div class="btn-group"><button class="btn-secondary" onclick="document.getElementById('registerModal').style.display='none';document.getElementById('welcomeModal').style.display='flex'">返回</button><button class="btn-primary" onclick="doRegister()">注册</button></div>
-  </div>
-</div>
-
-<div id="adminModal" class="modal-overlay" style="display:none">
-  <div class="modal-box"><h3>🔐 管理员验证</h3>
-    <input type="password" id="adminPass" placeholder="管理员密码" autocomplete="off">
-    <div class="btn-group"><button class="btn-secondary" onclick="document.getElementById('adminModal').style.display='none'">取消</button><button class="btn-warning" onclick="verifyAdmin()">验证</button></div>
-  </div>
-</div>
-
-<div id="logModal" class="log-modal" style="display:none">
-  <div class="log-box"><h3>📋 运行日志</h3><div id="logContent">暂无日志</div><br><button class="sidebar-btn" onclick="clearLog()">清空日志</button><button class="sidebar-btn" style="margin-top:4px" onclick="document.getElementById('logModal').style.display='none'">关闭</button></div>
-</div>
-
-<script>
-var ENC_TOKEN='59a643c206c92361b1fbd493f07065e64fff6a57cd90779631dae58a49c8457f0ca702ed01fb2a5b';
-var ADMIN_HASH='0cd875127059c80ae5744c59a4e1183a123f4f9dea543f9391bcff9317f0b4f6';
-var REPO_USER='small534460';var REPO_NAME='LTS';var MSG_DIR='messages';var USER_DIR='users';
-var token='';var currentUser='';var pollingTimer=null;var logs=[];var theme='dark';var attachFile=null;
-var loadedFolders={};
-
-function addLog(m){var t=new Date().toLocaleTimeString();logs.push('['+t+'] '+m);console.log(m);if(logs.length>200)logs.shift()}
-function showToast(m){var t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(function(){t.remove()},2000)}
-
-function decryptToken(pw){return crypto.subtle.digest('SHA-256',new TextEncoder().encode(pw)).then(function(h){var hb=new Uint8Array(h),eb=[];for(var i=0;i<ENC_TOKEN.length;i+=2)eb.push(parseInt(ENC_TOKEN.substr(i,2),16));var db=[];for(var i=0;i<eb.length;i++)db.push(eb[i]^hb[i%hb.length]);return new TextDecoder().decode(new Uint8Array(db))})}
-async function initToken(){try{token=await decryptToken('534460');addLog('令牌已就绪')}catch(e){addLog('令牌解密失败: '+e.message)}}
-
-async function api(endpoint,method,data){
-  method=method||'GET';data=data||null;
-  if(!token){try{await initToken()}catch(e){}if(!token){addLog('无令牌');return null}}
-  var url='https://api.github.com/repos/'+REPO_USER+'/'+REPO_NAME+'/'+endpoint;
-  var opts={method:method,headers:{'Authorization':'token '+token,'Accept':'application/vnd.github.v3+json'}};
-  if(data)opts.body=JSON.stringify(data);
-  try{var r=await fetch(url,opts);if(r.status===204)return null;if(r.status===404)return null;if(!r.ok){throw new Error('HTTP '+r.status)}return await r.json()}catch(e){addLog('API: '+e.message);return null}
-}
-
-function showLog(){document.getElementById('logModal').style.display='flex';renderLog()}
-function renderLog(){document.getElementById('logContent').innerHTML=logs.length?logs.join('<br>'):'暂无日志'}
-function clearLog(){logs=[];renderLog();addLog('日志已清空')}
-document.addEventListener('click',function(e){if(e.target.id==='logModal')document.getElementById('logModal').style.display='none'});
-document.addEventListener('click',function(e){if(e.target.id==='adminModal')document.getElementById('adminModal').style.display='none'});
-
-function toggleTheme(){if(theme==='dark'){document.body.classList.add('light');theme='light';document.getElementById('themeBtn').textContent='☀️ 白天模式'}else{document.body.classList.remove('light');theme='dark';document.getElementById('themeBtn').textContent='🌙 夜间模式'}localStorage.setItem('chat_theme',theme)}
-function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('sidebarOverlay').classList.add('show')}
-function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sidebarOverlay').classList.remove('show')}
-
-function showLoginModal(){document.getElementById('welcomeModal').style.display='none';document.getElementById('loginModal').style.display='flex';document.getElementById('loginUser').value='';document.getElementById('loginPass').value=''}
-function showRegisterModal(){document.getElementById('welcomeModal').style.display='none';document.getElementById('registerModal').style.display='flex';document.getElementById('regUser').value='';document.getElementById('regPass').value=''}
-
-async function doLogin(){
-  var u=document.getElementById('loginUser').value.trim();var p=document.getElementById('loginPass').value;
-  if(!u||!p){showToast('请填写完整');return}
-  if(u.indexOf('/')>=0||u.indexOf('\\')>=0||u.indexOf('__')>=0){showToast('用户名含非法字符');return}
-  addLog('尝试登录: '+u);
-  var info=await api('contents/'+USER_DIR+'/'+u+'.txt');
-  if(!info||!info.content){showToast('用户不存在');return}
-  var txt=atob(info.content.replace(/\s/g,''));var lines=txt.split('\n');
-  if(lines[0]!==p){showToast('密码错误');return}
-  if(lines[1].trim()!=='1'){showToast('账户待审核');return}
-  currentUser=u;localStorage.setItem('chat_user',u);
-  document.getElementById('loginModal').style.display='none';
-  document.getElementById('mainApp').style.display='flex';
-  loadedFolders={};document.getElementById('chatArea').innerHTML='<div style="text-align:center;opacity:0.5;padding:40px">暂无消息，来发第一条吧</div>';
-  addLog('登录成功: '+u);loadMessages();pollingTimer=setInterval(loadMessages,2000)
-}
-
-async function doRegister(){
-  var u=document.getElementById('regUser').value.trim();var p=document.getElementById('regPass').value;
-  if(!u||!p){showToast('请填写完整');return}
-  if(u.indexOf('/')>=0||u.indexOf('\\')>=0||u.indexOf('__')>=0){showToast('用户名含非法字符');return}
-  if(!token){try{await initToken()}catch(e){}if(!token){showToast('系统错误');return}}
-  addLog('尝试注册: '+u);
-  var check=await api('contents/'+USER_DIR+'/'+u+'.txt');
-  if(check){showToast('用户名已存在');return}
-  var cont=p+'\n0';var b64=btoa(unescape(encodeURIComponent(cont)));
-  var r=await api('contents/'+USER_DIR+'/'+u+'.txt','PUT',{message:'注册 '+u,content:b64,branch:'main'});
-  if(r){showToast('注册成功！等待审核');addLog('注册成功: '+u);document.getElementById('registerModal').style.display='none';document.getElementById('welcomeModal').style.display='flex'}else{showToast('注册失败')}
-}
-
-function logout(){if(pollingTimer)clearInterval(pollingTimer);currentUser='';localStorage.removeItem('chat_user');loadedFolders={};document.getElementById('mainApp').style.display='none';document.getElementById('welcomeModal').style.display='flex';addLog('已退出')}
-
-function showAdminModal(){document.getElementById('adminModal').style.display='flex';document.getElementById('adminPass').value=''}
-async function verifyAdmin(){
-  var pw=document.getElementById('adminPass').value;if(!pw)return;
-  var hh=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(pw)).then(function(h){return Array.from(new Uint8Array(h)).map(function(b){return b.toString(16).padStart(2,'0')}).join('')});
-  if(hh===ADMIN_HASH){document.getElementById('adminModal').style.display='none';
-    if(confirm('管理员模式已激活。\n\n要删除所有聊天记录吗？')){if(confirm('再次确认'))deleteAllMessages()}
-  }else{showToast('密码错误')}
-}
-async function deleteAllMessages(){var list=await api('contents/'+MSG_DIR);if(!list||!Array.isArray(list))return;var count=0;for(var i=0;i<list.length;i++){if(list[i].name==='.gitkeep')continue;if(list[i].type==='dir'){try{var sub=await api('contents/'+MSG_DIR+'/'+list[i].name);if(sub&&Array.isArray(sub)){for(var j=0;j<sub.length;j++){if(sub[j].name==='.gitkeep')continue;await api('contents/'+MSG_DIR+'/'+list[i].name+'/'+sub[j].name,'DELETE',{message:'删除',sha:sub[j].sha,branch:'main'});count++}}var self=await api('contents/'+MSG_DIR+'/'+list[i].name+'/.gitkeep');if(self)await api('contents/'+MSG_DIR+'/'+list[i].name+'/.gitkeep','DELETE',{message:'删除文件夹',sha:self.sha,branch:'main'}).catch(function(){})}catch(e){}}}loadedFolders={};document.getElementById('chatArea').innerHTML='<div style="text-align:center;opacity:0.5;padding:40px">暂无消息</div>';addLog('聊天记录已清空')}
-
-// ★★★ 发送消息 + 附件 ★★★
-async function sendMessage(){
-  var msg=document.getElementById('msgInput').value.trim();
-  if(!msg&&!attachFile){showToast('请输入内容');return}
-  if(msg&&(msg.indexOf('__')>=0||msg.indexOf('/')>=0||msg.indexOf('\\')>=0)){showToast('消息含非法字符');return}
-  var now=new Date();var ts=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0')+'_'+String(now.getHours()).padStart(2,'0')+'-'+String(now.getMinutes()).padStart(2,'0')+'-'+String(now.getSeconds()).padStart(2,'0');
-  var safeMsg=msg||'(附件)';var folderName=ts+'__'+currentUser+'__'+safeMsg;
   
-  // 先创建文件夹
-  var r=await api('contents/'+MSG_DIR+'/'+folderName+'/.gitkeep','PUT',{message:'消息',content:btoa('#'),branch:'main'});
-  if(!r){showToast('发送失败');return}
-  
-  // 上传附件
-  if(attachFile){
-    if(attachFile.size>25*1024*1024){showToast('附件<25MB')}
-    else{await uploadAttach(MSG_DIR+'/'+folderName)}
-  }
-  
-  document.getElementById('msgInput').value='';attachFile=null;
-  // 立即加载新消息
-  setTimeout(function(){loadMessages()},500);
-}
-
-async function uploadAttach(fp){var f=attachFile;return new Promise(function(resolve){var r=new FileReader();r.onload=async function(e){var c=btoa(new Uint8Array(e.target.result).reduce(function(d,b){return d+String.fromCharCode(b)},''));await api('contents/'+fp+'/'+f.name,'PUT',{message:'附件',content:c,branch:'main'});resolve()};r.readAsArrayBuffer(f)})}
-document.getElementById('attachInput').addEventListener('change',function(e){if(e.target.files.length>0){attachFile=e.target.files[0];showToast('已选: '+attachFile.name)}});
-
-// ★★★ 增量加载消息 ★★★
-async function loadMessages(){
-  if(!currentUser)return;
-  var list=await api('contents/'+MSG_DIR);if(!list||!Array.isArray(list))return;
-  var area=document.getElementById('chatArea');var hasNew=false;
-  
-  // 先移除"暂无消息"提示
-  var emptyTip=area.querySelector('div[style]');
-  
-  for(var i=0;i<list.length;i++){
-    if(list[i].name==='.gitkeep'||list[i].type!=='dir')continue;
-    if(loadedFolders[list[i].name])continue;
-    var parts=list[i].name.split('__',3);if(parts.length<3)continue;
-    loadedFolders[list[i].name]=true;hasNew=true;
+  <script>
+    // ╔══════════════════════════════════════════════════════════════╗
+    // ║            🔑 Unsplash API 配置区域 - 看这里！              ║
+    // ║        请将下面的字符串替换为您自己的 Access Key            ║
+    // ╚══════════════════════════════════════════════════════════════╝
+    var UNSPLASH_ACCESS_KEY = 'YYvtMNDAqTidAbtxrQkb-wOskhmn3CSHx0PXxAK60po';  // ← 您的 Access Key
+    //
+    // ╔══════════════════════════════════════════════════════════════╗
+    // ║               🎯 Unsplash API 配置区域结束                   ║
+    // ╚══════════════════════════════════════════════════════════════╝
     
-    // 创建消息行
-    var row=document.createElement('div');row.className='msg-row';
-    if(parts[1]===currentUser)row.classList.add('mine');
-    var meta=document.createElement('div');meta.className='msg-meta';
-    meta.innerHTML='<span class="user-tag">'+parts[1]+'</span> <span>'+parts[0]+'</span>';
-    var bb=document.createElement('div');bb.className='msg-bubble';bb.textContent=parts[2];
-    row.appendChild(meta);row.appendChild(bb);area.appendChild(row);
-    
-    // ★ 加载附件
-    var folderName=list[i].name;
-    api('contents/'+MSG_DIR+'/'+folderName).then(function(sub){
-      if(sub&&Array.isArray(sub)){
-        for(var j=0;j<sub.length;j++){
-          if(sub[j].name==='.gitkeep')continue;
-          var ad=document.createElement('div');ad.className='msg-attachment';
-          var ext=sub[j].name.split('.').pop().toLowerCase();
-          if(['jpg','jpeg','png','gif','bmp','webp','svg'].indexOf(ext)>=0){
-            var img=document.createElement('img');
-            img.src=sub[j].download_url;img.alt=sub[j].name;
-            img.onclick=function(){window.open(this.src)};
-            ad.appendChild(img);
-          }else{
-            var a=document.createElement('a');
-            a.href=sub[j].download_url;a.textContent='📎 '+sub[j].name;
-            a.download=sub[j].name;a.target='_blank';
-            ad.appendChild(a);
+    // ============ 新增：毛玻璃强度控制 ============
+    (function() {
+      var blurSlider = document.getElementById('blurSlider');
+      var blurValue = document.getElementById('blurValue');
+      var blurResetBtn = document.getElementById('blurResetBtn');
+      var wrap = document.querySelector('.wrap');
+      
+      // 默认值
+      var DEFAULT_BLUR = 8;
+      var MOBILE_DEFAULT_BLUR = 4;
+      
+      // 检测是否为移动设备
+      function isMobile() {
+        return window.innerWidth <= 768;
+      }
+      
+      // 从localStorage读取保存的值
+      function getSavedBlur() {
+        var saved = localStorage.getItem('blur_strength');
+        if (saved !== null && saved !== undefined) {
+          return parseInt(saved);
+        }
+        return isMobile() ? MOBILE_DEFAULT_BLUR : DEFAULT_BLUR;
+      }
+      
+      // 应用毛玻璃强度
+      function applyBlur(value) {
+        var blurPx = value + 'px';
+        
+        // 更新CSS变量
+        document.documentElement.style.setProperty('--blur-strength', blurPx);
+        
+        // 直接设置wrap的模糊
+        if (wrap) {
+          wrap.style.backdropFilter = 'blur(' + blurPx + ')';
+          wrap.style.webkitBackdropFilter = 'blur(' + blurPx + ')';
+        }
+        
+        // 更新滑块和显示值
+        if (blurSlider && blurValue) {
+          blurSlider.value = value;
+          blurValue.textContent = blurPx;
+        }
+        
+        // 保存到localStorage
+        localStorage.setItem('blur_strength', value);
+        
+        // 根据模糊程度调整背景透明度，让背景图片更清晰
+        var infoCards = document.querySelectorAll('.info-card, .card, .intro, .quick-action-btn');
+        var bgOpacity = value <= 5 ? '0.1' : value <= 12 ? '0.2' : '0.3';
+        
+        infoCards.forEach(function(card) {
+          if (card.className.includes('card') && !card.className.includes('info-card')) {
+            card.style.background = 'rgba(0, 0, 0, ' + bgOpacity + ')';
           }
-          bb.appendChild(ad);
+        });
+      }
+      
+      // 初始化
+      var initialBlur = getSavedBlur();
+      applyBlur(initialBlur);
+      
+      // 监听滑块变化
+      if (blurSlider) {
+        blurSlider.addEventListener('input', function() {
+          var value = parseInt(this.value);
+          applyBlur(value);
+          
+          // 实时提示
+          if (value === 0) {
+            showToast('毛玻璃已关闭 - 背景完全清晰 🔍');
+          } else if (value <= 4) {
+            showToast('轻微模糊 - 能看到背景细节 ✨');
+          } else if (value <= 12) {
+            showToast('适中模糊 - 内容和背景平衡 🎯');
+          } else {
+            showToast('强模糊 - 突出内容阅读 📖');
+          }
+        });
+      }
+      
+      // 重置按钮
+      if (blurResetBtn) {
+        blurResetBtn.addEventListener('click', function() {
+          var defaultVal = isMobile() ? MOBILE_DEFAULT_BLUR : DEFAULT_BLUR;
+          applyBlur(defaultVal);
+          showToast('毛玻璃已恢复默认：' + defaultVal + 'px 🔄');
+        });
+      }
+      
+      // 窗口大小改变时，如果不曾手动设置过，自动调整
+      window.addEventListener('resize', function() {
+        var hasUserSet = localStorage.getItem('blur_strength_user_set');
+        if (!hasUserSet) {
+          var defaultVal = isMobile() ? MOBILE_DEFAULT_BLUR : DEFAULT_BLUR;
+          applyBlur(defaultVal);
+        }
+      });
+      
+      // 标记用户是否手动设置过
+      if (blurSlider) {
+        blurSlider.addEventListener('change', function() {
+          localStorage.setItem('blur_strength_user_set', 'true');
+        });
+      }
+      
+      if (blurResetBtn) {
+        blurResetBtn.addEventListener('click', function() {
+          localStorage.removeItem('blur_strength_user_set');
+        });
+      }
+      
+      console.log('🔮 毛玻璃控制系统已初始化');
+      console.log('  当前模糊度：' + initialBlur + 'px');
+      console.log('  拖动滑块调整 | 点击重置恢复默认');
+    })();
+    
+    // ============ 时间和日期更新 ============
+    function updateDateTime() {
+      var now = new Date();
+      
+      var timeStr = now.toLocaleTimeString('zh-CN', { 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        second: '2-digit',
+        hour12: false 
+      });
+      document.getElementById('currentTime').textContent = timeStr;
+      
+      var weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+      var dateStr = now.getFullYear() + '年' + 
+                    (now.getMonth() + 1) + '月' + 
+                    now.getDate() + '日 星期' + 
+                    weekdays[now.getDay()];
+      document.getElementById('currentDate').textContent = dateStr;
+    }
+    
+    // ============ 每日一言 ============
+    var quotes = [
+      "生活不止眼前的苟且，还有诗和远方。",
+      "每一天都是一个新的开始。",
+      "保持热爱，奔赴山海。",
+      "星光不问赶路人，时光不负有心人。",
+      "与其临渊羡鱼，不如退而结网。",
+      "路漫漫其修远兮，吾将上下而求索。",
+      "世界上最快乐的事，莫过于为理想而奋斗。",
+      "不要等待机会，而要创造机会。",
+      "成功不是终点，失败也不是终结，唯有勇气才是永恒。",
+      "生活就像一盒巧克力，你永远不知道下一颗是什么味道。",
+      "种一棵树最好的时间是十年前，其次是现在。",
+      "人生如逆旅，我亦是行人。",
+      "且将新火试新茶，诗酒趁年华。",
+      "长风破浪会有时，直挂云帆济沧海。",
+      "世界那么大，我想去看看。"
+    ];
+    
+    function updateDailyQuote() {
+      var today = new Date();
+      var dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+      var quoteIndex = dayOfYear % quotes.length;
+      document.getElementById('dailyQuote').textContent = quotes[quoteIndex];
+    }
+    
+    // ============ 复制到剪贴板 ============
+    function copyToClipboard(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function() {
+          showToast('链接已复制！📋');
+        }).catch(function() {
+          fallbackCopy(text);
+        });
+      } else {
+        fallbackCopy(text);
+      }
+    }
+    
+    function fallbackCopy(text) {
+      var textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand('copy');
+        showToast('链接已复制！📋');
+      } catch (err) {
+        showToast('复制失败，请手动复制');
+      }
+      document.body.removeChild(textarea);
+    }
+    
+    // ============ Toast提示 ============
+    function showToast(message) {
+      var existingToast = document.querySelector('.custom-toast');
+      if (existingToast) {
+        document.body.removeChild(existingToast);
+      }
+      
+      var toast = document.createElement('div');
+      toast.className = 'custom-toast';
+      toast.textContent = message;
+      toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        color: white;
+        padding: 10px 24px;
+        border-radius: 20px;
+        font-size: 14px;
+        z-index: 2000;
+        animation: fadeInOut 2s ease forwards;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        white-space: nowrap;
+        pointer-events: none;
+      `;
+      
+      if (!document.getElementById('toast-animation-style')) {
+        var style = document.createElement('style');
+        style.id = 'toast-animation-style';
+        style.textContent = `
+          @keyframes fadeInOut {
+            0% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+            15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            85% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+          }
+        `;
+        document.head.appendChild(style);
+      }
+      
+      document.body.appendChild(toast);
+      
+      setTimeout(function() {
+        if (toast.parentNode) {
+          document.body.removeChild(toast);
+        }
+      }, 2000);
+    }
+    
+    // ============ 亮度调节 ============
+    var brightnessLevel = 0;
+    var brightnessValues = [
+      { value: 0.3, label: '明亮 ✨' },
+      { value: 0.5, label: '适中 🌤️' },
+      { value: 0.7, label: '暗色 🌙' }
+    ];
+    
+    function toggleBrightness() {
+      brightnessLevel = (brightnessLevel + 1) % brightnessValues.length;
+      var level = brightnessValues[brightnessLevel];
+      
+      var currentBg = document.body.style.backgroundImage;
+      var bgUrlMatch = currentBg.match(/url\(([^)]+)\)/);
+      
+      if (bgUrlMatch && bgUrlMatch[1]) {
+        var imageUrl = bgUrlMatch[1];
+        var gradientOverlay = 'linear-gradient(180deg, rgba(7,16,38,' + level.value + ') 0%, rgba(7,16,38,' + (level.value + 0.05) + ') 100%)';
+        document.body.style.backgroundImage = gradientOverlay + ', url(' + imageUrl + ')';
+        showToast('亮度：' + level.label);
+      } else {
+        showToast('亮度调节中... ' + level.label);
+      }
+    }
+    
+    // ============ 随机访问有趣网站 ============
+    var funWebsites = [
+      { url: 'https://www.bilibili.com', name: '哔哩哔哩 - 干杯！' },
+      { url: 'https://www.youtube.com', name: 'YouTube - 视频分享' },
+      { url: 'https://music.163.com', name: '网易云音乐' },
+      { url: 'https://y.qq.com', name: 'QQ音乐' },
+      { url: 'https://chat.deepseek.com', name: 'DeepSeek - AI助手' },
+      { url: 'https://kimi.moonshot.cn', name: 'Kimi - AI助手' },
+      { url: 'https://www.douyin.com', name: '抖音 - 记录美好生活' },
+      { url: 'https://weibo.com', name: '微博 - 随时随地发现新鲜事' },
+      { url: 'https://www.zhihu.com', name: '知乎 - 有问题，就会有答案' },
+      { url: 'https://translate.google.com', name: 'Google 翻译' },
+      { url: 'https://www.wikipedia.org', name: '维基百科' },
+      { url: 'https://store.steampowered.com', name: 'Steam 商店' },
+      { url: 'https://www.epicgames.com', name: 'Epic Games' },
+      { url: 'https://www.runoob.com', name: '菜鸟教程 - 编程学习' },
+      { url: 'https://github.com', name: 'GitHub - 代码托管' }
+    ];
+    
+    function randomWebsite() {
+      var randomIndex = Math.floor(Math.random() * funWebsites.length);
+      var website = funWebsites[randomIndex];
+      showToast('🚀 前往：' + website.name);
+      setTimeout(function() {
+        window.open(website.url, '_blank');
+      }, 800);
+    }
+    
+    // ============ 添加书签提示 ============
+    function showBookmarkPrompt() {
+      if (window.navigator.userAgent.indexOf('Mac') !== -1) {
+        showToast('按 Cmd+D 添加书签 ⭐');
+      } else {
+        showToast('按 Ctrl+D 添加书签 ⭐');
+      }
+    }
+    
+    // ============ 启动时更新时间和日期 ============
+    updateDateTime();
+    updateDailyQuote();
+    setInterval(updateDateTime, 1000);
+    
+    // ============ 头像图片加载失败时的处理函数 ============
+    function showAvatarFallback() {
+      var avatarImg = document.getElementById('avatarImg');
+      var avatarFallback = document.getElementById('avatarFallback');
+      
+      if (avatarImg) {
+        avatarImg.style.display = 'none';
+      }
+      
+      if (avatarFallback) {
+        avatarFallback.style.display = 'flex';
+      }
+    }
+    
+    var avatarUrl = 'https://i.mituw.com/imgs/2026/03/15/de4945abb96be550.jpg';
+    
+    window.addEventListener('DOMContentLoaded', function() {
+      var avatarImg = document.getElementById('avatarImg');
+      if (avatarImg) {
+        // avatarImg.src = avatarUrl;
+      }
+    });
+
+    // ============ 动态背景图片系统（图库选择版）============
+    (function() {
+      'use strict';
+      
+      var GALLERY_TYPES = {
+        nature: {
+          name: '自然风景',
+          icon: '🏔️',
+          description: '山川、海洋、森林等自然风光',
+          unsplashCollection: '1163637',
+          unsplashQuery: 'nature landscape'
+        },
+        art: {
+          name: '艺术创意',
+          icon: '🎨',
+          description: '抽象艺术、设计、创意摄影',
+          unsplashCollection: '317099',
+          unsplashQuery: 'art abstract creative'
+        }
+      };
+      
+      var currentGalleryType = localStorage.getItem('bg_gallery_type') || 'nature';
+      
+      var CONFIG = {
+        storageKey: 'bg_image_cache_v4',
+        cacheDuration: 30 * 60 * 1000,
+        maxDailyRequests: 50
+      };
+      
+      function buildImageSources(galleryType) {
+        var gallery = GALLERY_TYPES[galleryType] || GALLERY_TYPES.nature;
+        
+        return [
+          {
+            name: 'Unsplash - ' + gallery.name,
+            getUrl: function() {
+              return 'https://api.unsplash.com/photos/random?collections=' + 
+                     gallery.unsplashCollection + 
+                     '&orientation=landscape&w=1920&q=80&count=1';
+            },
+            getHeaders: function() {
+              return {
+                'Authorization': 'Client-ID ' + UNSPLASH_ACCESS_KEY,
+                'Accept-Version': 'v1'
+              };
+            },
+            parseResponse: function(data) {
+              var photo = Array.isArray(data) ? data[0] : data;
+              return {
+                url: photo.urls.regular,
+                photographer: photo.user.name,
+                link: photo.links.html,
+                galleryType: galleryType
+              };
+            }
+          },
+          {
+            name: 'Lorem Picsum (备用)',
+            getUrl: function() {
+              var randomId = Math.floor(Math.random() * 1000);
+              return 'https://picsum.photos/1920/1080?random=' + randomId;
+            },
+            getHeaders: function() {
+              return {};
+            },
+            parseResponse: function(response, url) {
+              return {
+                url: url,
+                photographer: 'Lorem Picsum',
+                link: 'https://picsum.photos',
+                galleryType: 'picsum'
+              };
+            }
+          }
+        ];
+      }
+      
+      var IMAGE_SOURCES = buildImageSources(currentGalleryType);
+      
+      var body = document.body;
+      var bgInfo = document.getElementById('bgInfo');
+      var bgPhotographer = document.getElementById('bgPhotographer');
+      var galleryBtn = document.getElementById('gallerySelectorBtn');
+      
+      function updateGalleryButton() {
+        if (galleryBtn) {
+          var gallery = GALLERY_TYPES[currentGalleryType] || GALLERY_TYPES.nature;
+          galleryBtn.innerHTML = '<span class="icon">' + gallery.icon + '</span> ' + gallery.name + 
+                                '<span class="gallery-indicator"></span>';
+          galleryBtn.title = '当前图库：' + gallery.name + ' - ' + gallery.description + ' | 点击切换';
         }
       }
-    }).catch(function(){});
-  }
-  
-  if(hasNew)area.scrollTop=area.scrollHeight;
-  if(Object.keys(loadedFolders).length===0){area.innerHTML='<div style="text-align:center;opacity:0.5;padding:40px">暂无消息，来发第一条吧</div>'}
-}
+      
+      updateGalleryButton();
+      
+      if (bgInfo) {
+        bgInfo.style.display = 'flex';
+        if (bgPhotographer) {
+          bgPhotographer.textContent = '摄影师: 加载中...';
+        }
+      }
+      
+      body.classList.add('bg-loading');
+      
+      function getCachedBackground() {
+        try {
+          var cached = localStorage.getItem(CONFIG.storageKey);
+          if (cached) {
+            var data = JSON.parse(cached);
+            if (data.timestamp && 
+                (Date.now() - data.timestamp) < CONFIG.cacheDuration &&
+                data.galleryType === currentGalleryType) {
+              return data;
+            }
+          }
+        } catch (e) {
+          console.warn('读取缓存失败:', e);
+        }
+        return null;
+      }
+      
+      function cacheBackground(imageData) {
+        try {
+          var cacheData = {
+            url: imageData.url,
+            photographer: imageData.photographer,
+            link: imageData.link,
+            galleryType: imageData.galleryType || currentGalleryType,
+            timestamp: Date.now()
+          };
+          localStorage.setItem(CONFIG.storageKey, JSON.stringify(cacheData));
+        } catch (e) {
+          console.warn('缓存存储失败:', e);
+        }
+      }
+      
+      function preloadImage(url) {
+        return new Promise(function(resolve, reject) {
+          var img = new Image();
+          img.onload = function() {
+            resolve(url);
+          };
+          img.onerror = function() {
+            reject(new Error('图片加载失败: ' + url));
+          };
+          img.src = url;
+        });
+      }
+      
+      function applyBackground(imageData) {
+        preloadImage(imageData.url).then(function(url) {
+          var gradientOverlay = 'linear-gradient(180deg, rgba(7,16,38,0.3) 0%, rgba(7,16,38,0.35) 100%)';
+          
+          body.style.backgroundImage = gradientOverlay + ', url(' + url + ')';
+          body.classList.remove('bg-loading');
+          body.classList.add('bg-loaded');
+          
+          if (bgPhotographer) {
+            if (imageData.photographer && !imageData.photographer.includes('Lorem Picsum')) {
+              var galleryLabel = '';
+              if (imageData.galleryType && GALLERY_TYPES[imageData.galleryType]) {
+                galleryLabel = '[' + GALLERY_TYPES[imageData.galleryType].name + '] ';
+              }
+              bgPhotographer.textContent = galleryLabel + '摄影师: ' + imageData.photographer;
+            } else if (imageData.photographer === 'Lorem Picsum') {
+              bgPhotographer.textContent = '图片来自 Lorem Picsum (备用)';
+            }
+          }
+          
+          if (bgInfo) {
+            bgInfo.style.display = 'flex';
+            
+            if (imageData.link) {
+              bgInfo.onclick = function() {
+                if (imageData.photographer !== 'Lorem Picsum') {
+                  window.open(imageData.link, '_blank');
+                } else {
+                  window.changeBackground();
+                }
+              };
+              bgInfo.title = imageData.photographer !== 'Lorem Picsum' ? 
+                '点击查看摄影师主页 | 右键强制换图 | 当前图库：' + 
+                (GALLERY_TYPES[imageData.galleryType] || {name: '未知'}).name : 
+                '点击切换背景图片 | 右键强制换图';
+            }
+          }
+          
+          cacheBackground(imageData);
+          
+          console.log('背景图片已更新 [' + (GALLERY_TYPES[imageData.galleryType] || {name: '未知'}).name + ']:', 
+                      imageData.photographer || '未知摄影师');
+        }).catch(function(error) {
+          console.error('图片预加载失败:', error);
+          fetchRandomImage(1);
+        });
+      }
+      
+      function fetchRandomImage(sourceIndex) {
+        sourceIndex = sourceIndex || 0;
+        
+        if (sourceIndex === 0 && (!UNSPLASH_ACCESS_KEY || UNSPLASH_ACCESS_KEY === 'YOUR_ACCESS_KEY_HERE')) {
+          console.warn('⚠️  检测到您还没有配置 Unsplash Access Key，正在跳过 Unsplash...');
+          fetchRandomImage(1);
+          return;
+        }
+        
+        if (sourceIndex >= IMAGE_SOURCES.length) {
+          console.warn('所有图片源都无法访问，使用默认背景');
+          body.classList.remove('bg-loading');
+          body.classList.add('bg-loaded');
+          if (bgPhotographer) {
+            bgPhotographer.textContent = '默认背景（点击切换）';
+          }
+          if (bgInfo) {
+            bgInfo.style.display = 'flex';
+            bgInfo.onclick = function() {
+              window.changeBackground();
+            };
+          }
+          return;
+        }
+        
+        var source = IMAGE_SOURCES[sourceIndex];
+        console.log('尝试从 ' + source.name + ' 获取背景图片...');
+        
+        if (source.name.includes('Lorem Picsum')) {
+          var imageUrl = source.getUrl();
+          var imageData = source.parseResponse(null, imageUrl);
+          applyBackground(imageData);
+          return;
+        }
+        
+        var headers = source.getHeaders();
+        var fetchOptions = {
+          method: 'GET',
+          headers: headers
+        };
+        
+        fetch(source.getUrl(), fetchOptions)
+          .then(function(response) {
+            if (!response.ok) {
+              throw new Error('HTTP ' + response.status + ' - 可能是API密钥无效或请求次数超限');
+            }
+            return response.json();
+          })
+          .then(function(data) {
+            var imageData = source.parseResponse(data);
+            applyBackground(imageData);
+          })
+          .catch(function(error) {
+            console.warn(source.name + ' 请求失败:', error.message);
+            fetchRandomImage(sourceIndex + 1);
+          });
+      }
+      
+      function initBackground() {
+        var cached = getCachedBackground();
+        
+        if (cached && cached.url) {
+          console.log('使用缓存的背景图片 [' + currentGalleryType + ']...');
+          applyBackground(cached);
+        } else {
+          console.log('获取新的背景图片 [' + currentGalleryType + ']...');
+          fetchRandomImage(0);
+        }
+      }
+      
+      initBackground();
+      
+      window.changeBackground = function() {
+        console.log('手动切换背景 [' + currentGalleryType + ']...');
+        localStorage.removeItem(CONFIG.storageKey);
+        IMAGE_SOURCES = buildImageSources(currentGalleryType);
+        body.classList.add('bg-loading');
+        body.classList.remove('bg-loaded');
+        if (bgPhotographer) {
+          bgPhotographer.textContent = '摄影师: 加载中...';
+        }
+        fetchRandomImage(0);
+      };
+      
+      window.toggleGallery = function() {
+        var galleryTypes = Object.keys(GALLERY_TYPES);
+        var currentIndex = galleryTypes.indexOf(currentGalleryType);
+        currentGalleryType = galleryTypes[(currentIndex + 1) % galleryTypes.length];
+        
+        localStorage.setItem('bg_gallery_type', currentGalleryType);
+        
+        var gallery = GALLERY_TYPES[currentGalleryType];
+        
+        updateGalleryButton();
+        
+        showToast('已切换至：' + gallery.icon + ' ' + gallery.name + ' - ' + gallery.description);
+        
+        localStorage.removeItem(CONFIG.storageKey);
+        IMAGE_SOURCES = buildImageSources(currentGalleryType);
+        body.classList.add('bg-loading');
+        body.classList.remove('bg-loaded');
+        if (bgPhotographer) {
+          bgPhotographer.textContent = '摄影师: 加载中...';
+        }
+        fetchRandomImage(0);
+      };
+      
+      if (bgInfo) {
+        bgInfo.addEventListener('contextmenu', function(e) {
+          e.preventDefault();
+          window.changeBackground();
+        });
+      }
+      
+      document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.shiftKey && e.key === 'B') {
+          e.preventDefault();
+          window.changeBackground();
+        }
+        if (e.ctrlKey && e.shiftKey && e.key === 'G') {
+          e.preventDefault();
+          window.toggleGallery();
+        }
+      });
+      
+      if (!UNSPLASH_ACCESS_KEY || UNSPLASH_ACCESS_KEY === 'YOUR_ACCESS_KEY_HERE') {
+        console.log('💡 提示：配置 Unsplash API 后将优先使用 Unsplash 的高质量图片');
+      } else {
+        console.log('✅ 已检测到 Unsplash Access Key，正在使用 Unsplash 服务');
+      }
+      
+      console.log('动态背景系统已初始化 - 图库选择版');
+      console.log('📸 当前图库：' + GALLERY_TYPES[currentGalleryType].name);
+      console.log('🖼️  切换图库：点击"图库选择"按钮 或 Ctrl+Shift+G');
+      console.log('🎨 切换图片：点击右下角信息栏右键 或 Ctrl+Shift+B');
+    })();
 
-document.addEventListener('DOMContentLoaded',async function(){
-  var st=localStorage.getItem('chat_theme')||'dark';theme=st;if(theme==='light'){document.body.classList.add('light');document.getElementById('themeBtn').textContent='☀️ 白天模式'}
-  await initToken();
-  var su=localStorage.getItem('chat_user');
-  if(su){document.getElementById('welcomeModal').style.display='none';
-    try{var check=await api('contents/'+USER_DIR+'/'+su+'.txt');
-      if(check&&check.content){var txt=atob(check.content.replace(/\s/g,''));if(txt.split('\n')[1].trim()==='1'){currentUser=su;document.getElementById('mainApp').style.display='flex';loadedFolders={};loadMessages();pollingTimer=setInterval(loadMessages,2000);addLog('自动登录: '+su)}else{localStorage.removeItem('chat_user');document.getElementById('welcomeModal').style.display='flex'}}
-      else{localStorage.removeItem('chat_user');document.getElementById('welcomeModal').style.display='flex'}
-    }catch(e){document.getElementById('welcomeModal').style.display='flex'}
-  }else{document.getElementById('welcomeModal').style.display='flex'}
-  addLog('聊天室就绪')
-});
-</script>
+    // 搜索表单提交事件
+    document.getElementById('songSearchForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      var keyword = document.getElementById('searchKeyword').value.trim();
+      
+      if (!keyword) {
+        alert('请输入要搜索的歌曲名称或歌手名称');
+        return;
+      }
+      
+      var resultsContainer = document.getElementById('searchResults');
+      var iframe = document.getElementById('resultsFrame');
+      
+      resultsContainer.classList.add('active');
+      document.querySelector('.results-header').style.display = 'flex';
+      
+      document.getElementById('loading').style.display = 'flex';
+      document.getElementById('errorMessage').style.display = 'none';
+      document.getElementById('initialMessage').style.display = 'none';
+      iframe.style.display = 'none';
+      
+      var searchUrl = 'https://www.gequhai.com/s/' + encodeURIComponent(keyword);
+      
+      iframe.src = searchUrl;
+      
+      iframe.onload = function() {
+        document.getElementById('loading').style.display = 'none';
+        iframe.style.display = 'block';
+        
+        document.querySelector('.results-title').textContent = `搜索结果: ${keyword}`;
+      };
+      
+      iframe.onerror = function() {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('errorMessage').style.display = 'block';
+        document.querySelector('.results-title').textContent = `搜索失败: ${keyword}`;
+      };
+    });
+    
+    function closeResults() {
+      var resultsContainer = document.getElementById('searchResults');
+      var iframe = document.getElementById('resultsFrame');
+      
+      resultsContainer.classList.remove('active');
+      
+      document.querySelector('.results-header').style.display = 'none';
+      
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('errorMessage').style.display = 'none';
+      document.getElementById('initialMessage').style.display = 'block';
+      iframe.style.display = 'none';
+    }
+    
+    document.addEventListener('click', function(e) {
+      var resultsContainer = document.getElementById('searchResults');
+      var searchForm = document.getElementById('songSearchForm');
+      var searchInput = document.getElementById('searchKeyword');
+      
+      if (!resultsContainer.contains(e.target) && 
+          !searchForm.contains(e.target) && 
+          resultsContainer.classList.contains('active')) {
+        closeResults();
+      }
+    });
+    
+    document.getElementById('searchKeyword').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        document.getElementById('songSearchForm').dispatchEvent(new Event('submit'));
+      }
+    });
+    
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        var resultsContainer = document.getElementById('searchResults');
+        if (resultsContainer.classList.contains('active')) {
+          closeResults();
+        }
+      }
+    });
+  </script>
 </body>
 </html>
