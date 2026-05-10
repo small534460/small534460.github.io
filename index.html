@@ -192,8 +192,11 @@ function renderSongList(){
 
 function playTrack(i){
   currentTrack=i;var s=playlist[i];var audio=document.getElementById('bgMusic');
-  audio.src='https://raw.githubusercontent.com/'+MUSIC_REPO_USER+'/'+MUSIC_REPO+'/main/'+encodeURIComponent(s.name+'.'+s.ext)+'?token='+encodeURIComponent(musicToken);
-  audio.load();audio.play().catch(function(e){console.log('播放失败:',e);showToast('⚠️ 播放失败')});
+  // 用 GitHub API 获取 download_url
+  var apiUrl='https://api.github.com/repos/'+MUSIC_REPO_USER+'/'+MUSIC_REPO+'/contents/'+encodeURIComponent(s.name+'.'+s.ext);
+  fetch(apiUrl,{headers:{'Authorization':'token '+musicToken}}).then(function(r){return r.json()}).then(function(data){
+    if(data&&data.download_url){audio.src=data.download_url;audio.load();audio.play().catch(function(e){console.log('播放失败:',e)})}
+  }).catch(function(e){console.log('获取失败:',e)});
   isPlaying=true;document.getElementById('musicToggleBtn').classList.add('playing');renderSongList()
 }
 
