@@ -157,19 +157,36 @@
 
 <div class="bg-info" id="bgInfo" title="点击查看摄影师 | 右键换图"><span>📷</span><span id="bgPhotographer">摄影师: 加载中...</span></div>
 
-<!-- ★★★ 音乐播放器 ★★★ -->
-<button class="music-toggle-btn" id="musicToggleBtn" onclick="toggleMusicPanel()" title="音乐播放器">🎵</button>
-<div class="music-panel" id="musicPanel">
-  <div class="music-now-playing" id="nowPlaying">未在播放</div>
-  <div id="songList">加载中...</div>
-  <audio id="bgMusic" style="display:none" onended="playNext()"></audio>
-</div>
+    /* ★★★ 音乐播放器 ★★★ */
+    .music-toggle-btn{position:fixed;bottom:80px;right:20px;width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,0.5);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:20px;cursor:pointer;z-index:999;display:flex;align-items:center;justify-content:center;transition:all .3s}
+    .music-toggle-btn:hover{background:rgba(0,0,0,0.7);transform:scale(1.05)}
+    .music-toggle-btn.playing{box-shadow:0 0 16px rgba(96,165,250,0.4);border-color:var(--accent);animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{box-shadow:0 0 12px rgba(96,165,250,0.3)}50%{box-shadow:0 0 24px rgba(96,165,250,0.6)}}
+    .music-panel{position:fixed;bottom:130px;right:20px;width:300px;background:rgba(0,0,0,0.75);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:16px;z-index:998;display:none;flex-direction:column;gap:8px;max-height:400px;overflow-y:auto}
+    .music-panel.show{display:flex}
+    .music-panel .player-controls{display:flex;align-items:center;gap:8px;justify-content:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.08)}
+    .music-panel .ctrl-btn{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;padding:4px 8px;border-radius:6px;transition:all .2s}
+    .music-panel .ctrl-btn:hover{background:rgba(255,255,255,0.1)}
+    .music-panel .ctrl-btn.play-btn{font-size:24px}
+    .music-panel .loop-btn{font-size:14px}
+    .music-panel .loop-btn.active{color:var(--accent)}
+    .music-progress-bar{flex:1;height:4px;background:rgba(255,255,255,0.15);border-radius:2px;cursor:pointer;position:relative;margin:0 4px}
+    .music-progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.1s linear;width:0%}
+    .music-time{font-size:10px;color:rgba(255,255,255,0.6);min-width:32px;text-align:center}
+    .music-now-playing{font-size:12px;color:var(--accent);text-align:center;padding:2px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .music-panel .song-item{padding:10px 12px;border-radius:8px;cursor:pointer;font-size:13px;color:rgba(255,255,255,0.8);transition:all .2s;display:flex;align-items:center;gap:8px;border:1px solid transparent;background:rgba(255,255,255,0.03)}
+    .music-panel .song-item:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.1)}
+    .music-panel .song-item.active{background:rgba(96,165,250,0.15);border-color:rgba(96,165,250,0.3);color:#fff}
+    .music-panel .song-item .song-icon{font-size:14px;flex-shrink:0}
+    .music-panel .song-item .song-num{font-size:10px;color:rgba(255,255,255,0.4);min-width:18px;text-align:center}
+    .music-panel .song-item .song-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    @media(max-width:768px){.music-panel{width:260px;right:8px;bottom:120px}.music-toggle-btn{bottom:70px;right:8px}}
 
 <script>
 // ═══════════ 音乐播放器 ═══════════
 var MUSIC_REPO_USER='small534460';var MUSIC_REPO='LTS';
 var ENC_MUSIC_TOKEN='L79jrVSjux2ZS790MCd2+jo7Z9gJPEm+z+0KyjiWGadLB71bCCsJh1vy+izUsCfXL/Dlwt2EdoDUeNc4mVTaE89aN6U=';
-var musicToken='';var playlist=[];var currentTrack=0;var isPlaying=false;
+var musicToken='';var playlist=[];var currentTrack=-1;var isPlaying=false;var loopMode=0; // 0=顺序,1=单曲循环,2=列表循环
 
 function base64ToBytes(b64){var str=atob(b64);var bytes=new Uint8Array(str.length);for(var i=0;i<str.length;i++)bytes[i]=str.charCodeAt(i);return bytes}
 
@@ -180,22 +197,101 @@ async function initMusicToken(){
 async function loadMusicList(){
   if(!musicToken)await initMusicToken();if(!musicToken)return;
   try{var url='https://api.github.com/repos/'+MUSIC_REPO_USER+'/'+MUSIC_REPO+'/contents/';var r=await fetch(url,{headers:{'Authorization':'token '+musicToken}});var files=await r.json();if(!Array.isArray(files))return;
-    playlist=[];files.forEach(function(f){if(f.name.match(/\.(mp3|m4a|wav|ogg|flac)$/i))playlist.push({name:f.name.replace(/\.(mp3|m4a|wav|ogg|flac)$/i,''),url:f.download_url,ext:f.name.split('.').pop()})});renderSongList()}catch(e){console.log('加载音乐失败')}
+    playlist=[];files.forEach(function(f){if(f.name.match(/\.(mp3|m4a|wav|ogg|flac)$/i))playlist.push({name:f.name.replace(/\.(mp3|m4a|wav|ogg|flac)$/i,''),url:f.download_url,sha:f.sha,ext:f.name.split('.').pop()})});renderSongList()}catch(e){console.log('加载音乐失败:',e)}
 }
 
 function renderSongList(){
   var list=document.getElementById('songList');if(playlist.length===0){list.innerHTML='<div style="opacity:0.5;text-align:center;padding:12px">暂无音乐</div>';return}
-  list.innerHTML='';playlist.forEach(function(s,i){var div=document.createElement('div');div.className='song-item';if(i===currentTrack&&isPlaying)div.classList.add('active');div.innerHTML='<span class="song-icon">🎵</span><span class="song-name">'+s.name+'</span>';div.onclick=function(){playTrack(i)};list.appendChild(div)})
+  list.innerHTML='';playlist.forEach(function(s,i){var div=document.createElement('div');div.className='song-item';if(i===currentTrack)div.classList.add('active');div.innerHTML='<span class="song-num">'+(i+1)+'</span><span class="song-icon">🎵</span><span class="song-name">'+s.name+'</span>';div.onclick=function(){playTrack(i)};list.appendChild(div)});
+  updateNowPlaying()
 }
 
-function playTrack(i){currentTrack=i;var s=playlist[i];var audio=document.getElementById('bgMusic');audio.src=s.url;audio.play();isPlaying=true;document.getElementById('nowPlaying').textContent='正在播放: '+s.name;document.getElementById('musicToggleBtn').classList.add('playing');renderSongList()}
+function playTrack(i){
+  currentTrack=i;var s=playlist[i];var audio=document.getElementById('bgMusic');
+  // 用 raw URL 而不是 download_url，避免认证问题
+  audio.src='https://raw.githubusercontent.com/'+MUSIC_REPO_USER+'/'+MUSIC_REPO+'/main/'+encodeURI(s.name)+'.'+s.ext;
+  audio.load();audio.play().catch(function(e){console.log('播放失败:',e);showToast('⚠️ 播放失败，请重试')});
+  isPlaying=true;document.getElementById('musicToggleBtn').classList.add('playing');
+  renderSongList()
+}
 
-function playNext(){if(playlist.length===0)return;currentTrack=(currentTrack+1)%playlist.length;playTrack(currentTrack)}
+function updateNowPlaying(){
+  var np=document.getElementById('nowPlaying');
+  if(currentTrack>=0&&currentTrack<playlist.length){np.textContent='正在播放: '+playlist[currentTrack].name}
+  else{np.textContent='未在播放'}
+}
+
+function playNext(){
+  if(playlist.length===0)return;
+  if(loopMode===1){playTrack(currentTrack)} // 单曲循环
+  else if(loopMode===2){currentTrack=(currentTrack+1)%playlist.length;playTrack(currentTrack)} // 列表循环
+  else{if(currentTrack<playlist.length-1){currentTrack++;playTrack(currentTrack)}else{isPlaying=false;document.getElementById('musicToggleBtn').classList.remove('playing');document.getElementById('nowPlaying').textContent='播放完毕';renderSongList()}} // 顺序播放
+}
+
+function playPrev(){if(playlist.length===0||currentTrack<=0)return;currentTrack--;playTrack(currentTrack)}
+
+function toggleLoop(){
+  loopMode=(loopMode+1)%3;var btn=document.getElementById('loopBtn');var labels=['🔁','🔂','🔁'];btn.textContent=labels[loopMode];
+  if(loopMode===0){btn.classList.remove('active');btn.title='顺序播放'}else if(loopMode===1){btn.classList.add('active');btn.title='单曲循环'}else{btn.classList.add('active');btn.title='列表循环'}
+}
 
 function toggleMusicPanel(){
   var panel=document.getElementById('musicPanel');panel.classList.toggle('show');
   if(panel.classList.contains('show')&&playlist.length===0)loadMusicList();
 }
+
+// 进度条更新
+setInterval(function(){
+  var audio=document.getElementById('bgMusic');if(!audio||!audio.duration)return;
+  var pct=(audio.currentTime/audio.duration)*100;
+  document.getElementById('musicProgressFill').style.width=pct+'%';
+  document.getElementById('musicCurrentTime').textContent=formatTime(audio.currentTime);
+  document.getElementById('musicTotalTime').textContent=formatTime(audio.duration);
+},500);
+
+function formatTime(s){var m=Math.floor(s/60);var sec=Math.floor(s%60);return m+':'+(sec<10?'0':'')+sec}
+
+function seekMusic(e){
+  var audio=document.getElementById('bgMusic');if(!audio||!audio.duration)return;
+  var rect=e.target.getBoundingClientRect();var pct=(e.clientX-rect.left)/rect.width;
+  audio.currentTime=pct*audio.duration;
+}
+
+// 音乐面板 HTML（在页面加载时动态插入）
+function buildMusicPanel(){
+  var panel=document.getElementById('musicPanel');
+  panel.innerHTML=''+
+    '<div class="player-controls">'+
+      '<button class="ctrl-btn" onclick="playPrev()" title="上一首">⏮</button>'+
+      '<button class="ctrl-btn play-btn" onclick="togglePlay()" id="playBtn">▶️</button>'+
+      '<button class="ctrl-btn" onclick="playNext()" title="下一首">⏭</button>'+
+      '<button class="ctrl-btn loop-btn" id="loopBtn" onclick="toggleLoop()" title="顺序播放">🔁</button>'+
+    '</div>'+
+    '<div style="display:flex;align-items:center;gap:4px;padding:0 4px">'+
+      '<span class="music-time" id="musicCurrentTime">0:00</span>'+
+      '<div class="music-progress-bar" onclick="seekMusic(event)"><div class="music-progress-fill" id="musicProgressFill"></div></div>'+
+      '<span class="music-time" id="musicTotalTime">0:00</span>'+
+    '</div>'+
+    '<div class="music-now-playing" id="nowPlaying">未在播放</div>'+
+    '<div id="songList">加载中...</div>';
+}
+
+function togglePlay(){
+  var audio=document.getElementById('bgMusic');if(!audio.src||currentTrack<0)return;
+  if(isPlaying){audio.pause();isPlaying=false;document.getElementById('playBtn').textContent='▶️';document.getElementById('musicToggleBtn').classList.remove('playing')}
+  else{audio.play();isPlaying=true;document.getElementById('playBtn').textContent='⏸️';document.getElementById('musicToggleBtn').classList.add('playing')}
+  renderSongList()
+}
+
+// 初始化
+document.addEventListener('DOMContentLoaded',function(){
+  buildMusicPanel();
+  initMusicToken().then(function(){loadMusicList()});
+  var audio=document.getElementById('bgMusic');
+  audio.onended=function(){playNext()};
+  audio.onplay=function(){isPlaying=true;document.getElementById('playBtn').textContent='⏸️';document.getElementById('musicToggleBtn').classList.add('playing')};
+  audio.onpause=function(){isPlaying=false;document.getElementById('playBtn').textContent='▶️';document.getElementById('musicToggleBtn').classList.remove('playing')};
+});
 
 // 页面加载时预加载音乐列表
 document.addEventListener('DOMContentLoaded',function(){initMusicToken().then(function(){loadMusicList()})});
