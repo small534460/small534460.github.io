@@ -6,28 +6,18 @@
   <title>Small 3 的个人领域</title>
   <style>
     :root{
-      --accent: #60a5fa;
-      --accent-2: #3b82f6;
-      --accent-green: #10B981;
-      --accent-green-hover: #059669;
-      --accent-purple: #8b5cf6;
-      --accent-orange: #f59e0b;
-      --muted: rgba(200, 210, 220, 0.85);
-      --glass: rgba(0, 0, 0, 0.15);
-      --glass-light: rgba(0, 0, 0, 0.2);
-      --glass-border: rgba(255, 255, 255, 0.15);
-      --radius: 12px;
-      --radius-sm: 8px;
-      --radius-lg: 16px;
-      --shadow: 0 8px 30px rgba(2,6,23,0.4);
-      --shadow-hover: 0 14px 40px rgba(2,6,23,0.5);
-      --blur-strength: 8px;
+      --accent: #60a5fa; --accent-2: #3b82f6; --accent-green: #10B981;
+      --accent-green-hover: #059669; --accent-purple: #8b5cf6; --accent-orange: #f59e0b;
+      --muted: rgba(200, 210, 220, 0.85); --glass: rgba(0, 0, 0, 0.15);
+      --glass-border: rgba(255, 255, 255, 0.15); --radius: 12px; --radius-sm: 8px;
+      --radius-lg: 16px; --shadow: 0 8px 30px rgba(2,6,23,0.4);
+      --shadow-hover: 0 14px 40px rgba(2,6,23,0.5); --blur-strength: 8px;
     }
     html, body { height: 100%; margin: 0; padding: 0; }
     body{
       background: linear-gradient(180deg, rgba(7,16,38,0.3) 0%, rgba(7,16,38,0.35) 100%), #070f26;
-      background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed;
-      color: #f0f4fa; min-height: 100vh; padding: 0;
+      background-size: cover; background-position: center; background-repeat: no-repeat;
+      background-attachment: fixed; color: #f0f4fa; min-height: 100vh; padding: 0;
       -webkit-font-smoothing: antialiased; line-height: 1.6;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
       transition: background-image 0.8s ease-in-out;
@@ -35,15 +25,9 @@
     body.bg-loading { background: linear-gradient(180deg, rgba(7,16,38,0.5) 0%, rgba(7,16,38,0.55) 100%), #070f26; }
     body.bg-loaded { background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed; }
 
-    .wrap{
-      width: 100%; max-width: 920px; background: rgba(0, 0, 0, 0.25);
-      backdrop-filter: blur(var(--blur-strength)); -webkit-backdrop-filter: blur(var(--blur-strength));
-      border-radius: var(--radius-lg); padding: 32px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.12); margin: 0 auto; box-sizing: border-box;
-      transition: backdrop-filter 0.3s ease, -webkit-backdrop-filter 0.3s ease;
-    }
-    @media (max-width: 768px){ body{padding:12px 8px;min-height:100vh;display:block} .wrap{margin:0 auto;padding:16px 12px;border-radius:14px;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)} }
-    @media (max-width: 480px){ body{padding:8px 4px} .wrap{padding:14px 10px;border-radius:12px} .page-wrapper{padding:8px 4px} }
+    .wrap{width:100%;max-width:920px;background:rgba(0,0,0,0.25);backdrop-filter:blur(var(--blur-strength));-webkit-backdrop-filter:blur(var(--blur-strength));border-radius:var(--radius-lg);padding:32px;box-shadow:0 8px 32px rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.12);margin:0 auto;box-sizing:border-box}
+    @media(max-width:768px){body{padding:12px 8px;display:block}.wrap{padding:16px 12px;border-radius:14px;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}}
+    @media(max-width:480px){body{padding:8px 4px}.wrap{padding:14px 10px;border-radius:12px}}
 
     header{display:flex;align-items:center;gap:18px;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.1)}
     .avatar{width:70px;height:70px;border-radius:16px;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(96,165,250,0.3);flex:0 0 70px;position:relative;overflow:hidden;border:2px solid rgba(96,165,250,0.4);background:linear-gradient(135deg,var(--accent),var(--accent-2))}
@@ -53,11 +37,9 @@
     .subtitle{margin:8px 0 0 0;color:var(--muted);font-size:14px;text-shadow:0 1px 3px rgba(0,0,0,0.3)}
     .content{margin-top:24px}
 
-    /* 毛玻璃滑块 */
-    .blur-control{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding:10px 14px;background:rgba(0,0,0,0.2);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-sm);transition:all 0.3s ease}
-    .blur-control:hover{background:rgba(0,0,0,0.3);border-color:rgba(255,255,255,0.2)}
+    .blur-control{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding:10px 14px;background:rgba(0,0,0,0.2);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-sm)}
     .blur-slider{flex:1;-webkit-appearance:none;appearance:none;height:6px;background:linear-gradient(90deg,rgba(255,255,255,0.1),rgba(255,255,255,0.3));border-radius:3px;outline:none;cursor:pointer}
-    .blur-slider::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));cursor:pointer;border:2px solid rgba(255,255,255,0.3);box-shadow:0 2px 8px rgba(0,0,0,0.3)}
+    .blur-slider::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));cursor:pointer;border:2px solid rgba(255,255,255,0.3)}
     .blur-value{font-size:13px;color:rgba(200,210,225,0.85);min-width:40px;text-align:right;font-weight:600}
     .blur-reset-btn{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:6px;color:rgba(200,210,225,0.85);padding:4px 10px;font-size:12px;cursor:pointer;white-space:nowrap}
 
@@ -66,8 +48,8 @@
     .quick-action-btn:hover{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.2);transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,0.3)}
     .gallery-selector-btn{background:rgba(139,92,246,0.15)!important;border-color:rgba(139,92,246,0.3)!important;position:relative}
     .info-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:24px}
-    .info-card{background:rgba(0,0,0,0.2);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-sm);padding:16px;display:flex;align-items:center;gap:12px;transition:all 0.3s ease}
-    .info-card:hover{background:rgba(0,0,0,0.3);border-color:rgba(255,255,255,0.2)}
+    .info-card{background:rgba(0,0,0,0.2);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-sm);padding:16px;display:flex;align-items:center;gap:12px}
+    .info-card:hover{background:rgba(0,0,0,0.3)}
     .info-icon{font-size:28px;flex-shrink:0}
     .info-label{font-size:11px;color:rgba(200,210,225,0.7);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
     .info-value{font-size:16px;font-weight:600;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,0.3)}
@@ -75,7 +57,7 @@
     .intro::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(to bottom,var(--accent),var(--accent-2))}
     .links{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
     .links a{text-decoration:none;color:inherit}
-    .card{background:rgba(0,0,0,0.2);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);border-radius:var(--radius);padding:18px;border:1px solid rgba(255,255,255,0.1);transition:all 0.3s cubic-bezier(0.25,0.8,0.25,1);display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden}
+    .card{background:rgba(0,0,0,0.2);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);border-radius:var(--radius);padding:18px;border:1px solid rgba(255,255,255,0.1);transition:all 0.3s;display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden}
     .card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(96,165,250,0.4),transparent)}
     .card:hover{transform:translateY(-6px);background:rgba(0,0,0,0.4);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 14px 40px rgba(0,0,0,0.5);border-color:rgba(96,165,250,0.35)}
     .card .title{font-weight:600;color:#fff;font-size:16px;display:flex;align-items:center;gap:8px;text-shadow:0 1px 3px rgba(0,0,0,0.3)}
@@ -85,7 +67,7 @@
     .search-form-group{display:flex;flex-direction:column;gap:16px;margin-bottom:24px}
     .search-form-row{display:flex;gap:12px}
     .search-form{flex:1;display:flex;gap:8px}
-    .search-input{flex:1;padding:10px 16px;border-radius:var(--radius-sm);border:1px solid rgba(255,255,255,0.2);outline:none;font-size:15px;background:rgba(0,0,0,0.25);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);color:#f0f4fa;transition:all 0.2s ease}
+    .search-input{flex:1;padding:10px 16px;border-radius:var(--radius-sm);border:1px solid rgba(255,255,255,0.2);outline:none;font-size:15px;background:rgba(0,0,0,0.25);backdrop-filter:blur(5px);color:#f0f4fa;transition:all 0.2s ease}
     .search-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(96,165,250,0.2);background:rgba(0,0,0,0.4)}
     .search-input::placeholder{color:rgba(200,210,225,0.5)}
     .search-button{padding:10px 20px;border-radius:var(--radius-sm);border:none;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:white;font-weight:600;cursor:pointer;transition:all 0.2s ease;backdrop-filter:blur(5px);min-width:100px;text-shadow:0 1px 2px rgba(0,0,0,0.2)}
@@ -99,18 +81,29 @@
     /* ★★★ 音乐播放器 ★★★ */
     .music-toggle-btn{position:fixed;bottom:80px;right:20px;width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,0.5);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:20px;cursor:pointer;z-index:999;display:flex;align-items:center;justify-content:center;transition:all .3s}
     .music-toggle-btn:hover{background:rgba(0,0,0,0.7);transform:scale(1.05)}
-    .music-toggle-btn.playing{box-shadow:0 0 16px rgba(96,165,250,0.4);border-color:var(--accent)}
-    .music-panel{position:fixed;bottom:130px;right:20px;width:300px;background:rgba(0,0,0,0.7);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:16px;z-index:998;display:none;flex-direction:column;gap:10px;max-height:350px;overflow-y:auto}
+    .music-toggle-btn.playing{box-shadow:0 0 16px rgba(96,165,250,0.4);border-color:var(--accent);animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{box-shadow:0 0 12px rgba(96,165,250,0.3)}50%{box-shadow:0 0 24px rgba(96,165,250,0.6)}}
+    .music-panel{position:fixed;bottom:130px;right:20px;width:300px;background:rgba(0,0,0,0.75);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:16px;z-index:998;display:none;flex-direction:column;gap:8px;max-height:400px;overflow-y:auto}
     .music-panel.show{display:flex}
-    .music-panel .song-item{padding:10px 12px;border-radius:8px;cursor:pointer;font-size:13px;color:rgba(255,255,255,0.8);transition:all .2s;display:flex;align-items:center;gap:8px;border:1px solid transparent;background:rgba(255,255,255,0.03)}
-    .music-panel .song-item:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.1)}
-    .music-panel .song-item.active{background:rgba(96,165,250,0.15);border-color:rgba(96,165,250,0.3);color:#fff}
-    .music-panel .song-item .song-icon{font-size:16px;flex-shrink:0}
-    .music-panel .song-item .song-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .music-now-playing{font-size:12px;color:var(--accent);text-align:center;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .player-controls{display:flex;align-items:center;gap:8px;justify-content:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.08)}
+    .ctrl-btn{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;padding:4px 8px;border-radius:6px;transition:all .2s}
+    .ctrl-btn:hover{background:rgba(255,255,255,0.1)}
+    .ctrl-btn.play-btn{font-size:24px}
+    .loop-btn{font-size:14px}
+    .loop-btn.active{color:var(--accent)}
+    .music-progress-bar{flex:1;height:4px;background:rgba(255,255,255,0.15);border-radius:2px;cursor:pointer;margin:0 4px}
+    .music-progress-fill{height:100%;background:var(--accent);border-radius:2px;width:0%}
+    .music-time{font-size:10px;color:rgba(255,255,255,0.6);min-width:32px;text-align:center}
+    .music-now-playing{font-size:12px;color:var(--accent);text-align:center;padding:2px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .song-item{padding:10px 12px;border-radius:8px;cursor:pointer;font-size:13px;color:rgba(255,255,255,0.8);transition:all .2s;display:flex;align-items:center;gap:8px;border:1px solid transparent;background:rgba(255,255,255,0.03)}
+    .song-item:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.1)}
+    .song-item.active{background:rgba(96,165,250,0.15);border-color:rgba(96,165,250,0.3);color:#fff}
+    .song-icon{font-size:14px;flex-shrink:0}
+    .song-num{font-size:10px;color:rgba(255,255,255,0.4);min-width:18px;text-align:center}
+    .song-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     @media(max-width:768px){.music-panel{width:260px;right:8px;bottom:120px}.music-toggle-btn{bottom:70px;right:8px}}
-    .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:white;padding:10px 24px;border-radius:20px;font-size:14px;z-index:2000;animation:fadeInOut 2s ease forwards;border:1px solid rgba(255,255,255,0.2);pointer-events:none}
-    @keyframes fadeInOut{0%{opacity:0;transform:translateX(-50%) translateY(-10px)}15%{opacity:1;transform:translateX(-50%) translateY(0)}85%{opacity:1}100%{opacity:0;transform:translateX(-50%) translateY(-10px)}}
+    .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);color:white;padding:10px 24px;border-radius:20px;font-size:14px;z-index:2000;animation:fadeInOut 2s ease forwards;pointer-events:none}
+    @keyframes fadeInOut{0%{opacity:0;transform:translateX(-50%) translateY(-10px)}15%{opacity:1;transform:translateX(-50%) translateY(0)}85%{opacity:1}100%{opacity:0}}
   </style>
 </head>
 <body>
@@ -121,7 +114,7 @@
     <div><h1>Small 3 的个人领域</h1><div class="subtitle">收藏与分享我觉得有趣的站点与资源</div></div>
   </header>
   <section class="content">
-    <div class="blur-control"><span class="blur-control-label"><span>🔮</span> 模糊度</span><input type="range" class="blur-slider" id="blurSlider" min="0" max="20" value="8" step="1"><span class="blur-value" id="blurValue">8px</span><button class="blur-reset-btn" id="blurResetBtn">重置</button></div>
+    <div class="blur-control"><span style="font-size:13px;color:rgba(200,210,225,0.85);white-space:nowrap">🔮 模糊度</span><input type="range" class="blur-slider" id="blurSlider" min="0" max="20" value="8" step="1"><span class="blur-value" id="blurValue">8px</span><button class="blur-reset-btn" id="blurResetBtn">重置</button></div>
     <div class="info-bar">
       <div class="info-card"><div class="info-icon">🕐</div><div class="info-text"><div class="info-label">当前时间</div><div class="info-value" id="currentTime">加载中...</div></div></div>
       <div class="info-card"><div class="info-icon">📅</div><div class="info-text"><div class="info-label">今天日期</div><div class="info-value" id="currentDate">加载中...</div></div></div>
@@ -129,7 +122,7 @@
     </div>
     <div class="quick-actions">
       <button class="quick-action-btn" onclick="window.changeBackground()"><span>🖼</span> 换背景</button>
-      <button class="quick-action-btn gallery-selector-btn" id="gallerySelectorBtn" onclick="toggleGallery()"><span>🖼️</span> 图库选择</button>
+      <button class="quick-action-btn gallery-selector-btn" onclick="toggleGallery()"><span>🖼️</span> 图库选择</button>
       <button class="quick-action-btn" onclick="copyToClipboard(window.location.href)"><span>🔗</span> 复制链接</button>
       <a class="quick-action-btn" href="https://126.com/" target="_blank"><span>📧</span> Email</a>
       <button class="quick-action-btn" onclick="toggleBrightness()"><span>🌓</span> 亮度调节</button>
@@ -157,155 +150,82 @@
 
 <div class="bg-info" id="bgInfo" title="点击查看摄影师 | 右键换图"><span>📷</span><span id="bgPhotographer">摄影师: 加载中...</span></div>
 
-    /* ★★★ 音乐播放器 ★★★ */
-    .music-toggle-btn{position:fixed;bottom:80px;right:20px;width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,0.5);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:20px;cursor:pointer;z-index:999;display:flex;align-items:center;justify-content:center;transition:all .3s}
-    .music-toggle-btn:hover{background:rgba(0,0,0,0.7);transform:scale(1.05)}
-    .music-toggle-btn.playing{box-shadow:0 0 16px rgba(96,165,250,0.4);border-color:var(--accent);animation:pulse 2s infinite}
-    @keyframes pulse{0%,100%{box-shadow:0 0 12px rgba(96,165,250,0.3)}50%{box-shadow:0 0 24px rgba(96,165,250,0.6)}}
-    .music-panel{position:fixed;bottom:130px;right:20px;width:300px;background:rgba(0,0,0,0.75);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:16px;z-index:998;display:none;flex-direction:column;gap:8px;max-height:400px;overflow-y:auto}
-    .music-panel.show{display:flex}
-    .music-panel .player-controls{display:flex;align-items:center;gap:8px;justify-content:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.08)}
-    .music-panel .ctrl-btn{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;padding:4px 8px;border-radius:6px;transition:all .2s}
-    .music-panel .ctrl-btn:hover{background:rgba(255,255,255,0.1)}
-    .music-panel .ctrl-btn.play-btn{font-size:24px}
-    .music-panel .loop-btn{font-size:14px}
-    .music-panel .loop-btn.active{color:var(--accent)}
-    .music-progress-bar{flex:1;height:4px;background:rgba(255,255,255,0.15);border-radius:2px;cursor:pointer;position:relative;margin:0 4px}
-    .music-progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.1s linear;width:0%}
-    .music-time{font-size:10px;color:rgba(255,255,255,0.6);min-width:32px;text-align:center}
-    .music-now-playing{font-size:12px;color:var(--accent);text-align:center;padding:2px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .music-panel .song-item{padding:10px 12px;border-radius:8px;cursor:pointer;font-size:13px;color:rgba(255,255,255,0.8);transition:all .2s;display:flex;align-items:center;gap:8px;border:1px solid transparent;background:rgba(255,255,255,0.03)}
-    .music-panel .song-item:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.1)}
-    .music-panel .song-item.active{background:rgba(96,165,250,0.15);border-color:rgba(96,165,250,0.3);color:#fff}
-    .music-panel .song-item .song-icon{font-size:14px;flex-shrink:0}
-    .music-panel .song-item .song-num{font-size:10px;color:rgba(255,255,255,0.4);min-width:18px;text-align:center}
-    .music-panel .song-item .song-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    @media(max-width:768px){.music-panel{width:260px;right:8px;bottom:120px}.music-toggle-btn{bottom:70px;right:8px}}
+<!-- ★★★ 音乐播放器 ★★★ -->
+<button class="music-toggle-btn" id="musicToggleBtn" onclick="toggleMusicPanel()" title="音乐播放器">🎵</button>
+<div class="music-panel" id="musicPanel">
+  <div class="player-controls">
+    <button class="ctrl-btn" onclick="playPrev()" title="上一首">⏮</button>
+    <button class="ctrl-btn play-btn" id="playBtn" onclick="togglePlay()">▶️</button>
+    <button class="ctrl-btn" onclick="playNext()" title="下一首">⏭</button>
+    <button class="ctrl-btn loop-btn" id="loopBtn" onclick="toggleLoop()" title="顺序播放">🔁</button>
+  </div>
+  <div style="display:flex;align-items:center;gap:4px;padding:0 4px">
+    <span class="music-time" id="musicCurrentTime">0:00</span>
+    <div class="music-progress-bar" onclick="seekMusic(event)"><div class="music-progress-fill" id="musicProgressFill"></div></div>
+    <span class="music-time" id="musicTotalTime">0:00</span>
+  </div>
+  <div class="music-now-playing" id="nowPlaying">未在播放</div>
+  <div id="songList">加载中...</div>
+  <audio id="bgMusic" style="display:none"></audio>
+</div>
 
 <script>
 // ═══════════ 音乐播放器 ═══════════
 var MUSIC_REPO_USER='small534460';var MUSIC_REPO='LTS';
 var ENC_MUSIC_TOKEN='L79jrVSjux2ZS790MCd2+jo7Z9gJPEm+z+0KyjiWGadLB71bCCsJh1vy+izUsCfXL/Dlwt2EdoDUeNc4mVTaE89aN6U=';
-var musicToken='';var playlist=[];var currentTrack=-1;var isPlaying=false;var loopMode=0; // 0=顺序,1=单曲循环,2=列表循环
+var musicToken='';var playlist=[];var currentTrack=-1;var isPlaying=false;var loopMode=0;
 
 function base64ToBytes(b64){var str=atob(b64);var bytes=new Uint8Array(str.length);for(var i=0;i<str.length;i++)bytes[i]=str.charCodeAt(i);return bytes}
 
-async function initMusicToken(){
-  try{var k=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('534460'));var key=await crypto.subtle.importKey('raw',k,{name:'AES-GCM'},false,['decrypt']);var bytes=base64ToBytes(ENC_MUSIC_TOKEN);var iv=bytes.slice(0,12);var ct=bytes.slice(12);var dec=await crypto.subtle.decrypt({name:'AES-GCM',iv:iv},key,ct);musicToken=new TextDecoder().decode(dec)}catch(e){console.log('音乐令牌解密失败')}
-}
+async function initMusicToken(){try{var k=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('534460'));var key=await crypto.subtle.importKey('raw',k,{name:'AES-GCM'},false,['decrypt']);var bytes=base64ToBytes(ENC_MUSIC_TOKEN);var iv=bytes.slice(0,12);var ct=bytes.slice(12);var dec=await crypto.subtle.decrypt({name:'AES-GCM',iv:iv},key,ct);musicToken=new TextDecoder().decode(dec)}catch(e){console.log('令牌解密失败')}}
 
 async function loadMusicList(){
   if(!musicToken)await initMusicToken();if(!musicToken)return;
   try{var url='https://api.github.com/repos/'+MUSIC_REPO_USER+'/'+MUSIC_REPO+'/contents/';var r=await fetch(url,{headers:{'Authorization':'token '+musicToken}});var files=await r.json();if(!Array.isArray(files))return;
-    playlist=[];files.forEach(function(f){if(f.name.match(/\.(mp3|m4a|wav|ogg|flac)$/i))playlist.push({name:f.name.replace(/\.(mp3|m4a|wav|ogg|flac)$/i,''),url:f.download_url,sha:f.sha,ext:f.name.split('.').pop()})});renderSongList()}catch(e){console.log('加载音乐失败:',e)}
+    playlist=[];files.forEach(function(f){if(f.name.match(/\.(mp3|m4a|wav|ogg|flac)$/i))playlist.push({name:f.name.replace(/\.(mp3|m4a|wav|ogg|flac)$/i,''),ext:f.name.split('.').pop()})});renderSongList()}catch(e){console.log('加载失败:',e)}
 }
 
 function renderSongList(){
   var list=document.getElementById('songList');if(playlist.length===0){list.innerHTML='<div style="opacity:0.5;text-align:center;padding:12px">暂无音乐</div>';return}
-  list.innerHTML='';playlist.forEach(function(s,i){var div=document.createElement('div');div.className='song-item';if(i===currentTrack)div.classList.add('active');div.innerHTML='<span class="song-num">'+(i+1)+'</span><span class="song-icon">🎵</span><span class="song-name">'+s.name+'</span>';div.onclick=function(){playTrack(i)};list.appendChild(div)});
-  updateNowPlaying()
+  list.innerHTML='';playlist.forEach(function(s,i){var div=document.createElement('div');div.className='song-item';if(i===currentTrack)div.classList.add('active');div.innerHTML='<span class="song-num">'+(i+1)+'</span><span class="song-icon">🎵</span><span class="song-name">'+s.name+'</span>';div.onclick=function(){playTrack(i)};list.appendChild(div)});updateNowPlaying()
 }
 
 function playTrack(i){
   currentTrack=i;var s=playlist[i];var audio=document.getElementById('bgMusic');
-  // 用 raw URL 而不是 download_url，避免认证问题
-  audio.src='https://raw.githubusercontent.com/'+MUSIC_REPO_USER+'/'+MUSIC_REPO+'/main/'+encodeURI(s.name)+'.'+s.ext;
-  audio.load();audio.play().catch(function(e){console.log('播放失败:',e);showToast('⚠️ 播放失败，请重试')});
-  isPlaying=true;document.getElementById('musicToggleBtn').classList.add('playing');
-  renderSongList()
+  audio.src='https://raw.githubusercontent.com/'+MUSIC_REPO_USER+'/'+MUSIC_REPO+'/main/'+encodeURIComponent(s.name+'.'+s.ext)+'?token='+encodeURIComponent(musicToken);
+  audio.load();audio.play().catch(function(e){console.log('播放失败:',e);showToast('⚠️ 播放失败')});
+  isPlaying=true;document.getElementById('musicToggleBtn').classList.add('playing');renderSongList()
 }
 
-function updateNowPlaying(){
-  var np=document.getElementById('nowPlaying');
-  if(currentTrack>=0&&currentTrack<playlist.length){np.textContent='正在播放: '+playlist[currentTrack].name}
-  else{np.textContent='未在播放'}
-}
-
-function playNext(){
-  if(playlist.length===0)return;
-  if(loopMode===1){playTrack(currentTrack)} // 单曲循环
-  else if(loopMode===2){currentTrack=(currentTrack+1)%playlist.length;playTrack(currentTrack)} // 列表循环
-  else{if(currentTrack<playlist.length-1){currentTrack++;playTrack(currentTrack)}else{isPlaying=false;document.getElementById('musicToggleBtn').classList.remove('playing');document.getElementById('nowPlaying').textContent='播放完毕';renderSongList()}} // 顺序播放
-}
-
+function updateNowPlaying(){var np=document.getElementById('nowPlaying');if(currentTrack>=0&&currentTrack<playlist.length)np.textContent='正在播放: '+playlist[currentTrack].name;else np.textContent='未在播放'}
+function playNext(){if(playlist.length===0)return;if(loopMode===1)playTrack(currentTrack);else if(loopMode===2){currentTrack=(currentTrack+1)%playlist.length;playTrack(currentTrack)}else{if(currentTrack<playlist.length-1){currentTrack++;playTrack(currentTrack)}else{isPlaying=false;document.getElementById('musicToggleBtn').classList.remove('playing');document.getElementById('nowPlaying').textContent='播放完毕';renderSongList()}}}
 function playPrev(){if(playlist.length===0||currentTrack<=0)return;currentTrack--;playTrack(currentTrack)}
+function toggleLoop(){loopMode=(loopMode+1)%3;var btn=document.getElementById('loopBtn');btn.textContent=['🔁','🔂','🔁'][loopMode];if(loopMode===0){btn.classList.remove('active');btn.title='顺序播放'}else{btn.classList.add('active');btn.title=loopMode===1?'单曲循环':'列表循环'}}
+function togglePlay(){var audio=document.getElementById('bgMusic');if(!audio.src||currentTrack<0)return;if(isPlaying){audio.pause()}else{audio.play()}}
+function toggleMusicPanel(){var p=document.getElementById('musicPanel');p.classList.toggle('show');if(p.classList.contains('show')&&playlist.length===0)loadMusicList()}
 
-function toggleLoop(){
-  loopMode=(loopMode+1)%3;var btn=document.getElementById('loopBtn');var labels=['🔁','🔂','🔁'];btn.textContent=labels[loopMode];
-  if(loopMode===0){btn.classList.remove('active');btn.title='顺序播放'}else if(loopMode===1){btn.classList.add('active');btn.title='单曲循环'}else{btn.classList.add('active');btn.title='列表循环'}
-}
-
-function toggleMusicPanel(){
-  var panel=document.getElementById('musicPanel');panel.classList.toggle('show');
-  if(panel.classList.contains('show')&&playlist.length===0)loadMusicList();
-}
-
-// 进度条更新
-setInterval(function(){
-  var audio=document.getElementById('bgMusic');if(!audio||!audio.duration)return;
-  var pct=(audio.currentTime/audio.duration)*100;
-  document.getElementById('musicProgressFill').style.width=pct+'%';
-  document.getElementById('musicCurrentTime').textContent=formatTime(audio.currentTime);
-  document.getElementById('musicTotalTime').textContent=formatTime(audio.duration);
-},500);
-
+setInterval(function(){var a=document.getElementById('bgMusic');if(!a||!a.duration)return;document.getElementById('musicProgressFill').style.width=(a.currentTime/a.duration)*100+'%';document.getElementById('musicCurrentTime').textContent=formatTime(a.currentTime);document.getElementById('musicTotalTime').textContent=formatTime(a.duration)},500);
 function formatTime(s){var m=Math.floor(s/60);var sec=Math.floor(s%60);return m+':'+(sec<10?'0':'')+sec}
+function seekMusic(e){var a=document.getElementById('bgMusic');if(!a||!a.duration)return;var r=e.target.getBoundingClientRect();a.currentTime=((e.clientX-r.left)/r.width)*a.duration}
 
-function seekMusic(e){
-  var audio=document.getElementById('bgMusic');if(!audio||!audio.duration)return;
-  var rect=e.target.getBoundingClientRect();var pct=(e.clientX-rect.left)/rect.width;
-  audio.currentTime=pct*audio.duration;
-}
-
-// 音乐面板 HTML（在页面加载时动态插入）
-function buildMusicPanel(){
-  var panel=document.getElementById('musicPanel');
-  panel.innerHTML=''+
-    '<div class="player-controls">'+
-      '<button class="ctrl-btn" onclick="playPrev()" title="上一首">⏮</button>'+
-      '<button class="ctrl-btn play-btn" onclick="togglePlay()" id="playBtn">▶️</button>'+
-      '<button class="ctrl-btn" onclick="playNext()" title="下一首">⏭</button>'+
-      '<button class="ctrl-btn loop-btn" id="loopBtn" onclick="toggleLoop()" title="顺序播放">🔁</button>'+
-    '</div>'+
-    '<div style="display:flex;align-items:center;gap:4px;padding:0 4px">'+
-      '<span class="music-time" id="musicCurrentTime">0:00</span>'+
-      '<div class="music-progress-bar" onclick="seekMusic(event)"><div class="music-progress-fill" id="musicProgressFill"></div></div>'+
-      '<span class="music-time" id="musicTotalTime">0:00</span>'+
-    '</div>'+
-    '<div class="music-now-playing" id="nowPlaying">未在播放</div>'+
-    '<div id="songList">加载中...</div>';
-}
-
-function togglePlay(){
-  var audio=document.getElementById('bgMusic');if(!audio.src||currentTrack<0)return;
-  if(isPlaying){audio.pause();isPlaying=false;document.getElementById('playBtn').textContent='▶️';document.getElementById('musicToggleBtn').classList.remove('playing')}
-  else{audio.play();isPlaying=true;document.getElementById('playBtn').textContent='⏸️';document.getElementById('musicToggleBtn').classList.add('playing')}
-  renderSongList()
-}
+var audio=document.getElementById('bgMusic');
+audio.onended=function(){playNext()};
+audio.onplay=function(){isPlaying=true;document.getElementById('playBtn').textContent='⏸️';document.getElementById('musicToggleBtn').classList.add('playing')};
+audio.onpause=function(){isPlaying=false;document.getElementById('playBtn').textContent='▶️';document.getElementById('musicToggleBtn').classList.remove('playing')};
 
 // 初始化
-document.addEventListener('DOMContentLoaded',function(){
-  buildMusicPanel();
-  initMusicToken().then(function(){loadMusicList()});
-  var audio=document.getElementById('bgMusic');
-  audio.onended=function(){playNext()};
-  audio.onplay=function(){isPlaying=true;document.getElementById('playBtn').textContent='⏸️';document.getElementById('musicToggleBtn').classList.add('playing')};
-  audio.onpause=function(){isPlaying=false;document.getElementById('playBtn').textContent='▶️';document.getElementById('musicToggleBtn').classList.remove('playing')};
-});
-
-// 页面加载时预加载音乐列表
 document.addEventListener('DOMContentLoaded',function(){initMusicToken().then(function(){loadMusicList()})});
 
-// ═══════════ 以下是原有的主页功能（毛玻璃、时间、背景等），保持不变 ═══════════
+// ═══════════ 以下是主页原有功能 ═══════════
+function showToast(m){var t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(function(){t.remove()},2000)}
+
 (function(){
   var blurSlider=document.getElementById('blurSlider'),blurValue=document.getElementById('blurValue'),blurResetBtn=document.getElementById('blurResetBtn'),wrap=document.querySelector('.wrap');
-  var DEFAULT_BLUR=8,MOBILE_DEFAULT_BLUR=4;
   function isMobile(){return window.innerWidth<=768}
-  function getSavedBlur(){var s=localStorage.getItem('blur_strength');return s!==null?parseInt(s):(isMobile()?MOBILE_DEFAULT_BLUR:DEFAULT_BLUR)}
   function applyBlur(value){var px=value+'px';document.documentElement.style.setProperty('--blur-strength',px);if(wrap){wrap.style.backdropFilter='blur('+px+')';wrap.style.webkitBackdropFilter='blur('+px+')'}if(blurSlider&&blurValue){blurSlider.value=value;blurValue.textContent=px}localStorage.setItem('blur_strength',value)}
-  var initial=getSavedBlur();applyBlur(initial);
+  var saved=localStorage.getItem('blur_strength');applyBlur(saved!==null?parseInt(saved):(isMobile()?4:8));
   if(blurSlider)blurSlider.addEventListener('input',function(){applyBlur(parseInt(this.value))});
-  if(blurResetBtn)blurResetBtn.addEventListener('click',function(){applyBlur(isMobile()?MOBILE_DEFAULT_BLUR:DEFAULT_BLUR)})
+  if(blurResetBtn)blurResetBtn.addEventListener('click',function(){applyBlur(isMobile()?4:8)})
 })();
 
 function updateDateTime(){var n=new Date();document.getElementById('currentTime').textContent=n.toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});var w=['日','一','二','三','四','五','六'];document.getElementById('currentDate').textContent=n.getFullYear()+'年'+(n.getMonth()+1)+'月'+n.getDate()+'日 星期'+w[n.getDay()]}
@@ -315,7 +235,6 @@ var quotes=["生活不止眼前的苟且，还有诗和远方。","每一天都�
 function updateDailyQuote(){var t=new Date();var d=Math.floor((t-new Date(t.getFullYear(),0,0))/(86400000));document.getElementById('dailyQuote').textContent=quotes[d%quotes.length]}
 updateDailyQuote();
 
-function showToast(m){var t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(function(){t.remove()},2000)}
 function copyToClipboard(t){if(navigator.clipboard)navigator.clipboard.writeText(t).then(function(){showToast('链接已复制！📋')}).catch(function(){var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');document.body.removeChild(a);showToast('链接已复制！📋')})}
 
 var brightnessLevel=0;
@@ -324,34 +243,29 @@ function toggleBrightness(){brightnessLevel=(brightnessLevel+1)%3;var v=[0.3,0.5
 var funWebsites=[{url:'https://www.bilibili.com',name:'哔哩哔哩'},{url:'https://www.youtube.com',name:'YouTube'},{url:'https://music.163.com',name:'网易云音乐'},{url:'https://y.qq.com',name:'QQ音乐'},{url:'https://chat.deepseek.com',name:'DeepSeek'},{url:'https://kimi.moonshot.cn',name:'Kimi'},{url:'https://www.douyin.com',name:'抖音'},{url:'https://weibo.com',name:'微博'},{url:'https://www.zhihu.com',name:'知乎'},{url:'https://store.steampowered.com',name:'Steam'},{url:'https://github.com',name:'GitHub'}];
 function randomWebsite(){var w=funWebsites[Math.floor(Math.random()*funWebsites.length)];showToast('🚀 前往：'+w.name);setTimeout(function(){window.open(w.url,'_blank')},800)}
 function showBookmarkPrompt(){showToast(navigator.userAgent.indexOf('Mac')!==-1?'按 Cmd+D 添加书签 ⭐':'按 Ctrl+D 添加书签 ⭐')}
-
 function showAvatarFallback(){document.getElementById('avatarImg').style.display='none';document.getElementById('avatarFallback').style.display='flex'}
 
-/* ============ 动态背景图片系统 ============ */
+/* ============ 动态背景 ============ */
 var UNSPLASH_ACCESS_KEY='YYvtMNDAqTidAbtxrQkb-wOskhmn3CSHx0PXxAK60po';
 (function(){
   var GALLERY_TYPES={nature:{name:'自然风景',icon:'🏔️',unsplashCollection:'1163637'},art:{name:'艺术创意',icon:'🎨',unsplashCollection:'317099'}};
   var currentGalleryType=localStorage.getItem('bg_gallery_type')||'nature';
-  var CONFIG={storageKey:'bg_image_cache_v4',cacheDuration:1800000};
-  function buildImageSources(gt){var g=GALLERY_TYPES[gt]||GALLERY_TYPES.nature;return[{name:'Unsplash',getUrl:function(){return'https://api.unsplash.com/photos/random?collections='+g.unsplashCollection+'&orientation=landscape&w=1920&q=80&count=1'},getHeaders:function(){return{'Authorization':'Client-ID '+UNSPLASH_ACCESS_KEY,'Accept-Version':'v1'}},parseResponse:function(d){var p=Array.isArray(d)?d[0]:d;return{url:p.urls.regular,photographer:p.user.name,link:p.links.html,galleryType:gt}}},{name:'Lorem Picsum',getUrl:function(){return'https://picsum.photos/1920/1080?random='+Math.floor(Math.random()*1000)},getHeaders:function(){return{}},parseResponse:function(r,u){return{url:u,photographer:'Lorem Picsum',link:'https://picsum.photos',galleryType:'picsum'}}}]}
-  var IMAGE_SOURCES=buildImageSources(currentGalleryType);
+  var CONFIG={storageKey:'bg_cache_v4',cacheDuration:1800000};
+  function buildSources(gt){var g=GALLERY_TYPES[gt]||GALLERY_TYPES.nature;return[{name:'Unsplash',getUrl:function(){return'https://api.unsplash.com/photos/random?collections='+g.unsplashCollection+'&orientation=landscape&w=1920&q=80&count=1'},getHeaders:function(){return{'Authorization':'Client-ID '+UNSPLASH_ACCESS_KEY}},parseResponse:function(d){var p=Array.isArray(d)?d[0]:d;return{url:p.urls.regular,photographer:p.user.name,link:p.links.html,galleryType:gt}}},{name:'Lorem Picsum',getUrl:function(){return'https://picsum.photos/1920/1080?random='+Math.floor(Math.random()*1000)},getHeaders:function(){return{}},parseResponse:function(r,u){return{url:u,photographer:'Lorem Picsum',link:'https://picsum.photos',galleryType:'picsum'}}}]}
+  var IMAGE_SOURCES=buildSources(currentGalleryType);
   var body=document.body,bgInfo=document.getElementById('bgInfo'),bgPhotographer=document.getElementById('bgPhotographer'),galleryBtn=document.getElementById('gallerySelectorBtn');
-  function updateGalleryButton(){if(galleryBtn){var g=GALLERY_TYPES[currentGalleryType]||GALLERY_TYPES.nature;galleryBtn.innerHTML='<span>'+g.icon+'</span> '+g.name;galleryBtn.title=g.description}}
-  updateGalleryButton();if(bgInfo){bgInfo.style.display='flex';bgPhotographer.textContent='摄影师: 加载中...'}body.classList.add('bg-loading');
-  function getCachedBg(){try{var c=localStorage.getItem(CONFIG.storageKey);if(c){var d=JSON.parse(c);if(d.timestamp&&(Date.now()-d.timestamp)<CONFIG.cacheDuration&&d.galleryType===currentGalleryType)return d}}catch(e){}return null}
+  function updateGalleryBtn(){if(galleryBtn){var g=GALLERY_TYPES[currentGalleryType]||GALLERY_TYPES.nature;galleryBtn.innerHTML='<span>'+g.icon+'</span> '+g.name}}
+  updateGalleryBtn();if(bgInfo){bgInfo.style.display='flex';bgPhotographer.textContent='摄影师: 加载中...'}body.classList.add('bg-loading');
+  function getCached(){try{var c=localStorage.getItem(CONFIG.storageKey);if(c){var d=JSON.parse(c);if(d.timestamp&&(Date.now()-d.timestamp)<CONFIG.cacheDuration&&d.galleryType===currentGalleryType)return d}}catch(e){}return null}
   function cacheBg(d){try{localStorage.setItem(CONFIG.storageKey,JSON.stringify({url:d.url,photographer:d.photographer,link:d.link,galleryType:d.galleryType||currentGalleryType,timestamp:Date.now()}))}catch(e){}}
-  function preloadImage(url){return new Promise(function(resolve,reject){var img=new Image();img.onload=function(){resolve(url)};img.onerror=function(){reject(new Error('加载失败'))};img.src=url})}
-  function applyBg(d){preloadImage(d.url).then(function(url){body.style.backgroundImage='linear-gradient(180deg,rgba(7,16,38,0.3) 0%,rgba(7,16,38,0.35) 100%),url('+url+')';body.classList.remove('bg-loading');body.classList.add('bg-loaded');if(bgPhotographer){if(d.photographer&&d.photographer!=='Lorem Picsum'){var l='';if(d.galleryType&&GALLERY_TYPES[d.galleryType])l='['+GALLERY_TYPES[d.galleryType].name+'] ';bgPhotographer.textContent=l+'摄影师: '+d.photographer}else bgPhotographer.textContent='图片: Lorem Picsum'}if(bgInfo){bgInfo.style.display='flex';bgInfo.onclick=function(){if(d.photographer!=='Lorem Picsum')window.open(d.link,'_blank');else window.changeBackground()}}cacheBg(d)}).catch(function(){fetchRandomImage(1)})}
-  function fetchRandomImage(si){si=si||0;if(si===0&&(!UNSPLASH_ACCESS_KEY||UNSPLASH_ACCESS_KEY==='YOUR_ACCESS_KEY_HERE')){fetchRandomImage(1);return}if(si>=IMAGE_SOURCES.length){body.classList.remove('bg-loading');body.classList.add('bg-loaded');if(bgPhotographer)bgPhotographer.textContent='默认背景';return}var s=IMAGE_SOURCES[si];if(s.name.includes('Lorem Picsum')){applyBg(s.parseResponse(null,s.getUrl()));return}fetch(s.getUrl(),{headers:s.getHeaders()}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(function(d){applyBg(s.parseResponse(d))}).catch(function(){fetchRandomImage(si+1)})}
-  var cached=getCachedBg();if(cached&&cached.url)applyBg(cached);else fetchRandomImage(0);
-  window.changeBackground=function(){localStorage.removeItem(CONFIG.storageKey);IMAGE_SOURCES=buildImageSources(currentGalleryType);body.classList.add('bg-loading');body.classList.remove('bg-loaded');bgPhotographer.textContent='摄影师: 加载中...';fetchRandomImage(0)}
-  window.toggleGallery=function(){var types=Object.keys(GALLERY_TYPES);currentGalleryType=types[(types.indexOf(currentGalleryType)+1)%types.length];localStorage.setItem('bg_gallery_type',currentGalleryType);updateGalleryButton();showToast('已切换至：'+GALLERY_TYPES[currentGalleryType].icon+' '+GALLERY_TYPES[currentGalleryType].name);localStorage.removeItem(CONFIG.storageKey);IMAGE_SOURCES=buildImageSources(currentGalleryType);body.classList.add('bg-loading');body.classList.remove('bg-loaded');bgPhotographer.textContent='摄影师: 加载中...';fetchRandomImage(0)}
+  function applyBg(d){var img=new Image();img.onload=function(){body.style.backgroundImage='linear-gradient(180deg,rgba(7,16,38,0.3) 0%,rgba(7,16,38,0.35) 100%),url('+d.url+')';body.classList.remove('bg-loading');body.classList.add('bg-loaded');if(bgPhotographer){bgPhotographer.textContent=d.photographer&&d.photographer!=='Lorem Picsum'?'摄影师: '+d.photographer:'图片: Lorem Picsum'}cacheBg(d)};img.onerror=function(){fetchRandomImage(1)};img.src=d.url}
+  function fetchRandomImage(si){si=si||0;if(si>=IMAGE_SOURCES.length){body.classList.remove('bg-loading');body.classList.add('bg-loaded');return}var s=IMAGE_SOURCES[si];if(s.name.includes('Lorem Picsum')){applyBg(s.parseResponse(null,s.getUrl()));return}fetch(s.getUrl(),{headers:s.getHeaders()}).then(function(r){return r.json()}).then(function(d){applyBg(s.parseResponse(d))}).catch(function(){fetchRandomImage(si+1)})}
+  var cached=getCached();if(cached&&cached.url)applyBg(cached);else fetchRandomImage(0);
+  window.changeBackground=function(){localStorage.removeItem(CONFIG.storageKey);IMAGE_SOURCES=buildSources(currentGalleryType);body.classList.add('bg-loading');body.classList.remove('bg-loaded');fetchRandomImage(0)}
+  window.toggleGallery=function(){var types=Object.keys(GALLERY_TYPES);currentGalleryType=types[(types.indexOf(currentGalleryType)+1)%types.length];localStorage.setItem('bg_gallery_type',currentGalleryType);updateGalleryBtn();showToast('已切换至：'+GALLERY_TYPES[currentGalleryType].icon+' '+GALLERY_TYPES[currentGalleryType].name);localStorage.removeItem(CONFIG.storageKey);IMAGE_SOURCES=buildSources(currentGalleryType);body.classList.add('bg-loading');body.classList.remove('bg-loaded');fetchRandomImage(0)}
   if(bgInfo)bgInfo.addEventListener('contextmenu',function(e){e.preventDefault();window.changeBackground()});
   document.addEventListener('keydown',function(e){if(e.ctrlKey&&e.shiftKey&&e.key==='B'){e.preventDefault();window.changeBackground()}if(e.ctrlKey&&e.shiftKey&&e.key==='G'){e.preventDefault();window.toggleGallery()}})
 })();
-
-document.getElementById('songSearchForm').addEventListener('submit',function(e){e.preventDefault();var k=document.getElementById('searchKeyword').value.trim();if(!k)return;var rc=document.getElementById('searchResults');rc.classList.add('active');document.querySelector('.results-header').style.display='flex';document.getElementById('loading').style.display='flex';document.getElementById('initialMessage').style.display='none';var iframe=document.getElementById('resultsFrame');iframe.style.display='none';iframe.src='https://www.gequhai.com/s/'+encodeURIComponent(k);iframe.onload=function(){document.getElementById('loading').style.display='none';iframe.style.display='block';document.querySelector('.results-title').textContent='搜索结果: '+k}});
-function closeResults(){var rc=document.getElementById('searchResults');rc.classList.remove('active');document.querySelector('.results-header').style.display='none';document.getElementById('resultsFrame').style.display='none';document.getElementById('initialMessage').style.display='block'}
 </script>
 </body>
 </html>
