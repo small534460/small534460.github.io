@@ -258,34 +258,24 @@ function closeResults(){var rc=document.getElementById('searchResults');rc.class
   body.classList.add('bg-loading');
 
   function applyBackground(url){
-    // 先不设置背景，等到图片加载成功后再设置
     var img=new Image();
     img.onload=function(){
       body.style.backgroundImage='linear-gradient(180deg,rgba(7,16,38,0.3) 0%,rgba(7,16,38,0.35) 100%),url('+url+')';
       body.classList.remove('bg-loading');body.classList.add('bg-loaded');
     };
-    img.onerror=function(){
-      body.classList.remove('bg-loading');body.classList.add('bg-loaded');
-    };
     img.src=url;
   }
 
-  function fetchBg(){
+  window.fetchBg=function(){
     body.classList.add('bg-loading');body.classList.remove('bg-loaded');
-    // 用 Image 对象加载，这样能拿到最终重定向后的 URL
     var img=new Image();
-    img.onload=function(){
-      applyBackground(img.src);
-    };
-    img.onerror=function(){
-      setTimeout(fetchBg,3000);
-    };
+    img.onload=function(){applyBackground(img.src)};
+    img.onerror=function(){setTimeout(window.fetchBg,3000)};
     img.src=bgApiUrl;
-  }
+  };
 
-  fetchBg();
-
-  window.changeBackground=function(){fetchBg()};
+  window.changeBackground=function(){window.fetchBg()};
+  window.fetchBg();
 })();
 </script>
 </body>
