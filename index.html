@@ -252,31 +252,31 @@ document.getElementById('songSearchForm').addEventListener('submit',function(e){
 function closeResults(){var rc=document.getElementById('searchResults');rc.classList.remove('active');document.querySelector('.results-header').style.display='none';document.getElementById('resultsFrame').style.display='none';document.getElementById('initialMessage').style.display='block'}
 
 // ═══════════ 二次元背景（樱花随机图）═══════════
-(function(){
-  var bgApiUrl='https://www.dmoe.cc/random.php';
-  var body=document.body;
-  body.classList.add('bg-loading');
+var bgApiUrl='https://www.dmoe.cc/random.php';
+var body=document.body;
+body.classList.add('bg-loading');
 
-  function applyBackground(url){
-    var img=new Image();
-    img.onload=function(){
-      body.style.backgroundImage='linear-gradient(180deg,rgba(7,16,38,0.3) 0%,rgba(7,16,38,0.35) 100%),url('+url+')';
-      body.classList.remove('bg-loading');body.classList.add('bg-loaded');
-    };
-    img.src=url;
-  }
-
-  window.fetchBg=function(){
-    body.classList.add('bg-loading');body.classList.remove('bg-loaded');
-    var img=new Image();
-    img.onload=function(){applyBackground(img.src)};
-    img.onerror=function(){setTimeout(window.fetchBg,3000)};
-    img.src=bgApiUrl;
+function applyBackground(url){
+  var img=new Image();
+  img.onload=function(){
+    body.style.backgroundImage='linear-gradient(180deg,rgba(7,16,38,0.3) 0%,rgba(7,16,38,0.35) 100%),url('+url+')';
+    body.classList.remove('bg-loading');body.classList.add('bg-loaded');
   };
+  img.onerror=function(){body.classList.remove('bg-loading');body.classList.add('bg-loaded')};
+  img.src=url;
+}
 
-  window.changeBackground=function(){window.fetchBg()};
-  window.fetchBg();
-})();
+function fetchBg(){
+  body.classList.add('bg-loading');body.classList.remove('bg-loaded');
+  var img=new Image();
+  img.onload=function(){applyBackground(img.src)};
+  img.onerror=function(){setTimeout(fetchBg,3000)};
+  img.src=bgApiUrl+'?t='+Date.now();
+}
+
+function changeBackground(){fetchBg()}
+
+fetchBg();
 </script>
 </body>
 </html>
