@@ -46,7 +46,6 @@
     .quick-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px}
     .quick-action-btn{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-sm);padding:12px;color:#f0f4fa;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;gap:8px;backdrop-filter:blur(5px);text-decoration:none}
     .quick-action-btn:hover{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.2);transform:translateY(-2px)}
-    .gallery-selector-btn{background:rgba(139,92,246,0.15)!important;border-color:rgba(139,92,246,0.3)!important}
     .info-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:24px}
     .info-card{background:rgba(0,0,0,0.2);backdrop-filter:blur(5px);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-sm);padding:16px;display:flex;align-items:center;gap:12px}
     .info-icon{font-size:28px;flex-shrink:0}
@@ -83,15 +82,14 @@
     .results-header{display:none;justify-content:space-between;align-items:center;padding:14px 18px;background:rgba(0,0,0,0.6);border-bottom:1px solid rgba(96,165,250,0.2)}
     .results-title{font-weight:600;color:#f0f4fa;font-size:15px}
     .close-results{background:rgba(239,68,68,0.2);border:1px solid rgba(239,68,68,0.3);border-radius:6px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;color:#fca5a5;cursor:pointer;font-size:18px}
-    .bg-info{position:fixed;bottom:20px;right:20px;background:rgba(0,0,0,0.5);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.15);border-radius:20px;padding:8px 16px;color:rgba(255,255,255,0.8);font-size:12px;z-index:1000;display:flex;align-items:center;gap:8px;cursor:pointer}
     .page-wrapper{width:100%;max-width:100%;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px 16px;box-sizing:border-box}
     .main-content{width:100%;max-width:920px;margin:0 auto;padding:20px 0}
 
     /* 音乐播放器 */
-    .music-toggle-btn{position:fixed;bottom:80px;right:20px;width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,0.5);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:20px;cursor:pointer;z-index:999;display:flex;align-items:center;justify-content:center}
+    .music-toggle-btn{position:fixed;bottom:30px;right:20px;width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,0.5);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:20px;cursor:pointer;z-index:999;display:flex;align-items:center;justify-content:center}
     .music-toggle-btn.playing{box-shadow:0 0 16px rgba(96,165,250,0.4);border-color:var(--accent);animation:pulse 2s infinite}
     @keyframes pulse{0%,100%{box-shadow:0 0 12px rgba(96,165,250,0.3)}50%{box-shadow:0 0 24px rgba(96,165,250,0.6)}}
-    .music-panel{position:fixed;bottom:130px;right:20px;width:300px;background:rgba(0,0,0,0.75);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:16px;z-index:998;display:none;flex-direction:column;gap:8px;max-height:400px;overflow-y:auto}
+    .music-panel{position:fixed;bottom:80px;right:20px;width:300px;background:rgba(0,0,0,0.75);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:16px;z-index:998;display:none;flex-direction:column;gap:8px;max-height:400px;overflow-y:auto}
     .music-panel.show{display:flex}
     .player-controls{display:flex;align-items:center;gap:8px;justify-content:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.08)}
     .ctrl-btn{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;padding:4px 8px;border-radius:6px}
@@ -108,7 +106,7 @@
     .song-icon{font-size:14px;flex-shrink:0}.song-num{font-size:10px;color:rgba(255,255,255,0.4);min-width:18px;text-align:center}
     .song-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     @media(max-width:768px){
-      .music-panel{width:260px;right:8px;bottom:120px}.music-toggle-btn{bottom:70px;right:8px}
+      .music-panel{width:260px;right:8px;bottom:70px}.music-toggle-btn{bottom:20px;right:8px}
       .search-form-row{flex-direction:column;gap:8px}.search-form{flex-direction:column;gap:6px}
       .search-button{width:100%}.links{grid-template-columns:1fr}
       .quick-actions{grid-template-columns:repeat(3,1fr);gap:6px}
@@ -144,7 +142,6 @@
     </div>
     <div class="quick-actions">
       <button class="quick-action-btn" onclick="window.changeBackground()"><span>🖼</span> 换背景</button>
-      <button class="quick-action-btn gallery-selector-btn" onclick="toggleGallery()"><span>🖼️</span> 图库选择</button>
       <button class="quick-action-btn" onclick="copyToClipboard(window.location.href)"><span>🔗</span> 复制链接</button>
       <a class="quick-action-btn" href="https://126.com/" target="_blank"><span>📧</span> Email</a>
       <button class="quick-action-btn" onclick="toggleBrightness()"><span>🌓</span> 亮度调节</button>
@@ -161,7 +158,7 @@
       <div id="searchResults" class="search-results">
         <div class="results-header"><div class="results-title">搜索结果</div><button class="close-results" onclick="closeResults()">×</button></div>
         <div id="loading" class="loading"><div class="loading-spinner"></div><div>正在加载搜索结果...</div></div>
-        <div id="initialMessage" class="no-results-message" style="text-align:center;padding:60px 20px;color:rgba(200,210,225,0.8)"><h3>歌曲搜索</h3><p>你还什么都没有输入呢＞︿＜</p></div>
+        <div id="initialMessage" style="text-align:center;padding:60px 20px;color:rgba(200,210,225,0.8)"><h3>歌曲搜索</h3><p>你还什么都没有输入呢＞︿＜</p></div>
         <iframe id="resultsFrame" class="results-iframe"></iframe>
       </div>
     </div>
@@ -177,8 +174,6 @@
   <footer><div class="small">本站由 <a href="https://github.com" target="_blank">GitHub</a> 支持</div><div class="small">© Small 3 | 探索数字世界</div></footer>
 </main>
 </div></div>
-
-<div class="bg-info" id="bgInfo"><span>📷</span><span id="bgPhotographer">摄影师: 加载中...</span></div>
 
 <!-- 音乐播放器 -->
 <button class="music-toggle-btn" id="musicToggleBtn" onclick="toggleMusicPanel()">🎵</button>
@@ -256,26 +251,29 @@ function showAvatarFallback(){document.getElementById('avatarImg').style.display
 document.getElementById('songSearchForm').addEventListener('submit',function(e){e.preventDefault();var k=document.getElementById('searchKeyword').value.trim();if(!k)return;var rc=document.getElementById('searchResults');rc.classList.add('active');document.querySelector('.results-header').style.display='flex';document.getElementById('loading').style.display='flex';document.getElementById('initialMessage').style.display='none';var iframe=document.getElementById('resultsFrame');iframe.style.display='none';iframe.src='https://www.gequhai.com/s/'+encodeURIComponent(k);iframe.onload=function(){document.getElementById('loading').style.display='none';iframe.style.display='block';document.querySelector('.results-title').textContent='搜索结果: '+k}});
 function closeResults(){var rc=document.getElementById('searchResults');rc.classList.remove('active');document.querySelector('.results-header').style.display='none';document.getElementById('resultsFrame').style.display='none';document.getElementById('initialMessage').style.display='block'}
 
-// 动态背景
-var UNSPLASH_ACCESS_KEY='YYvtMNDAqTidAbtxrQkb-wOskhmn3CSHx0PXxAK60po';
+// ═══════════ 二次元背景（樱花随机图）═══════════
 (function(){
-  var GALLERY_TYPES={nature:{name:'自然风景',icon:'🏔️',unsplashCollection:'1163637'},art:{name:'艺术创意',icon:'🎨',unsplashCollection:'317099'}};
-  var currentGalleryType=localStorage.getItem('bg_gallery_type')||'nature';
-  var CONFIG={storageKey:'bg_cache_v4',cacheDuration:1800000};
-  function buildSources(gt){var g=GALLERY_TYPES[gt]||GALLERY_TYPES.nature;return[{name:'Unsplash',getUrl:function(){return'https://api.unsplash.com/photos/random?collections='+g.unsplashCollection+'&orientation=landscape&w=1920&q=80&count=1'},getHeaders:function(){return{'Authorization':'Client-ID '+UNSPLASH_ACCESS_KEY}},parseResponse:function(d){var p=Array.isArray(d)?d[0]:d;return{url:p.urls.regular,photographer:p.user.name,link:p.links.html,galleryType:gt}}},{name:'Lorem Picsum',getUrl:function(){return'https://picsum.photos/1920/1080?random='+Math.floor(Math.random()*1000)},getHeaders:function(){return{}},parseResponse:function(r,u){return{url:u,photographer:'Lorem Picsum',galleryType:'picsum'}}}]}
-  var IMAGE_SOURCES=buildSources(currentGalleryType);
-  var body=document.body,bgInfo=document.getElementById('bgInfo'),bgPhotographer=document.getElementById('bgPhotographer');
-  function updateGalleryBtn(){var g=GALLERY_TYPES[currentGalleryType];document.getElementById('gallerySelectorBtn').innerHTML='<span>'+g.icon+'</span> '+g.name}
-  updateGalleryBtn();if(bgInfo){bgInfo.style.display='flex';bgPhotographer.textContent='摄影师: 加载中...'}body.classList.add('bg-loading');
-  function getCached(){try{var c=localStorage.getItem(CONFIG.storageKey);if(c){var d=JSON.parse(c);if(d.timestamp&&(Date.now()-d.timestamp)<CONFIG.cacheDuration&&d.galleryType===currentGalleryType)return d}}catch(e){}return null}
-  function cacheBg(d){try{localStorage.setItem(CONFIG.storageKey,JSON.stringify({url:d.url,photographer:d.photographer,galleryType:d.galleryType||currentGalleryType,timestamp:Date.now()}))}catch(e){}}
-  function applyBg(d){var img=new Image();img.onload=function(){body.style.backgroundImage='linear-gradient(180deg,rgba(7,16,38,0.3) 0%,rgba(7,16,38,0.35) 100%),url('+d.url+')';body.classList.remove('bg-loading');body.classList.add('bg-loaded');if(bgPhotographer)bgPhotographer.textContent=d.photographer&&d.photographer!=='Lorem Picsum'?'摄影师: '+d.photographer:'图片: Lorem Picsum';cacheBg(d)};img.src=d.url}
-  function fetchRandomImage(si){si=si||0;if(si>=IMAGE_SOURCES.length){body.classList.remove('bg-loading');return}var s=IMAGE_SOURCES[si];if(s.name.includes('Lorem Picsum')){applyBg(s.parseResponse(null,s.getUrl()));return}fetch(s.getUrl(),{headers:s.getHeaders()}).then(function(r){return r.json()}).then(function(d){applyBg(s.parseResponse(d))}).catch(function(){fetchRandomImage(si+1)})}
-  var cached=getCached();if(cached&&cached.url)applyBg(cached);else fetchRandomImage(0);
-  window.changeBackground=function(){localStorage.removeItem(CONFIG.storageKey);IMAGE_SOURCES=buildSources(currentGalleryType);body.classList.add('bg-loading');body.classList.remove('bg-loaded');fetchRandomImage(0)}
-  window.toggleGallery=function(){var types=Object.keys(GALLERY_TYPES);currentGalleryType=types[(types.indexOf(currentGalleryType)+1)%types.length];localStorage.setItem('bg_gallery_type',currentGalleryType);updateGalleryBtn();showToast('已切换至：'+GALLERY_TYPES[currentGalleryType].icon+' '+GALLERY_TYPES[currentGalleryType].name);localStorage.removeItem(CONFIG.storageKey);IMAGE_SOURCES=buildSources(currentGalleryType);body.classList.add('bg-loading');body.classList.remove('bg-loaded');fetchRandomImage(0)}
-  if(bgInfo)bgInfo.addEventListener('contextmenu',function(e){e.preventDefault();window.changeBackground()});
-  document.addEventListener('keydown',function(e){if(e.ctrlKey&&e.shiftKey&&e.key==='B'){e.preventDefault();window.changeBackground()}if(e.ctrlKey&&e.shiftKey&&e.key==='G'){e.preventDefault();window.toggleGallery()}})
+  var bgApiUrl='https://www.dmoe.cc/random.php';
+  var body=document.body;
+  body.classList.add('bg-loading');
+
+  function preloadImage(url){return new Promise(function(resolve,reject){var img=new Image();img.onload=function(){resolve(url)};img.onerror=function(){reject(new Error('加载失败'))};img.src=url})}
+
+  function applyBackground(url){
+    preloadImage(url).then(function(u){
+      body.style.backgroundImage='linear-gradient(180deg,rgba(7,16,38,0.3) 0%,rgba(7,16,38,0.35) 100%),url('+u+')';
+      body.classList.remove('bg-loading');body.classList.add('bg-loaded');
+    }).catch(function(){body.classList.remove('bg-loading');body.classList.add('bg-loaded')});
+  }
+
+  function fetchBg(){
+    body.classList.add('bg-loading');body.classList.remove('bg-loaded');
+    fetch(bgApiUrl).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.url}).then(function(url){applyBackground(url)}).catch(function(){setTimeout(fetchBg,3000)});
+  }
+
+  fetchBg();
+
+  window.changeBackground=function(){fetchBg()};
 })();
 </script>
 </body>
