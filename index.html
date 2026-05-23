@@ -15,7 +15,7 @@
     }
     html, body { height: 100%; margin: 0; padding: 0; }
     body{
-      background: linear-gradient(180deg, rgba(7,16,38,0.3) 0%, rgba(7,16,38,0.35) 100%), #070f26;
+      background: linear-gradient(180deg, rgba(7,16,38,0.25) 0%, rgba(7,16,38,0.3) 100%), #070f26;
       background-size: cover; background-position: center; background-repeat: no-repeat;
       background-attachment: fixed; color: #f0f4fa; min-height: 100vh; padding: 0;
       -webkit-font-smoothing: antialiased; line-height: 1.6;
@@ -37,27 +37,33 @@
     .subtitle{margin:8px 0 0 0;color:var(--muted);font-size:14px;text-shadow:0 1px 3px rgba(0,0,0,0.3)}
     .content{margin-top:24px}
 
-    .blur-control{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding:10px 14px;background:rgba(0,0,0,0.2);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-sm)}
+    .blur-control{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding:10px 14px;background:rgba(0,0,0,0.2);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-sm);transition:all 0.3s}
+    .blur-control:hover{background:rgba(0,0,0,0.3);border-color:rgba(255,255,255,0.2)}
     .blur-slider{flex:1;-webkit-appearance:none;appearance:none;height:6px;background:linear-gradient(90deg,rgba(255,255,255,0.1),rgba(255,255,255,0.3));border-radius:3px;outline:none;cursor:pointer}
     .blur-slider::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));cursor:pointer;border:2px solid rgba(255,255,255,0.3)}
     .blur-value{font-size:13px;color:rgba(200,210,225,0.85);min-width:40px;text-align:right;font-weight:600}
-    .blur-reset-btn{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:6px;color:rgba(200,210,225,0.85);padding:4px 10px;font-size:12px;cursor:pointer;white-space:nowrap}
+    .blur-reset-btn{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:6px;color:rgba(200,210,225,0.85);padding:4px 10px;font-size:12px;cursor:pointer;white-space:nowrap;transition:all 0.2s}
+    .blur-reset-btn:hover{background:rgba(255,255,255,0.2);color:#fff}
 
     .quick-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px}
-    .quick-action-btn{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-sm);padding:12px;color:#f0f4fa;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;gap:8px;backdrop-filter:blur(5px);text-decoration:none}
-    .quick-action-btn:hover{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.2);transform:translateY(-2px)}
+    .quick-action-btn{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-sm);padding:12px;color:#f0f4fa;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;gap:8px;backdrop-filter:blur(5px);text-decoration:none;transition:all 0.3s}
+    .quick-action-btn:hover{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.2);transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,0.3)}
+    .quick-action-btn:active{transform:translateY(0)}
     .info-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:24px}
-    .info-card{background:rgba(0,0,0,0.2);backdrop-filter:blur(5px);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-sm);padding:16px;display:flex;align-items:center;gap:12px}
+    .info-card{background:rgba(0,0,0,0.2);backdrop-filter:blur(5px);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-sm);padding:16px;display:flex;align-items:center;gap:12px;transition:all 0.3s}
+    .info-card:hover{background:rgba(0,0,0,0.3);transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,0.3)}
     .info-icon{font-size:28px;flex-shrink:0}
     .info-label{font-size:11px;color:rgba(200,210,225,0.7);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
     .info-value{font-size:16px;font-weight:600;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,0.3)}
-    .intro{background:rgba(96,165,250,0.08);backdrop-filter:blur(3px);padding:16px 18px;border-radius:var(--radius);color:#e8f0fe;font-size:15px;margin-bottom:24px;border:1px solid rgba(96,165,250,0.15);position:relative;overflow:hidden}
+    .intro{background:rgba(96,165,250,0.08);backdrop-filter:blur(3px);padding:16px 18px;border-radius:var(--radius);color:#e8f0fe;font-size:15px;margin-bottom:24px;border:1px solid rgba(96,165,250,0.15);position:relative;overflow:hidden;transition:all 0.3s}
     .intro::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(to bottom,var(--accent),var(--accent-2))}
+    .intro:hover{background:rgba(96,165,250,0.12);border-color:rgba(96,165,250,0.25)}
     .links{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
     .links a{text-decoration:none;color:inherit}
-    .card{background:rgba(0,0,0,0.2);backdrop-filter:blur(5px);border-radius:var(--radius);padding:18px;border:1px solid rgba(255,255,255,0.1);display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden}
+    .card{background:rgba(0,0,0,0.2);backdrop-filter:blur(5px);border-radius:var(--radius);padding:18px;border:1px solid rgba(255,255,255,0.1);display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden;transition:all 0.4s cubic-bezier(0.25,0.8,0.25,1)}
     .card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(96,165,250,0.4),transparent)}
-    .card:hover{transform:translateY(-6px);background:rgba(0,0,0,0.4);backdrop-filter:blur(10px);box-shadow:0 14px 40px rgba(0,0,0,0.5);border-color:rgba(96,165,250,0.35)}
+    .card:hover{transform:translateY(-8px);background:rgba(0,0,0,0.4);backdrop-filter:blur(10px);box-shadow:0 14px 40px rgba(0,0,0,0.5);border-color:rgba(96,165,250,0.35)}
+    .card:active{transform:translateY(-2px)}
     .card .title{font-weight:600;color:#fff;font-size:16px}
     .card .desc{font-size:13px;color:rgba(200,210,225,0.85)}
     footer{margin-top:28px;display:flex;justify-content:space-between;align-items:center;gap:12px;color:rgba(200,210,225,0.8);font-size:14px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.1)}
@@ -65,11 +71,14 @@
     .search-form-group{display:flex;flex-direction:column;gap:16px;margin-bottom:24px}
     .search-form-row{display:flex;gap:12px}
     .search-form{flex:1;display:flex;gap:8px}
-    .search-input{flex:1;padding:10px 16px;border-radius:var(--radius-sm);border:1px solid rgba(255,255,255,0.2);outline:none;font-size:15px;background:rgba(0,0,0,0.25);backdrop-filter:blur(5px);color:#f0f4fa}
+    .search-input{flex:1;padding:10px 16px;border-radius:var(--radius-sm);border:1px solid rgba(255,255,255,0.2);outline:none;font-size:15px;background:rgba(0,0,0,0.25);backdrop-filter:blur(5px);color:#f0f4fa;transition:all 0.2s}
     .search-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(96,165,250,0.2);background:rgba(0,0,0,0.4)}
     .search-input::placeholder{color:rgba(200,210,225,0.5)}
-    .search-button{padding:10px 20px;border-radius:var(--radius-sm);border:none;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:white;font-weight:600;cursor:pointer;min-width:100px}
+    .search-button{padding:10px 20px;border-radius:var(--radius-sm);border:none;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:white;font-weight:600;cursor:pointer;min-width:100px;transition:all 0.2s}
+    .search-button:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(59,130,246,0.4)}
+    .search-button:active{transform:translateY(0)}
     .green-button{background:linear-gradient(135deg,var(--accent-green),#0ea271)!important}
+    .green-button:hover{box-shadow:0 4px 12px rgba(16,185,129,0.4)!important}
     .section-title{margin:0 0 16px 0;font-size:15px;color:rgba(200,210,225,0.85);text-align:center;position:relative;padding-bottom:8px}
     .section-title::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:60px;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent)}
     .search-container{position:relative;margin-bottom:24px}
@@ -81,18 +90,24 @@
     @keyframes spin{to{transform:rotate(360deg)}}
     .results-header{display:none;justify-content:space-between;align-items:center;padding:14px 18px;background:rgba(0,0,0,0.6);border-bottom:1px solid rgba(96,165,250,0.2)}
     .results-title{font-weight:600;color:#f0f4fa;font-size:15px}
-    .close-results{background:rgba(239,68,68,0.2);border:1px solid rgba(239,68,68,0.3);border-radius:6px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;color:#fca5a5;cursor:pointer;font-size:18px}
+    .close-results{background:rgba(239,68,68,0.2);border:1px solid rgba(239,68,68,0.3);border-radius:6px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;color:#fca5a5;cursor:pointer;font-size:18px;transition:all 0.2s}
+    .close-results:hover{background:rgba(239,68,68,0.3)}
     .page-wrapper{width:100%;max-width:100%;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px 16px;box-sizing:border-box}
     .main-content{width:100%;max-width:920px;margin:0 auto;padding:20px 0}
 
+    /* 卡片入场动画 */
+    .fade-up{opacity:0;transform:translateY(30px);transition:opacity 0.6s ease,transform 0.6s ease}
+    .fade-up.visible{opacity:1;transform:translateY(0)}
+
     /* 音乐播放器 */
-    .music-toggle-btn{position:fixed;bottom:30px;right:20px;width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,0.5);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:20px;cursor:pointer;z-index:999;display:flex;align-items:center;justify-content:center}
+    .music-toggle-btn{position:fixed;bottom:30px;right:20px;width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,0.5);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:20px;cursor:pointer;z-index:999;display:flex;align-items:center;justify-content:center;transition:all 0.3s}
+    .music-toggle-btn:hover{background:rgba(0,0,0,0.7);transform:scale(1.1)}
     .music-toggle-btn.playing{box-shadow:0 0 16px rgba(96,165,250,0.4);border-color:var(--accent);animation:pulse 2s infinite}
     @keyframes pulse{0%,100%{box-shadow:0 0 12px rgba(96,165,250,0.3)}50%{box-shadow:0 0 24px rgba(96,165,250,0.6)}}
     .music-panel{position:fixed;bottom:80px;right:20px;width:300px;background:rgba(0,0,0,0.75);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:16px;z-index:998;display:none;flex-direction:column;gap:8px;max-height:400px;overflow-y:auto}
     .music-panel.show{display:flex}
     .player-controls{display:flex;align-items:center;gap:8px;justify-content:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.08)}
-    .ctrl-btn{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;padding:4px 8px;border-radius:6px}
+    .ctrl-btn{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;padding:4px 8px;border-radius:6px;transition:all 0.2s}
     .ctrl-btn:hover{background:rgba(255,255,255,0.1)}
     .ctrl-btn.play-btn{font-size:24px}
     .loop-btn{font-size:14px}.loop-btn.active{color:var(--accent)}
@@ -100,7 +115,7 @@
     .music-progress-fill{height:100%;background:var(--accent);border-radius:2px;width:0%}
     .music-time{font-size:10px;color:rgba(255,255,255,0.6);min-width:32px;text-align:center}
     .music-now-playing{font-size:12px;color:var(--accent);text-align:center;padding:2px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .song-item{padding:10px 12px;border-radius:8px;cursor:pointer;font-size:13px;color:rgba(255,255,255,0.8);display:flex;align-items:center;gap:8px;border:1px solid transparent;background:rgba(255,255,255,0.03)}
+    .song-item{padding:10px 12px;border-radius:8px;cursor:pointer;font-size:13px;color:rgba(255,255,255,0.8);display:flex;align-items:center;gap:8px;border:1px solid transparent;background:rgba(255,255,255,0.03);transition:all 0.2s}
     .song-item:hover{background:rgba(255,255,255,0.08)}
     .song-item.active{background:rgba(96,165,250,0.15);border-color:rgba(96,165,250,0.3);color:#fff}
     .song-icon{font-size:14px;flex-shrink:0}.song-num{font-size:10px;color:rgba(255,255,255,0.4);min-width:18px;text-align:center}
@@ -134,21 +149,21 @@
     <div><h1>Small 3 的个人领域</h1><div class="subtitle">收藏与分享我觉得有趣的站点与资源</div></div>
   </header>
   <section class="content">
-    <div class="blur-control"><span style="font-size:13px;color:rgba(200,210,225,0.85);white-space:nowrap">🔮 模糊度</span><input type="range" class="blur-slider" id="blurSlider" min="0" max="20" value="8" step="1"><span class="blur-value" id="blurValue">8px</span><button class="blur-reset-btn" id="blurResetBtn">重置</button></div>
+    <div class="blur-control fade-up"><span style="font-size:13px;color:rgba(200,210,225,0.85);white-space:nowrap">🔮 模糊度</span><input type="range" class="blur-slider" id="blurSlider" min="0" max="20" value="8" step="1"><span class="blur-value" id="blurValue">8px</span><button class="blur-reset-btn" id="blurResetBtn">重置</button></div>
     <div class="info-bar">
-      <div class="info-card"><div class="info-icon">🕐</div><div class="info-text"><div class="info-label">当前时间</div><div class="info-value" id="currentTime">加载中...</div></div></div>
-      <div class="info-card"><div class="info-icon">📅</div><div class="info-text"><div class="info-label">今天日期</div><div class="info-value" id="currentDate">加载中...</div></div></div>
-      <div class="info-card"><div class="info-icon">💡</div><div class="info-text"><div class="info-label">每日一言</div><div class="info-value" id="dailyQuote">思考中...</div></div></div>
+      <div class="info-card fade-up"><div class="info-icon">🕐</div><div class="info-text"><div class="info-label">当前时间</div><div class="info-value" id="currentTime">加载中...</div></div></div>
+      <div class="info-card fade-up"><div class="info-icon">📅</div><div class="info-text"><div class="info-label">今天日期</div><div class="info-value" id="currentDate">加载中...</div></div></div>
+      <div class="info-card fade-up"><div class="info-icon">💡</div><div class="info-text"><div class="info-label">每日一言</div><div class="info-value" id="dailyQuote">思考中...</div></div></div>
     </div>
     <div class="quick-actions">
-      <button class="quick-action-btn" onclick="window.changeBackground()"><span>🖼</span> 换背景</button>
-      <button class="quick-action-btn" onclick="copyToClipboard(window.location.href)"><span>🔗</span> 复制链接</button>
-      <a class="quick-action-btn" href="https://126.com/" target="_blank"><span>📧</span> Email</a>
-      <button class="quick-action-btn" onclick="toggleBrightness()"><span>🌓</span> 亮度调节</button>
-      <button class="quick-action-btn" onclick="randomWebsite()"><span>🎲</span> 随机访问</button>
-      <button class="quick-action-btn" onclick="showBookmarkPrompt()"><span>⭐</span> 加书签</button>
+      <button class="quick-action-btn fade-up" onclick="window.changeBackground()"><span>🖼</span> 换背景</button>
+      <button class="quick-action-btn fade-up" onclick="copyToClipboard(window.location.href)"><span>🔗</span> 复制链接</button>
+      <a class="quick-action-btn fade-up" href="https://126.com/" target="_blank"><span>📧</span> Email</a>
+      <button class="quick-action-btn fade-up" onclick="toggleBrightness()"><span>🌓</span> 亮度调节</button>
+      <button class="quick-action-btn fade-up" onclick="randomWebsite()"><span>🎲</span> 随机访问</button>
+      <button class="quick-action-btn fade-up" onclick="showBookmarkPrompt()"><span>⭐</span> 加书签</button>
     </div>
-    <div class="intro">我是 Small 3，这是我的个人领域。下面是我收藏的几个站点，欢迎访问。</div>
+    <div class="intro fade-up">我是 Small 3，这是我的个人领域。下面是我收藏的几个站点，欢迎访问。</div>
     <h2 class="section-title">—— SMALL 3 领域 ——</h2>
     <div class="search-form-group"><div class="search-form-row">
       <form action="https://www.bing.com/search" method="get" target="_blank" class="search-form"><input type="text" name="q" placeholder="必应搜索…" class="search-input"><button type="submit" class="search-button">必应搜索</button></form>
@@ -163,12 +178,12 @@
       </div>
     </div>
     <ul class="links">
-      <li><a class="card" href="https://small534460.github.io/shiyoungongjui/" target="_blank"><div class="title">🛠️ 实用工具</div><div class="desc">各种实用的在线工具和资源</div></a></li>
-      <li><a class="card" href="https://small534460.github.io/gonggao/" target="_blank"><div class="title">📢 公告</div><div class="desc">网站公告和实验性内容</div></a></li>
-      <li><a class="card" href="https://online.yandex.com/search?text=%E4%BF%84%E7%BD%97%E6%96%AF%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8Eyandex&lr=21206" target="_blank"><div class="title">🔍 Yandex导航</div><div class="desc">俄罗斯搜索引擎</div></a></li>
-      <li><a class="card" href="https://store.steampowered.com/" target="_blank"><div class="title">🎮 Steam</div><div class="desc">游戏平台和社区</div></a></li>
-      <li><a class="card" href="https://534460.netlify.app/" target="_blank"><div class="title">💻 Small 3的聊天室</div><div class="desc">你不想试一下吗？</div></a></li>
-      <li><a class="card" href="https://small534460.github.io/wenjiantuoguan/" target="_blank"><div class="title">📁 GitHub 文件管理器</div><div class="desc">你可以把文件暂时存放在这里</div></a></li>
+      <li><a class="card fade-up" href="https://small534460.github.io/shiyoungongjui/" target="_blank"><div class="title">🛠️ 实用工具</div><div class="desc">各种实用的在线工具和资源</div></a></li>
+      <li><a class="card fade-up" href="https://small534460.github.io/gonggao/" target="_blank"><div class="title">📢 公告</div><div class="desc">网站公告和实验性内容</div></a></li>
+      <li><a class="card fade-up" href="https://online.yandex.com/search?text=%E4%BF%84%E7%BD%97%E6%96%AF%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8Eyandex&lr=21206" target="_blank"><div class="title">🔍 Yandex导航</div><div class="desc">俄罗斯搜索引擎</div></a></li>
+      <li><a class="card fade-up" href="https://store.steampowered.com/" target="_blank"><div class="title">🎮 Steam</div><div class="desc">游戏平台和社区</div></a></li>
+      <li><a class="card fade-up" href="https://534460.netlify.app/" target="_blank"><div class="title">💻 Small 3的聊天室</div><div class="desc">你不想试一下吗？</div></a></li>
+      <li><a class="card fade-up" href="https://small534460.github.io/wenjiantuoguan/" target="_blank"><div class="title">📁 GitHub 文件管理器</div><div class="desc">你可以把文件暂时存放在这里</div></a></li>
     </ul>
   </section>
   <footer><div class="small">本站由 <a href="https://github.com" target="_blank">GitHub</a> 支持</div><div class="small">© Small 3 | 探索数字世界</div></footer>
@@ -195,6 +210,12 @@
 </div>
 
 <script>
+// ═══════════ 卡片入场动画 ═══════════
+(function(){
+  var observer=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible')}})},{threshold:0.15});
+  document.querySelectorAll('.fade-up').forEach(function(el){observer.observe(el)});
+})();
+
 // ═══════════ 音乐播放器 ═══════════
 var MUSIC_REPO_USER='small534460';var MUSIC_REPO='LTS';
 var ENC_MUSIC_TOKEN='L79jrVSjux2ZS790MCd2+jo7Z9gJPEm+z+0KyjiWGadLB71bCCsJh1vy+izUsCfXL/Dlwt2EdoDUeNc4mVTaE89aN6U=';
@@ -240,7 +261,7 @@ function showToast(m){var t=document.createElement('div');t.style.cssText='posit
 function copyToClipboard(t){if(navigator.clipboard)navigator.clipboard.writeText(t).then(function(){showToast('链接已复制！📋')}).catch(function(){var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');document.body.removeChild(a)})}
 
 var brightnessLevel=0;
-function toggleBrightness(){brightnessLevel=(brightnessLevel+1)%3;var v=[0.3,0.5,0.7][brightnessLevel];var bg=document.body.style.backgroundImage;var m=bg.match(/url\(([^)]+)\)/);if(m)document.body.style.backgroundImage='linear-gradient(180deg,rgba(7,16,38,'+v+') 0%,rgba(7,16,38,'+(v+0.05)+') 100%),url('+m[1]+')'}
+function toggleBrightness(){brightnessLevel=(brightnessLevel+1)%3;var v=[0.25,0.45,0.65][brightnessLevel];var labels=['明亮 ✨','适中 🌤️','暗色 🌙'];var bg=document.body.style.backgroundImage;var m=bg.match(/url\(([^)]+)\)/);if(m)document.body.style.backgroundImage='linear-gradient(180deg,rgba(7,16,38,'+v+') 0%,rgba(7,16,38,'+(v+0.05)+') 100%),url('+m[1]+')';showToast('亮度：'+labels[brightnessLevel])}
 
 var funWebsites=[{url:'https://www.bilibili.com',name:'哔哩哔哩'},{url:'https://www.youtube.com',name:'YouTube'},{url:'https://music.163.com',name:'网易云音乐'},{url:'https://y.qq.com',name:'QQ音乐'},{url:'https://chat.deepseek.com',name:'DeepSeek'},{url:'https://kimi.moonshot.cn',name:'Kimi'},{url:'https://www.douyin.com',name:'抖音'},{url:'https://weibo.com',name:'微博'},{url:'https://www.zhihu.com',name:'知乎'},{url:'https://store.steampowered.com',name:'Steam'},{url:'https://github.com',name:'GitHub'}];
 function randomWebsite(){var w=funWebsites[Math.floor(Math.random()*funWebsites.length)];showToast('🚀 前往：'+w.name);setTimeout(function(){window.open(w.url,'_blank')},800)}
@@ -259,7 +280,7 @@ body.classList.add('bg-loading');
 function applyBackground(url){
   var img=new Image();
   img.onload=function(){
-    body.style.backgroundImage='linear-gradient(180deg,rgba(7,16,38,0.3) 0%,rgba(7,16,38,0.35) 100%),url('+url+')';
+    body.style.backgroundImage='linear-gradient(180deg,rgba(7,16,38,0.25) 0%,rgba(7,16,38,0.3) 100%),url('+url+')';
     body.classList.remove('bg-loading');body.classList.add('bg-loaded');
   };
   img.onerror=function(){body.classList.remove('bg-loading');body.classList.add('bg-loaded')};
