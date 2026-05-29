@@ -15,15 +15,25 @@
     }
     html, body { height: 100%; margin: 0; padding: 0; }
     body{
-      background: linear-gradient(180deg, rgba(7,16,38,0.25) 0%, rgba(7,16,38,0.3) 100%), #070f26;
+      background: #070f26;
       background-size: cover; background-position: center; background-repeat: no-repeat;
       background-attachment: fixed; color: #f0f4fa; min-height: 100vh; padding: 0;
       -webkit-font-smoothing: antialiased; line-height: 1.6;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
       transition: background-image 0.8s ease-in-out;
     }
-    body.bg-loading { background: linear-gradient(180deg, rgba(7,16,38,0.5) 0%, rgba(7,16,38,0.55) 100%), #070f26; }
     body.bg-loaded { background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed; }
+
+    /* ═══════════ 加载界面 ═══════════ */
+    #loaderScreen{position:fixed;top:0;left:0;width:100%;height:100%;background:#0f1724;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.6s ease,visibility 0.6s ease}
+    #loaderScreen.hidden{opacity:0;visibility:hidden;pointer-events:none}
+    #loaderScreen .loader-avatar{width:80px;height:80px;border-radius:50%;border:3px solid var(--accent);animation:loaderPulse 2s infinite;object-fit:cover}
+    @keyframes loaderPulse{0%,100%{transform:scale(1);box-shadow:0 0 20px rgba(96,165,250,0.3)}50%{transform:scale(1.08);box-shadow:0 0 40px rgba(96,165,250,0.6)}}
+    #loaderScreen .loader-title{font-size:24px;font-weight:700;margin-top:20px;background:linear-gradient(to right,#ffffff,#c8dfff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    #loaderScreen .loader-progress-wrap{width:200px;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;margin-top:24px;overflow:hidden}
+    #loaderScreen .loader-progress-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-green),var(--accent));background-size:200% 100%;animation:loaderShine 1.5s linear infinite;border-radius:2px;transition:width 0.4s ease}
+    @keyframes loaderShine{0%{background-position:200% 0}100%{background-position:-200% 0}}
+    #loaderScreen .loader-status{font-size:11px;color:rgba(200,210,225,0.6);margin-top:10px}
 
     .wrap{width:100%;max-width:920px;background:rgba(0,0,0,0.25);backdrop-filter:blur(var(--blur-strength));-webkit-backdrop-filter:blur(var(--blur-strength));border-radius:var(--radius-lg);padding:32px;box-shadow:0 8px 32px rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.12);margin:0 auto;box-sizing:border-box}
     @media(max-width:768px){body{padding:12px 8px;display:block}.wrap{padding:16px 12px;border-radius:14px;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}}
@@ -48,10 +58,9 @@
     .quick-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px}
     .quick-action-btn{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-sm);padding:12px;color:#f0f4fa;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;gap:8px;backdrop-filter:blur(5px);text-decoration:none;transition:all 0.3s}
     .quick-action-btn:hover{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.2);transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,0.3)}
-    .quick-action-btn:active{transform:translateY(0)}
     .info-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:24px}
     .info-card{background:rgba(0,0,0,0.2);backdrop-filter:blur(5px);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-sm);padding:16px;display:flex;align-items:center;gap:12px;transition:all 0.3s}
-    .info-card:hover{background:rgba(0,0,0,0.3);transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,0.3)}
+    .info-card:hover{background:rgba(0,0,0,0.3);transform:translateY(-2px)}
     .info-icon{font-size:28px;flex-shrink:0}
     .info-label{font-size:11px;color:rgba(200,210,225,0.7);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
     .info-value{font-size:16px;font-weight:600;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,0.3)}
@@ -63,7 +72,6 @@
     .card{background:rgba(0,0,0,0.2);backdrop-filter:blur(5px);border-radius:var(--radius);padding:18px;border:1px solid rgba(255,255,255,0.1);display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden;transition:all 0.4s cubic-bezier(0.25,0.8,0.25,1)}
     .card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(96,165,250,0.4),transparent)}
     .card:hover{transform:translateY(-8px);background:rgba(0,0,0,0.4);backdrop-filter:blur(10px);box-shadow:0 14px 40px rgba(0,0,0,0.5);border-color:rgba(96,165,250,0.35)}
-    .card:active{transform:translateY(-2px)}
     .card .title{font-weight:600;color:#fff;font-size:16px}
     .card .desc{font-size:13px;color:rgba(200,210,225,0.85)}
     footer{margin-top:28px;display:flex;justify-content:space-between;align-items:center;gap:12px;color:rgba(200,210,225,0.8);font-size:14px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.1)}
@@ -76,7 +84,6 @@
     .search-input::placeholder{color:rgba(200,210,225,0.5)}
     .search-button{padding:10px 20px;border-radius:var(--radius-sm);border:none;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:white;font-weight:600;cursor:pointer;min-width:100px;transition:all 0.2s}
     .search-button:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(59,130,246,0.4)}
-    .search-button:active{transform:translateY(0)}
     .green-button{background:linear-gradient(135deg,var(--accent-green),#0ea271)!important}
     .green-button:hover{box-shadow:0 4px 12px rgba(16,185,129,0.4)!important}
     .section-title{margin:0 0 16px 0;font-size:15px;color:rgba(200,210,225,0.85);text-align:center;position:relative;padding-bottom:8px}
@@ -95,7 +102,6 @@
     .page-wrapper{width:100%;max-width:100%;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px 16px;box-sizing:border-box}
     .main-content{width:100%;max-width:920px;margin:0 auto;padding:20px 0}
 
-    /* 卡片入场动画 */
     .fade-up{opacity:0;transform:translateY(30px);transition:opacity 0.6s ease,transform 0.6s ease}
     .fade-up.visible{opacity:1;transform:translateY(0)}
 
@@ -142,6 +148,15 @@
   </style>
 </head>
 <body>
+
+<!-- ═══════════ 加载界面 ═══════════ -->
+<div id="loaderScreen">
+  <img class="loader-avatar" src="https://i.mituw.com/imgs/2026/03/15/de4945abb96be550.jpg" alt="头像" onerror="this.style.display='none'">
+  <div class="loader-title">Small 3</div>
+  <div class="loader-progress-wrap"><div class="loader-progress-bar" id="loaderProgressBar" style="width:0%"></div></div>
+  <div class="loader-status" id="loaderStatus">正在连接...</div>
+</div>
+
 <div class="page-wrapper"><div class="main-content">
 <main class="wrap" role="main">
   <header>
@@ -210,6 +225,76 @@
 </div>
 
 <script>
+// ═══════════ 加载系统 ═══════════
+(function(){
+  var loader=document.getElementById('loaderScreen');
+  var progressBar=document.getElementById('loaderProgressBar');
+  var statusEl=document.getElementById('loaderStatus');
+  var totalSteps=4, currentStep=0;
+  var cachedBgUrl='';
+  var bgLoaded=false, avatarLoaded=false, tokenReady=false;
+
+  function updateProgress(msg){
+    currentStep++;
+    var pct=(currentStep/totalSteps)*100;
+    progressBar.style.width=pct+'%';
+    if(msg)statusEl.textContent=msg;
+  }
+
+  function tryHideLoader(){
+    if(bgLoaded && avatarLoaded && tokenReady){
+      setTimeout(function(){
+        // ★ 先设置背景再隐藏加载界面
+        document.body.style.backgroundImage='linear-gradient(180deg,rgba(7,16,38,0.25) 0%,rgba(7,16,38,0.3) 100%),url('+cachedBgUrl+')';
+        document.body.classList.add('bg-loaded');
+        loader.classList.add('hidden');
+      },300);
+    }
+  }
+
+  // 1. 预加载头像
+  updateProgress('正在加载头像...');
+  var avatarImg=new Image();
+  avatarImg.onload=function(){avatarLoaded=true;tryHideLoader()};
+  avatarImg.onerror=function(){avatarLoaded=true;tryHideLoader()};
+  avatarImg.src='https://i.mituw.com/imgs/2026/03/15/de4945abb96be550.jpg';
+
+  // 2. 预加载背景图（必须等图片完全加载）
+  updateProgress('正在加载背景...');
+  var bgImg=new Image();
+  bgImg.onload=function(){
+    cachedBgUrl=bgImg.src;
+    bgLoaded=true;
+    tryHideLoader();
+  };
+  bgImg.onerror=function(){
+    bgLoaded=true;
+    tryHideLoader();
+  };
+  bgImg.src='https://www.dmoe.cc/random.php?t='+Date.now();
+
+  // 3. 解密音乐令牌
+  updateProgress('正在初始化...');
+  initMusicToken().then(function(){
+    tokenReady=true;
+    tryHideLoader();
+  }).catch(function(){
+    tokenReady=true;
+    tryHideLoader();
+  });
+
+  // 兜底：6秒后强制显示
+  updateProgress('即将完成...');
+  setTimeout(function(){
+    bgLoaded=true;avatarLoaded=true;tokenReady=true;
+    if(cachedBgUrl){
+      document.body.style.backgroundImage='linear-gradient(180deg,rgba(7,16,38,0.25) 0%,rgba(7,16,38,0.3) 100%),url('+cachedBgUrl+')';
+    }
+    document.body.classList.add('bg-loaded');
+    tryHideLoader();
+  },6000);
+})();
+
 // ═══════════ 卡片入场动画 ═══════════
 (function(){
   var observer=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible')}})},{threshold:0.15});
@@ -238,7 +323,7 @@ var audio=document.getElementById('bgMusic');
 audio.onended=function(){playNext()};
 audio.onplay=function(){isPlaying=true;document.getElementById('playBtn').textContent='⏸️';document.getElementById('musicToggleBtn').classList.add('playing')};
 audio.onpause=function(){isPlaying=false;document.getElementById('playBtn').textContent='▶️';document.getElementById('musicToggleBtn').classList.remove('playing')};
-document.addEventListener('DOMContentLoaded',function(){initMusicToken().then(function(){loadMusicList()})});
+document.addEventListener('DOMContentLoaded',function(){loadMusicList()});
 
 // ═══════════ 主页原有功能 ═══════════
 (function(){
@@ -272,32 +357,22 @@ function showAvatarFallback(){document.getElementById('avatarImg').style.display
 document.getElementById('songSearchForm').addEventListener('submit',function(e){e.preventDefault();var k=document.getElementById('searchKeyword').value.trim();if(!k)return;var rc=document.getElementById('searchResults');rc.classList.add('active');document.querySelector('.results-header').style.display='flex';document.getElementById('loading').style.display='flex';document.getElementById('initialMessage').style.display='none';var iframe=document.getElementById('resultsFrame');iframe.style.display='none';iframe.src='https://www.gequhai.com/s/'+encodeURIComponent(k);iframe.onload=function(){document.getElementById('loading').style.display='none';iframe.style.display='block';document.querySelector('.results-title').textContent='搜索结果: '+k}});
 function closeResults(){var rc=document.getElementById('searchResults');rc.classList.remove('active');document.querySelector('.results-header').style.display='none';document.getElementById('resultsFrame').style.display='none';document.getElementById('initialMessage').style.display='block'}
 
-// ═══════════ 二次元背景（樱花随机图）═══════════
-var bgApiUrl='https://www.dmoe.cc/random.php';
-var body=document.body;
-body.classList.add('bg-loading');
-
+// ═══════════ 二次元背景 ═══════════
 function applyBackground(url){
   var img=new Image();
   img.onload=function(){
-    body.style.backgroundImage='linear-gradient(180deg,rgba(7,16,38,0.25) 0%,rgba(7,16,38,0.3) 100%),url('+url+')';
-    body.classList.remove('bg-loading');body.classList.add('bg-loaded');
+    document.body.style.backgroundImage='linear-gradient(180deg,rgba(7,16,38,0.25) 0%,rgba(7,16,38,0.3) 100%),url('+url+')';
+    document.body.classList.add('bg-loaded');
   };
-  img.onerror=function(){body.classList.remove('bg-loading');body.classList.add('bg-loaded')};
   img.src=url;
 }
-
 function fetchBg(){
-  body.classList.add('bg-loading');body.classList.remove('bg-loaded');
   var img=new Image();
   img.onload=function(){applyBackground(img.src)};
   img.onerror=function(){setTimeout(fetchBg,3000)};
-  img.src=bgApiUrl+'?t='+Date.now();
+  img.src='https://www.dmoe.cc/random.php?t='+Date.now();
 }
-
 function changeBackground(){fetchBg()}
-
-fetchBg();
 </script>
 </body>
 </html>
