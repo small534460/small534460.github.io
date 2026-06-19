@@ -303,7 +303,7 @@
 
 // ═══════════ 音乐播放器 ═══════════
 var MUSIC_REPO_USER='small534460';var MUSIC_REPO='LTS';
-var ENC_MUSIC_TOKEN='L79jrVSjux2ZS790MCd2+jo7Z9gJPEm+z+0KyjiWGadLB71bCCsJh1vy+izUsCfXL/Dlwt2EdoDUeNc4mVTaE89aN6U=';
+var ENC_MUSIC_TOKEN='Amd/XHtEE5/KY2ljKDPSBs6zUYi1dYMwGmW05jlKanGy07Br7r5DD+GGU8U4pY6psGOComeLQpA/LoAfXNgn0PcJiKU=';
 var musicToken='';var playlist=[];var currentTrack=-1;var isPlaying=false;var loopMode=0;
 function base64ToBytes(b64){var str=atob(b64);var bytes=new Uint8Array(str.length);for(var i=0;i<str.length;i++)bytes[i]=str.charCodeAt(i);return bytes}
 async function initMusicToken(){try{var k=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('534460'));var key=await crypto.subtle.importKey('raw',k,{name:'AES-GCM'},false,['decrypt']);var bytes=base64ToBytes(ENC_MUSIC_TOKEN);var iv=bytes.slice(0,12);var ct=bytes.slice(12);var dec=await crypto.subtle.decrypt({name:'AES-GCM',iv:iv},key,ct);musicToken=new TextDecoder().decode(dec)}catch(e){console.log('令牌解密失败')}}
