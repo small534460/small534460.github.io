@@ -21,17 +21,10 @@
       -webkit-font-smoothing: antialiased; line-height: 1.6;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
       transition: background-image 0.8s ease-in-out;
-      position: relative; /* 让 canvas 定位参考 */
     }
     body.bg-loaded { background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed; }
 
-    /* 粒子画布 - 背景层 */
-    #particleBgCanvas {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      z-index: -1; pointer-events: none; /* 鼠标穿透 */
-    }
-
-    /* 加载界面 */
+    /* ═══════════ 加载界面 ═══════════ */
     #loaderScreen{position:fixed;top:0;left:0;width:100%;height:100%;background:#0f1724;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.6s ease,visibility 0.6s ease}
     #loaderScreen.hidden{opacity:0;visibility:hidden;pointer-events:none}
     #loaderScreen .loader-avatar{width:80px;height:80px;border-radius:50%;border:3px solid var(--accent);animation:loaderPulse 2s infinite;object-fit:cover}
@@ -156,9 +149,6 @@
 </head>
 <body>
 
-<!-- 粒子背景画布（最底层） -->
-<canvas id="particleBgCanvas"></canvas>
-
 <!-- ═══════════ 加载界面 ═══════════ -->
 <div id="loaderScreen">
   <img class="loader-avatar" src="https://i.mituw.com/imgs/2026/03/15/de4945abb96be550.jpg" alt="头像" onerror="this.style.display='none'">
@@ -254,6 +244,7 @@
   function tryHideLoader(){
     if(bgLoaded && avatarLoaded && tokenReady){
       setTimeout(function(){
+        // ★ 先设置背景再隐藏加载界面
         document.body.style.backgroundImage='linear-gradient(180deg,rgba(7,16,38,0.25) 0%,rgba(7,16,38,0.3) 100%),url('+cachedBgUrl+')';
         document.body.classList.add('bg-loaded');
         loader.classList.add('hidden');
@@ -268,20 +259,19 @@
   avatarImg.onerror=function(){avatarLoaded=true;tryHideLoader()};
   avatarImg.src='https://i.mituw.com/imgs/2026/03/15/de4945abb96be550.jpg';
 
-  // 2. 预加载背景图
+  // 2. 预加载背景图（必须等图片完全加载）
   updateProgress('正在加载背景...');
   var bgImg=new Image();
   bgImg.onload=function(){
-  cachedBgUrl=bgImg.src;
-  bgLoaded=true;
-  tryHideLoader();
-};
-bgImg.onerror=function(){
-  // 如果加载失败，也允许继续，但背景可能是纯色，后续可以手动换
-  bgLoaded=true;
-  tryHideLoader();
-};
-bgImg.src='https://img.xjh.me/random_img.php?type=bg&ctype=nature&return=302&t='+Date.now(); // ← 改成这个
+    cachedBgUrl=bgImg.src;
+    bgLoaded=true;
+    tryHideLoader();
+  };
+  bgImg.onerror=function(){
+    bgLoaded=true;
+    tryHideLoader();
+  };
+  bgImg.src='https://www.dmoe.cc/random.php?t='+Date.now();
 
   // 3. 解密音乐令牌
   updateProgress('正在初始化...');
@@ -383,243 +373,6 @@ function fetchBg(){
   img.src='https://img.xjh.me/random_img.php?type=bg&ctype=nature&return=302&t='+Date.now();
 }
 function changeBackground(){fetchBg()}
-
-// ═══════════ 粒子背景系统（融入主页） ═══════════
-(function() {
-  var canvas = document.getElementById('particleBgCanvas');
-  var ctx = canvas.getContext('2d');
-  var particles = [];
-  var mouseX = -100, mouseY = -100, mouseDown = false;
-  var audioCtx = null;
-  var lastTime = performance.now();
-
-  // 音频初始化（首次用户交互时激活）
-  function initAudio() {
-    if (!audioCtx) {
-      try {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      } catch (e) {}
-    }
-  }
-
-  // 粒子音效（移动时轻微叮）
-  function playParticleTone(freq, duration, vol) {
-    if (!audioCtx) return;
-    var now = audioCtx.currentTime;
-    var osc = audioCtx.createOscillator();
-    var gain = audioCtx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(freq, now);
-    gain.gain.setValueAtTime(vol, now);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
-    osc.connect(gain).connect(audioCtx.destination);
-    osc.start(now);
-    osc.stop(now + duration);
-  }
-
-  // 花朵绽放音效（多谐波）
-  function playBloomSound() {
-    if (!audioCtx) return;
-    var now = audioCtx.currentTime;
-    var baseFreq = 220 + Math.random() * 300;
-    [1, 1.5, 2].forEach(function(mult, i) {
-      var osc = audioCtx.createOscillator();
-      var gain = audioCtx.createGain();
-      osc.type = i === 0 ? 'triangle' : 'sine';
-      osc.frequency.setValueAtTime(baseFreq * mult, now);
-      gain.gain.setValueAtTime(0.08, now);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.25 + i * 0.05);
-      osc.connect(gain).connect(audioCtx.destination);
-      osc.start(now);
-      osc.stop(now + 0.3);
-    });
-  }
-
-  // 粒子类
-  class Particle {
-    constructor(x, y, vx, vy, color, size, life) {
-      this.x = x;
-      this.y = y;
-      this.vx = vx || 0;
-      this.vy = vy || 0;
-      this.life = life !== undefined ? life : 0.6 + Math.random() * 0.5;
-      this.maxLife = this.life;
-      this.size = size !== undefined ? size : 1.5 + Math.random() * 3.5;
-      this.color = color || 'hsl(' + Math.random() * 360 + ', 90%, 65%)';
-    }
-    update(dt) {
-      this.x += this.vx * dt;
-      this.y += this.vy * dt;
-      this.life -= dt;
-      this.vx *= 0.99;
-      this.vy *= 0.99;
-    }
-    draw(ctx) {
-      var alpha = Math.max(0, this.life / this.maxLife);
-      var s = this.size * (0.7 + alpha * 0.3);
-      ctx.save();
-      ctx.globalAlpha = alpha;
-      ctx.shadowColor = this.color;
-      ctx.shadowBlur = s * 2.5;
-      ctx.fillStyle = this.color;
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, s, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-    }
-    isDead() {
-      return this.life <= 0;
-    }
-  }
-
-  // 生成移动轨迹粒子
-  function spawnTrailParticle(x, y) {
-    var angle = Math.random() * Math.PI * 2;
-    var speed = 15 + Math.random() * 35;
-    var hue = (Date.now() * 0.02 + Math.random() * 60) % 360;
-    particles.push(new Particle(
-      x, y,
-      Math.cos(angle) * speed,
-      Math.sin(angle) * speed,
-      'hsl(' + hue + ', 90%, 70%)',
-      1.8 + Math.random() * 2.8,
-      0.4 + Math.random() * 0.4
-    ));
-  }
-
-  // 生成点击绽放花朵
-  function spawnBloom(x, y) {
-    var petalCount = 5 + Math.floor(Math.random() * 10);
-    var layers = 2 + Math.floor(Math.random() * 3);
-    var baseHue = Math.random() * 360;
-    var secondaryHue = (baseHue + 30 + Math.random() * 60) % 360;
-
-    for (var layer = 0; layer < layers; layer++) {
-      var radiusBase = 25 + layer * 18 + Math.random() * 20;
-      var count = petalCount + layer * 2;
-      var layerHue = layer % 2 === 0 ? baseHue : secondaryHue;
-      for (var i = 0; i < count; i++) {
-        var angle = (i / count) * Math.PI * 2 + Math.random() * 0.2;
-        var dist = radiusBase + Math.random() * 15;
-        var targetX = x + Math.cos(angle) * dist;
-        var targetY = y + Math.sin(angle) * dist;
-        var dirX = targetX - x;
-        var dirY = targetY - y;
-        var len = Math.sqrt(dirX * dirX + dirY * dirY);
-        var speed = 80 + Math.random() * 120;
-        particles.push(new Particle(
-          x, y,
-          (dirX / len) * speed + (Math.random() - 0.5) * 30,
-          (dirY / len) * speed + (Math.random() - 0.5) * 30,
-          'hsl(' + (layerHue + Math.random() * 30) + ', 85%, 70%)',
-          2.5 + Math.random() * 4.5,
-          0.7 + Math.random() * 0.6
-        ));
-      }
-    }
-
-    // 中心光点
-    for (var j = 0; j < 8; j++) {
-      var a = Math.random() * Math.PI * 2;
-      var sp = 40 + Math.random() * 70;
-      particles.push(new Particle(
-        x, y,
-        Math.cos(a) * sp,
-        Math.sin(a) * sp,
-        'hsl(' + baseHue + ', 90%, 80%)',
-        1.5 + Math.random() * 3,
-        0.3 + Math.random() * 0.5
-      ));
-    }
-
-    playBloomSound();
-  }
-
-  // 画布自适应
-  function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-
-  // 动画循环
-  function animate(now) {
-    requestAnimationFrame(animate);
-    var dt = (now - lastTime) / 1000;
-    if (dt <= 0) dt = 0.016;
-    if (dt > 0.1) dt = 0.1;
-    lastTime = now;
-
-    ctx.fillStyle = 'rgba(10, 10, 20, 0.28)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    for (var i = particles.length - 1; i >= 0; i--) {
-      particles[i].update(dt);
-      particles[i].draw(ctx);
-      if (particles[i].isDead()) {
-        particles.splice(i, 1);
-      }
-    }
-
-    // 鼠标按住时额外生成粒子
-    if (mouseDown) {
-      for (var k = 0; k < 2; k++) {
-        spawnTrailParticle(mouseX + (Math.random() - 0.5) * 6, mouseY + (Math.random() - 0.5) * 6);
-      }
-      if (Math.random() < 0.3) playParticleTone(400 + Math.random() * 500, 0.05, 0.02);
-    }
-  }
-
-  // 全局事件（不干扰页面交互）
-  window.addEventListener('mousemove', function(e) {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    if (Math.random() < 0.4) {
-      spawnTrailParticle(mouseX, mouseY);
-      if (Math.random() < 0.2) playParticleTone(600 + Math.random() * 400, 0.04, 0.015);
-    }
-  });
-
-  window.addEventListener('mousedown', function(e) {
-    initAudio();
-    mouseDown = true;
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    spawnBloom(mouseX, mouseY);
-  });
-
-  window.addEventListener('mouseup', function() {
-    mouseDown = false;
-  });
-
-  // 触摸事件
-  window.addEventListener('touchmove', function(e) {
-    if (e.touches.length > 0) {
-      mouseX = e.touches[0].clientX;
-      mouseY = e.touches[0].clientY;
-      if (Math.random() < 0.4) spawnTrailParticle(mouseX, mouseY);
-    }
-  }, { passive: true });
-
-  window.addEventListener('touchstart', function(e) {
-    initAudio();
-    if (e.touches.length > 0) {
-      mouseX = e.touches[0].clientX;
-      mouseY = e.touches[0].clientY;
-      mouseDown = true;
-      spawnBloom(mouseX, mouseY);
-    }
-  });
-
-  window.addEventListener('touchend', function() {
-    mouseDown = false;
-  });
-
-  window.addEventListener('resize', resizeCanvas);
-
-  // 启动
-  resizeCanvas();
-  requestAnimationFrame(animate);
-})();
 </script>
 </body>
 </html>
