@@ -369,8 +369,8 @@ function applyBackground(url){
 function fetchBg(){
   var img=new Image();
   img.onload=function(){applyBackground(img.src)};
-  img.onerror=function(){setTimeout(fetchBg,3000)};
-  img.src='https://www.dmoe.cc/random.php?t='+Date.now();
+  img.onerror=function(){setTimeout(fetchBg, 3000)};
+  img.src='https://img.xjh.me/random_img.php?type=bg&ctype=nature&return=302&t='+Date.now();
 }
 function changeBackground(){fetchBg()}
 </script>
